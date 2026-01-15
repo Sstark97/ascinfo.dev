@@ -1,0 +1,88 @@
+---
+title: "Lean Mind Monads"
+description: "Conjunto de mónadas implementadas en TypeScript con enfoque OOP para manejo funcional de errores."
+tags: ["TypeScript", "Functional Programming", "NPM", "Open Source"]
+repoUrl: "https://github.com/lean-mind/monads"
+demoUrl: "https://www.npmjs.com/package/@leanmind/monads"
+status: "active"
+featured: true
+---
+
+Una librería de mónadas implementadas en TypeScript con un enfoque orientado a objetos, diseñada para manejar errores y efectos secundarios de forma funcional y elegante.
+
+## Características
+
+Esta librería proporciona implementaciones completas y tipadas de las mónadas más útiles para desarrollo en TypeScript:
+
+### Either Monad
+Representa un valor que puede ser exitoso (Right) o un error (Left). Ideal para manejo de errores sin excepciones.
+
+### Option Monad
+Representa un valor que puede existir (Some) o no existir (None). Reemplaza el uso de `null` y `undefined` de forma segura.
+
+### Try Monad
+Encapsula operaciones que pueden lanzar excepciones, convirtiéndolas en Success o Failure.
+
+### Future Monad
+Representa computaciones asincrónicas con evaluación lazy (perezosa).
+
+### IO Monad
+Encapsula efectos secundarios de forma pura, permitiendo composición antes de la ejecución.
+
+### AsyncEither Monad
+Combina Either con operaciones asincrónicas para manejo de errores en código asíncrono.
+
+## Ventajas
+
+- **Type Safety**: Totalmente tipado con TypeScript
+- **Railway Oriented Programming**: Soporta patrones como `andThen` y `orElse`
+- **Composición**: Métodos `map`, `flatMap`, `fold` para transformaciones elegantes
+- **Combinadores**: Método `combineWith` para combinar múltiples mónadas
+- **Sin excepciones**: Manejo de errores explícito y funcional
+- **Zero dependencies**: Sin dependencias externas
+
+## Instalación
+
+```bash
+npm install @leanmind/monads
+```
+
+## Ejemplo de Uso
+
+```typescript
+import { Either } from '@leanmind/monads';
+
+const divide = (a: number, b: number): Either<string, number> => {
+  if (b === 0) {
+    return Either.left('Division by zero');
+  }
+  return Either.right(a / b);
+};
+
+const result = divide(10, 2)
+  .map(x => x * 2)
+  .fold({
+    ifRight: x => `Result: ${x}`,
+    ifLeft: err => `Error: ${err}`,
+  });
+```
+
+## Tecnologías
+- TypeScript
+- NPM
+- ESM y CommonJS
+- Husky (Git hooks)
+- Semantic Release
+
+## Documentación
+
+El proyecto incluye:
+- README completo con ejemplos de cada mónada
+- Documentación de todos los métodos
+- Ejemplos de uso en escenarios reales
+- Guías de Railway Oriented Programming
+
+## Enlaces
+- [Repositorio](https://github.com/lean-mind/monads)
+- [NPM Package](https://www.npmjs.com/package/@leanmind/monads)
+- [Documentación](https://github.com/lean-mind/monads#readme)

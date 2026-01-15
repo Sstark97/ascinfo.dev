@@ -1,0 +1,45 @@
+---
+title: "Login Dialog Kata"
+description: "Kata para practicar dobles de test creando un sistema de login con autenticación."
+tags: ["Java", "Testing", "TDD", "Test Doubles"]
+repoUrl: "https://github.com/Sstark97/login_dialog_kata"
+status: "active"
+featured: false
+---
+
+Una kata simple y efectiva para practicar test doubles. El objetivo es testear un LoginDialog que tiene una dependencia de Authentication sin usar ninguna librería de mocking.
+
+## Objetivo
+
+Implementar tests para un diálogo de login que depende de un servicio de autenticación, creando manualmente todos los tipos de dobles de test necesarios.
+
+## Reglas
+
+- **No usar librerías de mocking**: Debes crear tus propios test doubles
+- **Practicar todos los tipos**: Dummy, Stub, Spy, Strict Mock y Fake
+- **Entender las diferencias**: Cada tipo de doble tiene un propósito específico
+
+## Tipos de Dobles de Test
+
+- **Dummy**: Objetos que se pasan pero nunca se usan realmente
+- **Stub**: Proveen respuestas predefinidas a las llamadas del test
+- **Spy**: Similar a stubs pero registran las llamadas para verificación
+- **Strict Mock**: Pre-programados con expectativas y pueden lanzar excepciones
+- **Fake**: Implementaciones funcionales pero simplificadas
+
+## Tecnologías
+- Java
+- JUnit 5
+- Maven
+
+## Recursos
+
+El proyecto incluye:
+- Diagrama explicativo de los tipos de dobles
+- Rama con ejemplo usando Mockito para comparación
+- Material utilizado en charlas sobre testing
+
+Esta kata se utiliza en la charla "El Arte de la Guerra…del testing: Dobladores de Pruebas", presentada en eventos como Codemotion Madrid 2024.
+
+## Enlaces
+- [Repositorio](https://github.com/Sstark97/login_dialog_kata)

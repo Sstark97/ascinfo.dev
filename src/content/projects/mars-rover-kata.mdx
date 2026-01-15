@@ -1,0 +1,54 @@
+---
+title: "Mars Rover Kata"
+description: "Kata de formación para desarrollar un rover de Marte controlado remotamente usando TDD."
+tags: ["Java", "TDD", "Spring", "Gradle"]
+repoUrl: "https://github.com/aitorevi/mars-rover-kata"
+status: "active"
+featured: false
+---
+
+Kata de formación para desarrollar una API que traduce comandos enviados desde la Tierra a instrucciones que entiende un rover en Marte.
+
+## Descripción
+
+Eres parte del equipo que explora Marte enviando vehículos controlados remotamente a la superficie del planeta. Tu tarea es desarrollar una API que permita controlar el rover mediante comandos.
+
+## Requisitos
+
+- El rover tiene una posición inicial (x,y) y una dirección (N,S,E,W)
+- Recibe un array de comandos: FORWARD, BACKWARD, LEFT, RIGHT
+- Implementar movimiento hacia adelante y atrás
+- Implementar giros a izquierda y derecha
+- Implementar wrapping en los bordes (el planeta es una esfera)
+- Detectar obstáculos antes de cada movimiento
+- Si encuentra un obstáculo, el rover se detiene y reporta la posición
+
+## Características Técnicas
+
+- **Requisito**: Java 21
+- **Build Tool**: Gradle
+- **Includes**: Solución implementada y servicio Spring
+
+## Reglas de Desarrollo
+
+- **Hardcore TDD**: Sin excusas
+- Cambiar roles (driver, navigator) después de cada ciclo TDD
+- No fases rojas durante refactoring
+- Cuidado con edge cases y excepciones
+
+## Tecnologías
+- Java 21
+- Gradle
+- Spring Framework
+- JUnit 5
+
+## Objetivos de Aprendizaje
+
+- Practicar Test-Driven Development
+- Diseño de APIs
+- Manejo de coordenadas y direcciones
+- Detección de colisiones
+- Pair programming
+
+## Enlaces
+- [Repositorio](https://github.com/aitorevi/mars-rover-kata)
