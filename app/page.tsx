@@ -44,6 +44,7 @@ export default async function Home(): Promise<React.ReactElement> {
           <div className="md:col-span-4">
             {featuredTalk && (
               <RecentTalkBlock
+                slug={featuredTalk.slug}
                 title={featuredTalk.title}
                 event={featuredTalk.event}
               />

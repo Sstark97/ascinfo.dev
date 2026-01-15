@@ -66,7 +66,7 @@ export function FeaturedProjectBlock({ slug, title, status }: FeaturedProjectBlo
 
         {/* Footer CTA */}
         <div className="mt-4 flex items-center gap-2 border-t border-white/5 pt-4">
-          <span className="text-sm font-medium text-[#FCA311]">Ver proyectos</span>
+          <span className="text-sm font-medium text-[#FCA311]">Ver proyecto</span>
           <ArrowUpRight className="h-4 w-4 text-[#FCA311] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </div>
       </div>
