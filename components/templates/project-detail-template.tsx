@@ -23,7 +23,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
   const { title, description, heroImage, tags, repoUrl, demoUrl, status, stars, forks, lastCommit, license } = project
 
   return (
-    <div className="box-border min-h-screen w-full max-w-full overflow-hidden bg-[#1a1a1a] px-6 sm:px-0">
+    <div className="box-border min-h-screen w-full max-w-full overflow-x-hidden bg-[#1a1a1a] px-4 sm:px-6 md:px-0">
       {/* Back link */}
       <div className="mx-auto max-w-6xl pt-6 sm:px-6 md:px-8">
         <Link
@@ -99,7 +99,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
           </div>
         ) : (
           // Hero without Screenshot - Clean header
-          <div className="w-full max-w-full rounded-2xl border border-[#333333] bg-[#222222] p-6 sm:p-8 md:p-10">
+          <div className="w-full max-w-full rounded-2xl border border-[#333333] bg-[#222222] p-4 sm:p-6 md:p-8 lg:p-10">
             <div className="flex flex-wrap items-center gap-2 md:gap-3">
               <span
                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${statusConfig[status].bgColor} ${statusConfig[status].color}`}
@@ -116,8 +116,8 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                 </span>
               ))}
             </div>
-            <h1 className="mt-4 text-balance text-2xl font-bold text-[#f5f5f5] sm:text-3xl md:text-5xl">{title}</h1>
-            <p className="mt-3 max-w-3xl text-pretty text-base text-[#aaaaaa] sm:text-lg md:text-xl">{description}</p>
+            <h1 className="mt-4 break-words text-balance text-xl font-bold text-[#f5f5f5] sm:text-2xl md:text-4xl lg:text-5xl">{title}</h1>
+            <p className="mt-3 break-words text-pretty text-sm text-[#aaaaaa] sm:text-base md:text-lg">{description}</p>
 
             {/* Action buttons */}
             <div className="mt-6 flex flex-wrap gap-2 sm:gap-3">
