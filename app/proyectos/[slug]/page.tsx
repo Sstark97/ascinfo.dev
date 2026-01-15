@@ -26,7 +26,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const projectUrl = `${siteUrl}/proyectos/${project.slug}`
-  const imageUrl = project.heroImage.startsWith("http") ? project.heroImage : `${siteUrl}${project.heroImage}`
+  const imageUrl = project.heroImage
+    ? project.heroImage.startsWith("http")
+      ? project.heroImage
+      : `${siteUrl}${project.heroImage}`
+    : `${siteUrl}/og-image.png`
 
   return {
     title: project.title,

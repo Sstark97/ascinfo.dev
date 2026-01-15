@@ -35,22 +35,71 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
         </Link>
       </div>
 
-      {/* Hero Section with Screenshot */}
+      {/* Hero Section */}
       <section className="mx-auto max-w-6xl py-8 sm:px-6 md:px-8">
-        <div className="relative w-full max-w-full overflow-hidden rounded-2xl border border-[#333333] bg-[#222222]">
-          {/* Screenshot - using standard img for Astro compatibility */}
-          <div className="relative aspect-video w-full overflow-hidden">
-            <img
-              src={heroImage || "/placeholder.svg"}
-              alt={`Screenshot de ${title}`}
-              className="h-full w-full rounded-lg object-cover"
-            />
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#222222] via-[#222222]/60 to-transparent" />
-          </div>
+        {heroImage ? (
+          // Hero with Screenshot
+          <div className="relative w-full max-w-full overflow-hidden rounded-2xl border border-[#333333] bg-[#222222]">
+            {/* Screenshot - using standard img for Astro compatibility */}
+            <div className="relative aspect-video w-full overflow-hidden">
+              <img
+                src={heroImage}
+                alt={`Screenshot de ${title}`}
+                className="h-full w-full rounded-lg object-cover"
+              />
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#222222] via-[#222222]/60 to-transparent" />
+            </div>
 
-          {/* Title overlay */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-8">
+            {/* Title overlay */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 md:p-8">
+              <div className="flex flex-wrap items-center gap-2 md:gap-3">
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${statusConfig[status].bgColor} ${statusConfig[status].color}`}
+                >
+                  <span className={`h-1.5 w-1.5 rounded-full ${statusConfig[status].dotColor}`} />
+                  {statusConfig[status].label}
+                </span>
+                {tags.map((tag: string) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-[#444444] bg-[#1a1a1a]/80 px-2.5 py-1 font-mono text-xs text-[#aaaaaa]"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <h1 className="mt-4 text-balance text-xl font-bold text-[#f5f5f5] sm:text-2xl md:text-4xl">{title}</h1>
+              <p className="mt-2 max-w-2xl text-pretty text-sm text-[#aaaaaa] sm:text-base md:text-lg">{description}</p>
+
+              {/* Action buttons */}
+              <div className="mt-5 flex flex-wrap gap-2 sm:mt-6 sm:gap-3">
+                <a
+                  href={repoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-lg border border-[#444444] bg-[#2a2a2a] px-3 py-2 text-sm font-medium text-[#f5f5f5] transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311] sm:px-4 sm:py-2.5"
+                >
+                  <Github className="h-4 w-4 shrink-0" />
+                  <span>GitHub</span>
+                </a>
+                {demoUrl && (
+                  <a
+                    href={demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-lg bg-[#fca311] px-3 py-2 text-sm font-medium text-[#1a1a1a] transition-all duration-300 hover:bg-[#e5940f] sm:px-4 sm:py-2.5"
+                  >
+                    <ExternalLink className="h-4 w-4 shrink-0" />
+                    <span>Demo</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
+          // Hero without Screenshot - Clean header
+          <div className="w-full max-w-full rounded-2xl border border-[#333333] bg-[#222222] p-6 sm:p-8 md:p-10">
             <div className="flex flex-wrap items-center gap-2 md:gap-3">
               <span
                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${statusConfig[status].bgColor} ${statusConfig[status].color}`}
@@ -61,22 +110,22 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
               {tags.map((tag: string) => (
                 <span
                   key={tag}
-                  className="rounded-full border border-[#444444] bg-[#1a1a1a]/80 px-2.5 py-1 font-mono text-xs text-[#aaaaaa]"
+                  className="rounded-full border border-[#444444] bg-[#1a1a1a] px-2.5 py-1 font-mono text-xs text-[#aaaaaa]"
                 >
                   {tag}
                 </span>
               ))}
             </div>
-            <h1 className="mt-4 text-balance text-xl font-bold text-[#f5f5f5] sm:text-2xl md:text-4xl">{title}</h1>
-            <p className="mt-2 max-w-2xl text-pretty text-sm text-[#aaaaaa] sm:text-base md:text-lg">{description}</p>
+            <h1 className="mt-4 text-balance text-2xl font-bold text-[#f5f5f5] sm:text-3xl md:text-5xl">{title}</h1>
+            <p className="mt-3 max-w-3xl text-pretty text-base text-[#aaaaaa] sm:text-lg md:text-xl">{description}</p>
 
             {/* Action buttons */}
-            <div className="mt-5 flex flex-wrap gap-2 sm:mt-6 sm:gap-3">
+            <div className="mt-6 flex flex-wrap gap-2 sm:gap-3">
               <a
                 href={repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border border-[#444444] bg-[#2a2a2a] px-3 py-2 text-sm font-medium text-[#f5f5f5] transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311] sm:px-4 sm:py-2.5"
+                className="inline-flex items-center gap-2 rounded-lg border border-[#444444] bg-[#2a2a2a] px-4 py-2.5 text-sm font-medium text-[#f5f5f5] transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311]"
               >
                 <Github className="h-4 w-4 shrink-0" />
                 <span>GitHub</span>
@@ -86,7 +135,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                   href={demoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-lg bg-[#fca311] px-3 py-2 text-sm font-medium text-[#1a1a1a] transition-all duration-300 hover:bg-[#e5940f] sm:px-4 sm:py-2.5"
+                  className="inline-flex items-center gap-2 rounded-lg bg-[#fca311] px-4 py-2.5 text-sm font-medium text-[#1a1a1a] transition-all duration-300 hover:bg-[#e5940f]"
                 >
                   <ExternalLink className="h-4 w-4 shrink-0" />
                   <span>Demo</span>
@@ -94,7 +143,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
               )}
             </div>
           </div>
-        </div>
+        )}
       </section>
 
       {/* Content Grid */}

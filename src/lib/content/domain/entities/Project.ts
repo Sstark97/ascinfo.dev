@@ -4,7 +4,7 @@ export type Project = {
   slug: string
   title: string
   description: string
-  heroImage: string
+  heroImage?: string
   tags: string[]
   repoUrl: string
   demoUrl?: string
