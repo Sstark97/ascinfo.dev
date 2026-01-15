@@ -6,27 +6,73 @@ import "./globals.css"
 
 const _inter = Inter({ subsets: ["latin"] })
 
+const siteUrl = "https://ascinfo.dev"
+const defaultImage = `${siteUrl}/aitor_profile.webp`
+
 export const metadata: Metadata = {
-  title: "Aitor Santana | Desarrollador de Software",
+  title: {
+    default: "Aitor Santana | Desarrollador de Software",
+    template: "%s | Aitor Santana",
+  },
   description:
-    "Portfolio de Aitor Santana, desarrollador de software especializado en código limpio, TDD, DDD y arquitectura hexagonal. Artesano del software en Lean Mind.",
-  generator: "v0.app",
-  icons: {
-    icon: [
+    "Soy Aitor Santana, Desarrollador de Software apasionado por escribir código limpio y sostenible, aplicando TDD y buenas prácticas como patrones de diseño y arquitecturas limpias. En Lean Mind, colaboro con un equipo que me impulsa a crecer profesionalmente.",
+  keywords: [
+    "aitor santana cabrera",
+    "aitor santana",
+    "ascinfo",
+    "ascinfo.dev",
+    "TDD",
+    "Clean Code",
+    "Código Limpio",
+    "DDD",
+    "Arquitectura Hexagonal",
+    "Lean Mind",
+  ],
+  authors: [{ name: "Aitor Santana Cabrera", url: siteUrl }],
+  creator: "Aitor Santana Cabrera",
+  metadataBase: new URL(siteUrl),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    url: siteUrl,
+    siteName: "ascinfo.dev",
+    title: "Aitor Santana | Desarrollador de Software",
+    description:
+      "Soy Aitor Santana, Desarrollador de Software apasionado por escribir código limpio y sostenible, aplicando TDD y buenas prácticas como patrones de diseño y arquitecturas limpias.",
+    images: [
       {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
+        url: defaultImage,
+        width: 1200,
+        height: 630,
+        alt: "Aitor Santana Cabrera",
       },
     ],
-    apple: "/apple-icon.png",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@aitorsci",
+    creator: "@aitorsci",
+    title: "Aitor Santana | Desarrollador de Software",
+    description:
+      "Soy Aitor Santana, Desarrollador de Software apasionado por escribir código limpio y sostenible, aplicando TDD y buenas prácticas.",
+    images: [defaultImage],
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 }
 
