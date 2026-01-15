@@ -1,0 +1,181 @@
+---
+title: "El Arte de la Guerra... del Testing: Dobladores de Pruebas"
+event: "T3chFest 2025"
+date: "2025-03-14"
+location: "Madrid, España"
+slidesUrl: "https://docs.google.com/presentation/d/15GnvSrUZMvnFcww-3r7s9nLJqV98T0qMrhCfYMKkA14/edit?usp=sharing"
+videoUrl: "https://youtu.be/Yxo70Ec-j0U?si=k3pwLPqJGTuLIW9t"
+tags: ["Clean Code", "Testing", "Java"]
+featured: false
+description: "Una charla completa sobre los dobles de prueba en testing: desde dummies hasta fakes, pasando por stubs, spies y mocks. Aprende cuándo y cómo usar cada tipo para hacer tus tests más confiables y mantenibles."
+---
+
+El 14 de marzo de 2025 tuve la oportunidad de dar una charla completa en [T3chFest](https://t3chfest.es/2025/) sobre los dobles de test, y cómo estos pueden ayudarnos a mejorar la calidad de nuestro código. Fue una experiencia increíble poder compartir conocimientos con la comunidad técnica en uno de los eventos más importantes de España.
+
+A continuación comparto con vosotros el contenido que comenté en la charla.
+
+## Introducción
+
+¿Alguna vez han perdido horas debugueando un test que fallaba aleatoriamente? ¿O han visto cómo un simple cambio en una dependencia rompe múltiples pruebas? Si han pasado por esto, saben lo frustrante que puede ser.
+
+Buenas a todos, mi nombre es Aitor Santana y vengo desde la soleada Gran Canaria. Soy un apasionado de los videojuegos, un hobby que me ha acompañado desde mi infancia. Sin embargo, mi carrera profesional ha tomado un camino diferente pero igualmente emocionante: el desarrollo web. Actualmente trabajo del lado del backend con C# y el ecosistema de .NET en Lean Mind. Aunque no desarrollo videojuegos, la resolución de problemas y creatividad que he desarrollado jugando, me han sido muy útiles en mi carrera. Estoy aquí para compartir con ustedes mi experiencia en el fascinante mundo del testing de software.
+
+Hoy quiero ayudarles a entender cómo los dobles de prueba pueden hacer que nuestras pruebas sean más confiables y mantenibles. Pero también quiero hablarles de los problemas que pueden traer si no los usamos correctamente.
+
+## Contexto
+
+A medida que se profundiza en los conceptos básicos del testing, es inevitable toparse con una piedra en el camino: los mocks. Entender este tipo de estructuras puede ser un gran desafío, ya que existen varios tipos que se adaptan a diferentes casos de uso.
+
+Como podemos ver en datos disponibles en internet, la mayoría de los desarrolladores encuentran los mocks de dificultad moderada o alta. Esto se debe a varios factores:
+
+- **Aplicación Práctica**: Saber que existen varios tipos de mocks y entender en qué momento usar cada uno es crucial, y es uno de los objetivos de esta charla.
+- **Identificación del Contexto**: Relacionado con el punto anterior, es fundamental conocer los tipos de mocks disponibles y cómo aplicarlos según las necesidades de tu proyecto.
+- **Principios de Diseño de Software**: La compatibilidad de los mocks con tu proyecto depende en gran medida del tipo de arquitectura seguida y los principios de diseño de software adoptados.
+
+Un aspecto que destaco especialmente es cómo diferentes frameworks de testing definen el concepto de mock. Esta variabilidad puede generar confusión, lo que requiere dominar el arte de la guerra... o más bien, del testing, para navegar eficazmente por estos desafíos.
+
+Para facilitar este proceso y mejorar la comprensión sobre los mocks, me basaré en la terminología de Gerard Meszaros, quien hace una distinción clara de los tipos de dobles de prueba según su caso de uso. Además, me apoyaré en un esquema propuesto por Robert C. Martin en su libro "La artesanía del código limpio: Disciplinas, estándares y ética", que me fue de gran ayuda para entender completamente estos conceptos.
+
+## TDD y Dobles de Prueba
+
+Test Driven Development es una metodología que tiene 3 pasos sencillos:
+
+1. Primero haz el test, que se vea en rojo
+2. Haz el código productivo, pasa a verde
+3. Limpia el código, refactorízalo
+
+Los dobles de tests son bastante útiles si haces TDD, especialmente Outside-In, cuando quieres testear desde lo más afuera tu sistema y aún no tienes desarrollado el código de los colaboradores.
+
+Hay que aclarar que para usar dobles de tests no es necesario aplicar TDD, por ejemplo en proyectos legacy donde ya tienes el código pero quieres añadir tests muy seguramente tendrás que usar dobles de tests.
+
+## Test Desiderata
+
+El término "Test Desiderata" hace referencia a un conjunto de principios o características deseables para las pruebas de software. Destacamos dos principios fundamentales:
+
+- **Determinismo**: Los dobles de prueba ayudan a eliminar la aleatoriedad y la dependencia de factores externos (como bases de datos, APIs o servicios externos). Esto hace que los tests sean predecibles y confiables.
+- **Aislado (Micro)**: El uso de dobles de prueba ayuda a que los tests sean más pequeños y específicos, evitando dependencias externas y asegurando que cada unidad de código se pruebe en aislamiento.
+
+## Tests Sociales vs Solitarios
+
+- Un **test social** es aquel en el que se prueba el comportamiento de un artefacto usando sus dependencias reales, con todas las implicaciones que puede tener esto. Es un test más a alto nivel.
+- Un **test solitario** es aquel en el que se prueba el comportamiento de un artefacto usando dobles de test de sus dependencias, por lo que tendrá un entorno más aislado, seguro y será menos costoso.
+
+> Esto no quiere decir que todos los test deban ser solitarios. En ocasiones te interesará probar con sus dependencias reales para ver el flujo completo de las reglas de negocio.
+
+## Tipos de Dobles de Prueba
+
+### Dummy
+
+Un dummy es un tipo de doble de prueba que se utiliza cuando necesitas pasar un objeto a un componente bajo prueba pero el comportamiento del doble no es relevante para la prueba en cuestión.
+
+```java
+public class AuthenticatorDummy implements Authenticator {
+  @Override
+  public boolean authenticate(String username, String password) {
+    return false;
+  }
+}
+
+@Test
+void when_closed_login_is_canceled() {
+  Authenticator authenticator = new AuthenticatorDummy();
+  LoginDialog dialog = new LoginDialog(authenticator);
+
+  dialog.show();
+  dialog.close();
+
+  assertFalse(dialog.isOpen());
+}
+```
+
+### Stub
+
+Un stub proporciona respuestas predefinidas a las llamadas que se le hacen durante la prueba, tienen estado o memoria.
+
+```java
+public class AuthenticatorStub implements Authenticator {
+  private final boolean allowLogin;
+
+  public AuthenticatorStub(boolean allowLogin) {
+    this.allowLogin = allowLogin;
+  }
+
+  @Override
+  public boolean authenticate(String username, String password) {
+    return allowLogin;
+  }
+}
+```
+
+### Spy
+
+Un Spy registra información sobre cómo se utiliza durante las pruebas. Además de proporcionar respuestas predefinidas como un Stub, también permite hacerle preguntas sobre su uso.
+
+```java
+public class AuthenticatorSpy implements Authenticator {
+  private final boolean allowLogin;
+  private int calls = 0;
+  private String registeredUserName;
+  private String registeredPassword;
+
+  @Override
+  public boolean authenticate(String username, String password) {
+    calls++;
+    registeredUserName = username;
+    registeredPassword = password;
+    return allowLogin;
+  }
+
+  public int calls() { return calls; }
+  public String registeredUserName() { return registeredUserName; }
+  public String registeredPassword() { return registeredPassword; }
+}
+```
+
+### Mock Estricto
+
+Un Mock estricto no solo simula el comportamiento de un objeto, sino que también verifica que se realicen llamadas esperadas a sus métodos con parámetros específicos.
+
+**Problemas principales:**
+- Fragilidad de las pruebas
+- Dificultad de refactorización
+- Enfoque en implementación en lugar de comportamiento
+- Mantenimiento costoso
+
+### Fake
+
+Es un objeto que simula el comportamiento real del artefacto implementando algunas reglas de negocio de manera rudimentaria o simplificada.
+
+```java
+public class AuthenticatorFake implements Authenticator {
+  @Override
+  public boolean authenticate(String username, String password) {
+    return username.equals("username") && password.equals("good password");
+  }
+}
+```
+
+## Patrones Adicionales
+
+### Test Specific SubClass
+
+Este patrón se utiliza cuando queremos probar un método específico, pero sabemos que este método puede realizar llamadas a otros métodos que producen efectos secundarios. Creamos una subclase específica y sobrescribimos el método problemático.
+
+### Shelf Shunt
+
+Es una variación del patrón Test-Specific Subclass, pero en este caso es la clase de prueba la que sobrescribe el comportamiento no deseado.
+
+### Humble Object
+
+Se utiliza para separar el código difícil de probar del código fácil de probar. Delegamos ese código difícil a otra clase tan pequeña que no necesitamos probarla directamente.
+
+## Recursos
+
+Me gustaría dejarles algunos recursos:
+- [La artesanía del código limpio](https://www.casadellibro.com/libro-la-artesania-del-codigo-limpio/9788441544994/12726053)
+- [xUnit Tests Patterns](http://xunitpatterns.com/)
+- [Código sostenible](https://savvily.es/libros/codigo-sostenible/)
+- [Testing Sostenible](https://testingsostenible.com/)
+- [Diseño Sostenible](https://diseñosostenible.com/)
+
+Puedes ver la charla completa en [YouTube](https://youtu.be/Yxo70Ec-j0U?si=k3pwLPqJGTuLIW9t), y el código de los ejemplos en el [repositorio](https://github.com/Sstark97/login_dialog_kata).

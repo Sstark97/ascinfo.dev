@@ -1,0 +1,263 @@
+---
+title: "Mock 101: El Arte del Testing"
+event: "Nerdearla España 2025"
+date: "2025-11-15"
+location: "Madrid, España"
+slidesUrl: "https://docs.google.com/presentation/d/1b3OrQtgWpMDKrK264M9innzxEMJeuT4cTstWlsM2lZY/edit?usp=sharing"
+tags: ["Clean Code", "Testing", "Java"]
+featured: true
+description: "Taller práctico sobre dobles de prueba en testing. Explora los fundamentos de los mocks, desde dummies hasta fakes, con ejemplos prácticos y ejercicios hands-on para mejorar la calidad de tus tests."
+---
+
+El 15 de noviembre de 2025 tuve la oportunidad de dar un taller práctico en [Nerdearla España](https://nerdearla.es/) sobre los dobles de test. Fue una experiencia increíble poder trabajar directamente con los asistentes en ejercicios prácticos y compartir conocimientos sobre testing en un formato más interactivo.
+
+A continuación comparto con vosotros el contenido que trabajamos en el taller.
+
+## Test Desiderata
+
+El término "Test Desiderata" hace referencia a un conjunto de principios o características deseables para las pruebas de software. Aunque no es un estándar formal, el concepto se ha popularizado en el mundo del Software Craftsmanship, con el objetivo de garantizar que las pruebas sean efectivas, mantenibles y confiables. Destacamos tres principios fundamentales:
+
+- **Determinismo**: Los dobles de prueba ayudan a eliminar la aleatoriedad y la dependencia de factores externos (como bases de datos, APIs o servicios externos). Esto hace que los tests sean predecibles y confiables, ya que siempre devolverán los mismos valores esperados.
+- **Aislado (Micro)**: El uso de dobles de prueba ayuda a que los tests sean más pequeños y específicos, evitando dependencias externas y asegurando que cada unidad de código se pruebe en aislamiento.
+- **Información Específica y de Comportamiento**: Los tests deben proporcionar información clara sobre qué falló y por qué.
+
+## Tests Sociales vs Solitarios
+
+- Un **test social** es aquel en el que se prueba el comportamiento de un artefacto usando sus dependencias reales, con todas las implicaciones que puede tener esto (pueden ser más costosos, pueden fallar por alguna de esas dependencias, etc). Es un test más a alto nivel.
+- Un **test solitario** es aquel en el que se prueba el comportamiento de un artefacto usando dobles de test de sus dependencias, por lo que tendrá un entorno más aislado, seguro y será menos costoso.
+
+> Esto no quiere decir que todos los test deban ser solitarios. En ocasiones te interesará probar con sus dependencias reales para ver el flujo completo de las reglas de negocio.
+
+## Tipos de Pruebas
+
+Para apoyarnos vamos a utilizar un esquema del libro "La artesanía del código limpio" de Robert C. Martin, que representa los tipos de dobles como una estructura jerárquica. Para mí fue lo que terminó de hacerme click en la cabeza, lo que terminó por hacer encajar las piezas del puzzle.
+
+Esto que vemos es la terminología de Meszaros, apareció por primera vez en el libro "xUnit Test Patterns: Refactoring Test Code" de Gerard Meszaros. Creo que es importante conocer cada tipo de doble, porque en las librerías de test generalmente están un poco difusos, y muchas veces es eso lo que nos lleva a confusión.
+
+## LoginDialog - Ejercicio Base
+
+Para apoyarnos y explicar los diferentes tipos de doble, veremos un pequeño ejercicio de ejemplo. Tenemos esta interfaz Authenticator y la clase LoginDialog, esa interfaz representa el contrato que debe seguir el colaborador que pasemos por constructor a la clase. El objetivo es testear el comportamiento del diálogo de Login y utilizar los distintos dobles para hacer nuestras pruebas.
+
+```java
+interface Authenticator {
+  boolean authenticate(String username, String password);
+}
+
+public class LoginDialog {
+  private final Authenticator authenticator;
+  private boolean isOpen = false;
+
+  public LoginDialog(Authenticator authenticator) {
+    this.authenticator = authenticator;
+  }
+
+  public boolean submit(String username, String password) {
+    if(isOpen) {
+      close();
+      return authenticator.authenticate(username, password);
+    }
+    return false;
+  }
+  // More code...
+}
+```
+
+## Dummies
+
+Empecemos con el tipo de doble más sencillo, el dummy. Un dummy es un tipo de doble de prueba que se utiliza cuando necesitas pasar un objeto a un componente bajo prueba pero el comportamiento del doble no es relevante para la prueba en cuestión.
+
+En este caso queremos testear que se cierre el modal cuando le damos a cancelar, por lo que un dummy nos viene como anillo al dedo. Creamos un dummy que implemente la interfaz, para que podamos inyectarlo en nuestro Login, que devuelva cualquier cosa, nos da igual.
+
+```java
+public class AuthenticatorDummy implements Authenticator {
+  @Override
+  public boolean authenticate(String username, String password) {
+    return false;
+  }
+}
+
+@Test
+void when_closed_login_is_canceled() {
+  Authenticator authenticator = new AuthenticatorDummy();
+  LoginDialog dialog = new LoginDialog(authenticator);
+
+  dialog.show();
+  dialog.close();
+
+  assertFalse(dialog.isOpen());
+}
+```
+
+No es relevante que el usuario esté autenticado para testear el comportamiento del modal.
+
+## Stubs
+
+El siguiente paso es el stub. Un stub es un tipo de doble de prueba que, a diferencia de un dummy, proporciona respuestas predefinidas a las llamadas que se le hacen durante la prueba, tienen estado o memoria.
+
+Esto nos permite especificar el resultado deseado sin necesidad de interactuar con el sistema real de autenticación. Por ejemplo, si quisiéramos probar que una autenticación falle, podríamos hacer lo siguiente:
+
+```java
+public class AuthenticatorStub implements Authenticator {
+  private final boolean allowLogin;
+
+  public AuthenticatorStub(boolean allowLogin) {
+    this.allowLogin = allowLogin;
+  }
+
+  @Override
+  public boolean authenticate(String username, String password) {
+    return allowLogin;
+  }
+}
+
+@Test
+void when_authorizer_rejects_login_fail() {
+  Authenticator authenticator = new AuthenticatorStub(false);
+  LoginDialog dialog = new LoginDialog(authenticator);
+
+  dialog.show();
+  boolean success = dialog.submit("bad username", "bad password");
+
+  assertFalse(success);
+}
+```
+
+Nos creamos un stub al que le pasemos por constructor el resultado que nosotros queramos que tenga nuestro autenticador, y lo devolvemos en el método authenticate. De esta forma en los test podemos crear un Stub que falle la autenticación de manera programática, y sin depender de la implementación real de nuestro artefacto.
+
+## Spies
+
+Continuemos con el siguiente tipo de doble, el Spy. Un Spy se utiliza para verificar si ciertas acciones han sido realizadas en el objeto, como la invocación de métodos con parámetros específicos, sin interrumpir el flujo natural de la prueba. Además de proporcionar respuestas predefinidas como un Stub, también registra información sobre cómo se utiliza durante las pruebas, por lo que podemos hacerle preguntas (datos con los que ha sido llamado, cuántas veces ha sido llamado, etc).
+
+```java
+public class AuthenticatorSpy implements Authenticator {
+  private final boolean allowLogin;
+  private int calls = 0;
+  private String registeredUserName;
+  private String registeredPassword;
+
+  public AuthenticatorSpy(boolean allowLogin) {
+    this.allowLogin = allowLogin;
+  }
+
+  @Override
+  public boolean authenticate(String username, String password) {
+    calls++;
+    registeredUserName = username;
+    registeredPassword = password;
+    return allowLogin;
+  }
+
+  public int calls() { return calls; }
+  public String registeredUserName() { return registeredUserName; }
+  public String registeredPassword() { return registeredPassword; }
+}
+
+@Test
+void loging_dialog_correctly_invokes_authenticator() {
+  AuthenticatorSpy authenticatorSpy = new AuthenticatorSpy(true);
+  LoginDialog dialog = new LoginDialog(authenticatorSpy);
+
+  dialog.show();
+  boolean success = dialog.submit("user", "pw");
+
+  assertTrue(success);
+  assertEquals(1, authenticatorSpy.calls());
+  assertEquals("user", authenticatorSpy.registeredUserName());
+  assertEquals("pw", authenticatorSpy.registeredPassword());
+}
+```
+
+De esa forma en esta prueba, nos aseguramos de que `LoginDialog` invoca correctamente a `Authenticator`, comprobando que sólo se llame una vez a `authenticate` y con los argumentos que se han pasado en el `submit`.
+
+Son útiles para garantizar que el algoritmo está probándose de manera correcta, sobre todo en código en el que no tenemos tanto control como el código legacy.
+
+## Mocks Estrictos
+
+Llegamos al último tipo de doble de la parte izquierda del diagrama, los Mocks estrictos. Este es el doble que suele dar nombre a todos los demás, ya que normalmente cuando hablamos de dobles hablamos de mocks.
+
+Un Mock estricto es aquel que no solo simula el comportamiento de un objeto, sino que también verifica que se realicen llamadas esperadas a sus métodos con parámetros específicos, y falla la prueba si se realiza alguna llamada inesperada o si las llamadas esperadas no ocurren en el orden definido. Dicho de otro modo, las aserciones de la prueba se realizan en el mock.
+
+```java
+public class AuthenticatorStrictMock implements Authenticator {
+  private boolean authenticateCalled = false;
+  private final String expectedUsername;
+  private final String expectedPassword;
+  private final boolean authenticationResult;
+
+  public AuthenticatorStrictMock(String expectedUsername, String expectedPassword,
+      boolean authenticationResult) {
+    this.expectedUsername = expectedUsername;
+    this.expectedPassword = expectedPassword;
+    this.authenticationResult = authenticationResult;
+  }
+
+  @Override
+  public boolean authenticate(String username, String password) {
+    if (!expectedUsername.equals(username) || !expectedPassword.equals(password)) {
+      throw new AssertionError("Authenticator was called with unexpected arguments");
+    }
+    if (authenticateCalled) {
+      throw new AssertionError("Authenticator authenticate method called more than once");
+    }
+    authenticateCalled = true;
+    return authenticationResult;
+  }
+
+  public void verify() {
+    if (!authenticateCalled) {
+      throw new AssertionError("Expected authenticate method was not called");
+    }
+  }
+}
+```
+
+El mock estricto nos puede ayudar a diseñar si partimos de un código nuevo, ya que nos permite definir cierta lógica de negocio y nos guía en el diseño de nuestro código de producción. Sin embargo debemos tener en cuenta que nuestros tests pueden llegar a ser frágiles en el caso de que alguna regla de negocio cambie.
+
+## Fake Objects
+
+Por último nos pasamos a la rama derecha del diagrama, el siguiente tipo de doble es el Fake Object. Es un objeto que simula el comportamiento real del artefacto, a diferencia de los stubs o mocks, que generalmente solo simulan respuestas a llamadas específicas, un fake implementa algunas reglas de negocio de manera rudimentaria o simplificada.
+
+```java
+public class AuthenticatorFake implements Authenticator {
+  @Override
+  public boolean authenticate(String username, String password) {
+    return username.equals("user") && password.equals("good password");
+  }
+}
+```
+
+Como vemos esto podría simular perfectamente el comportamiento del artefacto Authenticator real, pero con una lógica mucho más simple.
+
+Los fakes son especialmente útiles en entornos de prueba donde interactuar con el verdadero sistema o componente sería impracticable, costoso o lento, proporcionando una simulación lo suficientemente buena para permitir una variedad de pruebas.
+
+El problema con los Fake es que, a medida que la aplicación crezca, siempre habrá más condiciones que comprobar. Como consecuencia los Fake tienden a crecer por cada nueva condición, pudiendo ser tan grandes y complejos que necesiten sus propias pruebas.
+
+## Dobles de Test con Librerías
+
+Todo esto está muy bien, hemos visto los diferentes tipos de dobles de test (dummy, stub, spy, mock y fake object), pero generalmente en nuestro día a día no vamos a picarnos nuestro propio doble, normalmente haremos uso de librerías de tests que nos faciliten el desarrollo.
+
+El ejemplo que les quiero enseñar es con **Mockito**, una librería de Java:
+
+```java
+Authenticator authenticator = mock(Authenticator.class);
+when(authenticator.authenticate("user", "password")).thenReturn(true);
+
+// Verificar llamadas
+verify(authenticator, times(1)).authenticate("user", "password");
+```
+
+Como vemos definir un doble es tan simple como usar el método `mock` y pasarle la clase que queremos que simule. Esto nos va a permitir definir la respuesta que queramos que tenga el mock ante ciertos parámetros de entrada, a través del método `when`.
+
+También podemos verificar cuántas veces y con qué parámetros se ha llamado al método authenticate, a través del método `verify`, como podríamos hacer con un Spy.
+
+Como vemos en Mockito está todo un poco unido, pero es una herramienta super potente que nos va a permitir hacer dobles de una manera sencilla.
+
+## Recursos
+
+Puedes encontrar el repositorio del taller en [GitHub](https://github.com/Sstark97/mock-101) con todos los ejercicios prácticos.
+
+Recursos adicionales recomendados:
+- [La artesanía del código limpio](https://www.casadellibro.com/libro-la-artesania-del-codigo-limpio/9788441544994/12726053)
+- [xUnit Tests Patterns](http://xunitpatterns.com/)
+- [Código sostenible](https://savvily.es/libros/codigo-sostenible/)
+- [Testing Sostenible](https://testingsostenible.com/)
