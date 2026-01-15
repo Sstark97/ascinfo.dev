@@ -1,0 +1,101 @@
+---
+title: "El Arte de la Guerra... del Testing: Dobles de tests"
+event: "Codemotion Madrid 2024"
+date: "2024-05-21"
+location: "Madrid, España"
+slidesUrl: "https://docs.google.com/presentation/d/1cyNWRPbAA1S0Yc1meRhmuWDYr3R7LfXcfFcQBb0Qoe4/edit?usp=sharing"
+videoUrl: "https://www.youtube.com/embed/FEumxdULiV4?si=uzRggUc6qrhecGgO"
+tags: ["Clean Code", "Testing", "Java"]
+featured: true
+description: "En el mundo del testing automatizado, tarde o temprano, te cruzarás con los mocks o dobles de prueba. Si todavía no te sientes cómodo con ellos o simplemente quieres afianzar tus conocimientos, esta charla es perfecta para ti."
+---
+
+El 21 de Mayo de 2024 tuve la oportunidad de dar una charla en [Codemotion](https://conferences.codemotion.com/madrid2024/) sobre los dobles de test, y cómo estos pueden ayudarnos a mejorar la calidad de nuestro código. Fue mi primera charla en un evento, y la verdad es que me lo pasé genial. Esta charla es una breve introducción a una charla más completa, que daré en algún otro evento en algún futuro.
+
+A continuación comparto con vosotros el contenido que comente en la charla.
+
+## Introducción
+Buenas tardes a todos, mi nombre es Aitor Santana y vengo desde la soleada Gran Canaria. Soy un apasionado de los videojuegos, un hobby que me ha acompañado desde mi infancia. Sin embargo, mi carrera profesional ha tomado un camino diferente pero igualmente emocionante: el desarrollo web. Actualmente, trabajo del lado del backend con Java en Lean Mind. Aunque no desarrollo videojuegos, la resolución de problemas y creatividad que he desarrollado jugando, me han sido muy útiles en mi carrera. Estoy aquí para compartir con ustedes mi experiencia en el fascinante mundo del testing de software.
+
+## Contexto
+Para empezar me gustaría daros un poco de contexto.
+
+Cuando aprendí a manejar con más o menos soltura el desarrollo de test, y empecé a profundizar me tope con una piedra en el camino: los dobles de prueba. Entender este tipo de estructuras puede ser un gran desafío, ya que existen varios tipos que se adaptan a diferentes casos de uso.
+
+Para mí fue un concepto complicado de entender, y mucha gente que conozco paso por este mismo problema, así que se me ocurrió preguntarle a nuestro querido chat-gpt.
+
+Esta fue la estadística que saco, seguramente no podamos fiarnos de estos datos al 100%, pero sí que nos muestra que para la gran mayoría son conceptos algo complejos, es por ello que me gustaría ayudar a todo aquel que esté empezando, a entender un poco mejor este tipo de herramientas. Creo que esto es como el arte de la guerra, conoce bien a tu enemigo para saber como combatirlo.
+
+## Tipos de Pruebas
+Para apoyarme voy a utilizar este pequeño esquema que saqué del libro "La artesanía del código limpio de Robert C. Martin", que representa los tipos de dobles como unan estructura jerárquica, como si estuviéramos hablando de herencia entre comillas.
+
+Para mí fue lo que termino de hacerme clic en la cabeza, lo que termino por hacer encajar las piezas del puzzle. Esto que vemos es la terminología de Meszaros, apareció por primera vez en el libro "xUnit Test Patterns: Refactoring Test Code" de Gerard Meszaros. Creo que es importante conocer un poco cada tipo de doble, porque en las librerías de test generalmente están un poco difusos, y muchas veces es eso lo que nos lleva a confusión.
+
+## LoginDialog
+Para apoyarme y explicar los diferentes tipos de doble, me apoyaré en un pequeño ejercicio.
+
+```java
+public interface Authenticator {
+  boolean authenticate(String username, String password);
+ }
+
+ public class LoginDialog {
+    private final Authenticator authenticator;
+    private boolean isOpen = false;
+
+    public LoginDialog(Authenticator authenticator) {
+        this.authenticator = authenticator;
+    }
+
+    public boolean submit(String username, String password) {
+        if(isOpen) {
+            close();
+            return authenticator.authenticate(username, password);
+        }
+
+        return false;
+    }
+
+    // More code...
+ }
+```
+
+Tenemos esta interfaz Authenticator y la clase LoginDialog, esa interfaz representa el contrato que debe seguir el colaborador que pasemos por constructor a la clase. El objetivo es testear el comportamiento del diálogo de Login y utilizar los distintos dobles para hacer nuestras pruebas. Al final de la sesión tendrán un repo con el boilerplate, como los diferentes ejemplos de código que veremos en la sesión.
+
+## Dummy
+Empecemos con el tipo de doble más sencillo, el dummy. Un dummy es un tipo de doble de prueba que se utiliza cuando necesitas pasar un objeto a un componente bajo prueba, pero el comportamiento del doble no es relevante para la prueba en cuestión.
+
+```java
+public class AuthenticatorDummy implements Authenticator {
+    @Override
+    public boolean authenticate(String username, String password) {
+        return false;
+    }
+ }
+
+@Test
+void when_closed_login_is_canceled() {
+    Authenticator authenticator = new AuthenticatorDummy();
+    LoginDialog dialog = new LoginDialog(authenticator);
+
+    dialog.show();
+    dialog.close();
+
+    assertFalse(dialog.isOpen());
+}
+```
+
+Nosotros queremos testear que se cierre el modal cuando le damos a cancelar, por lo que un dummy nos viene como anillo al dedo. Creamos un dummy que implemente la interfaz, para que podamos inyectarlo en nuestro Login, que devuelva cualquier cosa, nos da igual.
+
+No es relevante que el usuario esté autenticado para testear el comportamiento del modal.
+
+## Recursos
+
+Me gustaría dejarles algunos recursos:
+- [La artesanía del código limpio](https://www.casadellibro.com/libro-la-artesania-del-codigo-limpio/9788441544994/12726053)
+- [xUnit Tests Patterns](http://xunitpatterns.com/)
+- [Código sostenible](https://savvily.es/libros/codigo-sostenible/)
+- [Testing Sostenible](https://testingsostenible.com/)
+- [Diseño Sostenible](https://diseñosostenible.com/)
+
+Puedes ver la charla completa en el canal de [Lean Mind](https://www.youtube.com/@LeanMind), y el código de los ejemplos en el [repositorio](https://github.com/Sstark97/login_dialog_kata).

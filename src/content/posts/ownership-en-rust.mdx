@@ -1,0 +1,101 @@
+---
+title: "Ownership en Rust"
+excerpt: "En Rust, para garantizar la seguridad de la memoria y evitar errores como punteros nulos, dobles liberaciones de memoria o condiciones de carrera, existe el concepto de ownership o 'propiedad'."
+date: "2024-08-25"
+readingTime: "8 min"
+tags: ["Rust", "Ownership", "Borrowing", "Memory Management"]
+featured: true
+---
+
+En Rust, para garantizar la seguridad de la memoria y evitar errores como punteros nulos, dobles liberaciones de memoria o condiciones de carrera, existe el concepto de **ownership** o "propiedad". Este sistema funciona en **tiempo de compilación** y permite que Rust no necesite un garbage collector.
+
+## Principios Básicos del Ownership
+
+### **Cada valor tiene un único propietario**
+Cuando se crea un valor, este es asignado a una variable, y esa variable se convierte en el "propietario" de ese valor.
+
+Solo puede haber un propietario a la vez, lo que significa que cuando el propietario deja de estar en uso (por ejemplo, cuando la variable sale de su ámbito), el valor asociado es automáticamente liberado por Rust. Un ejemplo de esto podría ser el paso de una variable a una función.
+
+```rust
+let text = "Helloo";
+
+// El ownership pasa a la función transform
+transform(text);
+```
+
+### **El propietario de un valor es responsable de su liberación**
+Cuando el propietario de un valor sale de su ámbito, Rust automáticamente llama a un destructor (el método `drop`), liberando la memoria asociada con ese valor.
+
+Esto previene fugas de memoria y garantiza que los recursos se liberen de manera oportuna.
+
+### **Transferencia de Propiedad (Move)**
+La propiedad puede ser transferida (movida) de una variable a otra. Cuando la propiedad se mueve, la variable original ya no es válida y no puede ser utilizada.
+
+```rust
+let text = String::from("hello");
+let text_now = text;  // La propiedad de la cadena "hello" se mueve a text_now.
+
+// Ahora text no es válido, y no se puede usar.
+// println!("{}", text);  // Esto causaría un error de compilación.
+```
+
+### **Préstamos (Borrowing)**
+En lugar de transferir la propiedad, Rust permite "prestar" un valor, lo que significa que se puede acceder a un valor sin transferir su propiedad. Existen dos tipos de préstamos:
+- **Préstamos inmutables (`&T`)**: Permite acceder al valor sin modificarlo.
+- **Préstamos mutables (`&mut T`)**: Permite modificar el valor, pero solo un préstamo mutable puede existir a la vez.
+
+```rust
+fn main() {
+    let text = String::from("hello");
+    let len = calculate_length(&text);  // Prestamos una referencia inmutable de text
+
+    println!("La longitud de '{}' es {}.", text, len);
+}
+
+fn calculate_length(text: &String) -> usize {  // `text` es una referencia inmutable
+    text.len()
+}
+```
+
+En este ejemplo:
+
+- **`&text`** es un préstamo inmutable de `text` a la función `calculate_length`.
+- **`text`** sigue siendo válido después de que se realiza el préstamo porque solo hemos prestado su referencia, no movido su propiedad.
+
+### **Copias de Valores**
+
+Algunos tipos de datos en Rust implementan el rasgo `Copy`, lo que significa que, en lugar de mover el valor, se hace una copia. Esto ocurre automáticamente para tipos simples como `i32`, `f64`, `bool`, entre otros. Sin embargo, para tipos más complejos como `String` o `Vec`, debemos usar explícitamente el método `clone` si queremos una copia completa del valor.
+
+```rust
+fn main() {
+    let text = String::from("hello");
+    let len = calculate_length(text.clone());  // Creamos una copia de la variable
+
+    println!("La longitud de la copia de 'hello' es {}.", len);
+
+    // Aquí, `text` sigue siendo válido porque creamos una copia, no movimos el valor.
+    println!("El texto original sigue siendo '{}'.", text);
+}
+
+fn calculate_length(text: String) -> usize {  // `text` es una copia
+    text.len()
+}
+```
+
+Es importante notar que el método `clone` realiza una copia completa del valor en la memoria, lo que puede ser costoso para estructuras de datos grandes.
+
+## ¿Por Qué es Importante el Ownership?
+
+1. **Seguridad de Memoria**:
+    - La memoria se gestiona de manera segura y eficiente en tiempo de compilación, sin necesidad de un recolector de basura. Como hemos visto, esto se logra asegurando que cada valor tenga un solo propietario y que la memoria sea liberada automáticamente cuando el propietario ya no es válido.
+
+2. **Evita Errores Comunes**:
+    - **Punteros colgantes**: No pueden ocurrir porque no se permite que una variable acceda a la memoria de otra que ya ha sido liberada.
+    - **Condiciones de carrera**: Son prevenidas al asegurar que solo un hilo pueda modificar un recurso a la vez, mediante el control del ownership y los préstamos mutables.
+
+3. **Rendimiento**:
+    - Rust evita las sobrecargas asociadas con la gestión de memoria en tiempo de ejecución, lo que lo hace extremadamente eficiente en cuanto a rendimiento, especialmente en sistemas de alto rendimiento y aplicaciones en tiempo real.
+
+## Conclusión
+
+El ownership es una característica única y poderosa de Rust que proporciona un modelo de seguridad de memoria sin comprometer el rendimiento. Gracias a este concepto, podemos asegurar que el código resultante sea seguro y libre de errores de memoria, lo que es crucial para aplicaciones donde la estabilidad y la eficiencia son esenciales, como en sistemas embebidos o software crítico. La verificación en tiempo de compilación garantiza que el código cumpla con estas reglas sin penalizaciones de rendimiento en tiempo de ejecución, lo que hace de Rust una excelente opción para desarrollar software robusto y eficiente.

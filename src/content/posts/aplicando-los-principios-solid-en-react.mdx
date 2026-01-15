@@ -1,0 +1,298 @@
+---
+title: "Aplicando los principios SOLID en React"
+excerpt: "Los principios SOLID son uno de los fundamentos más importantes en la arquitectura y desarrollo de software. SOLID es un acrónimo acuñado por Michael Feathers..."
+date: "2023-04-11"
+readingTime: "15 min"
+tags: ["Clean Code", "SOLID", "React"]
+featured: true
+---
+
+Los principios SOLID son uno de los fundamentos más importantes en la arquitectura y desarrollo de software.
+SOLID es un acrónimo acuñado por Michael Feathers, basado en los principios de la POO (programación orientada a objetos)
+que recopilaba Robert C. Martin en su libro *Design Principles and Design Patterns*.
+
+Estos principios son:
+1. **Single responsability principle** - SRP (principio de responsabilidad única)
+2. **Open-closed principle** - OCP (principio abierto-cerrado)
+3. **Liskov substitution principle** - LSP (principio de sustitución de Liskov)
+4. **Interface segregation principle** - ISP (principio de segregación de interfaces)
+5. **Dependency Inversion Principle** - DIP (principio de inversión de dependencias)
+
+Estos principios son útiles incluso más allá de la programación orientada a objetos, son parcialmente aplicables a otros estilos de programación, como puede ser el caso de la programación funcional o el desarrollo de componentes en los frameworks actuales de JavaScript.
+
+Como muchos sabemos, React es una de las librerías más usadas en la actualidad para desarrollar aplicaciones web. Si conoces SOLID y React, puedes llegar a hacerte la siguiente pregunta: ¿Se pueden aplicar los principios SOLID en React?
+La respuesta es sí, veamos como podríamos aplicarlos.
+
+## Principio de responsabilidad única (SRP)
+
+Este principio nos especifica que **una clase debería tener una, y solo una, razón para cambiar**, en el caso de React en lugar de una clase podría ser un componente.
+En el siguiente ejemplo tenemos un componente que incumple dicho principio:
+
+```tsx
+import { useEffect, useState } from "React"
+import axios from "axios"
+
+type Todo {
+    id: number;
+    userId: number;
+    title: string;
+    completed: boolean;
+}
+
+const TodoList = () => {
+    const [todos, setTodos] = useState<Todo[]>([])
+    const [isFetching, setIsFetching] = useState(true)
+
+    useEffect(() => {
+        const loadTodos = async () => {
+            try {
+                const response = await axios.get("https://jsonplaceholder.typicode.com/todos")
+                const currentTodos = response.data
+                setTodos(currentTodos)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setIsFetching(false)
+            }
+        }
+    }, [])
+
+    if (isFetching) {
+        return <p>...loading<p>
+    }
+
+    return (
+        <ul>
+            {todos.map(todo =>
+                <li key={todo.id}>
+                    <span>{todo.id}</span>
+                    <span>{todo.name}</span>
+                </li>
+            )}
+        </ul>
+    )
+}
+```
+
+Podemos ver como el componente *TodoList* tiene varias responsabilidades, entre ellas:
+- Gestionar el estado
+- Hacer el fetching de datos
+- Renderizar una lista de Todos
+- Decidir como mostrar los elementos de la lista
+
+Podemos mejorarlo un poco generando el siguiente custom hook:
+
+```tsx
+// useTodos.ts
+import { useEffect, useState } from "React"
+import axios from "axios"
+import type { Todo } from "../types"
+
+const useTodos = () => {
+    const [todos, setTodos] = useState<Todo[]>([])
+    const [isFetching, setIsFetching] = useState(true)
+
+    useEffect(() => {
+        const loadTodos = async () => {
+            try {
+                const response = await axios.get("https://jsonplaceholder.typicode.com/todos")
+                const currentTodos = response.data
+                setTodos(currentTodos)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setIsFetching(false)
+            }
+        }
+    }, [])
+
+    return { todo, isFetching}
+}
+
+export default useTodos
+```
+
+```tsx
+// TodosList.tsx
+import useTodos from "../hooks/useTodos"
+import type { Todo } from "../types"
+
+const TodoList = () => {
+    const { todos, isFetching } = useTodos()
+
+    if (isFetching) {
+        return <p>...loading<p>
+    }
+
+    return (
+        <ul>
+            {todos.map(todo =>
+                <li key={todo.id}>
+                    <span>{todo.id}</span>
+                    <span>{todo.name}</span>
+                </li>
+            )}
+        </ul>
+    )
+}
+```
+
+De esta forma hemos pasado la responsabilidad de realizar el fetching de datos a otro artefacto, aliviando así la carga del componente.
+
+Sin embargo, nuestro custom hook no está del todo bien, gestiona el estado y carga los ToDos. Separemos este comportamiento en una función:
+
+```tsx
+// todos.service.ts
+const loadTodos = async () => {
+    try {
+        const response = await axios.get("https://jsonplaceholder.typicode.com/todos")
+        const currentTodos = response.data
+
+        return currentTodos
+    } catch (error) {
+        throw new Error(error.message)
+    }
+}
+
+export { loadTodos }
+```
+
+```tsx
+// useTodos.ts
+import { useEffect, useState } from "React"
+import { loadTodos } from "../services/todos.service"
+import type { Todo } from "../types"
+
+const useTodos = () => {
+    const [todos, setTodos] = useState<Todo[]>([])
+    const [isFetching, setIsFetching] = useState(true)
+
+    useEffect(() => {
+        const saveTodosInState = async () => {
+            try {
+                const currentTodos = await loadTodos()
+                setTodos(currentTodos)
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setIsFetching(false)
+            }
+        }
+
+        saveTodosInState()
+    }, [])
+
+    return { todo, isFetching}
+}
+
+export default useTodos
+```
+
+Al hacerlo de esta forma, podemos sustituir fácilmente la librería con la que estamos solicitando los ToDos, que nuestro hook seguiría funcionando de la misma forma.
+
+## Principio abierto-cerrado (OCP)
+
+Se dice que **un artefacto** debe admitir modificaciones en su comportamiento sin necesidad de cambiar su código, es decir, **debe estar abierto a extensión y cerrado a modificación**.
+
+Supongamos que tenemos el siguiente componente Header:
+
+```tsx
+const Header = () => {
+  const { pathname } = useRouter()
+
+  return (
+    <header>
+      <Logo />
+      <Actions>
+        {pathname === '/dashboard' && <Link to="/events/new">Create event</Link>}
+        {pathname === '/' && <Link to="/dashboard">Go to dashboard</Link>}
+      </Actions>
+    </header>
+  )
+}
+```
+
+El problema es que si en un futuro necesitamos añadir otra ruta, tendremos que modificar el código. Una posible solución sería el uso de **children**:
+
+```tsx
+const Header = ({ children }) => (
+  <header>
+    <Logo />
+    <Actions>
+      {children}
+    </Actions>
+  </header>
+)
+
+const HomePage = () => (
+  <>
+    <Header>
+      <Link to="/dashboard">Go to dashboard</Link>
+    </Header>
+    <OtherHomeStuff />
+  </>
+)
+```
+
+## Principio de Sustitución de Liskov (LSP)
+
+Este principio indica que **un tipo base, pueda ser sustituido por cualquiera de sus subtipos**, sin romper la funcionalidad del programa.
+
+Si utilizamos TypeScript en nuestro proyecto, podemos garantizar esto con interfaces:
+
+```tsx
+interface TitleProps {
+    content: JSX.Element
+}
+
+const Title = ({ content }: TitleProps) => (
+    <>{content}</>
+)
+```
+
+## Principio de Segregación de Interfaces (ISP)
+
+En este cuarto principio se explica que **todos los métodos de una interfaz deben ser consumidos por un único cliente**.
+
+Por ejemplo, si un componente Thumbnail solo necesita `coverUrl`, no le pasemos todo el objeto Video:
+
+```tsx
+// Mal
+const Thumbnail = ({ video }: { video: Video }) => {
+  return <img src={video.coverUrl} />
+}
+
+// Bien
+const Thumbnail = ({ coverUrl }: { coverUrl: string }) => {
+  return <img src={coverUrl} />
+}
+```
+
+## Principio de inversión de las dependencias (DIP)
+
+**Un artefacto con un nivel de abstracción alto no debería depender de otro con un nivel de abstracción más bajo**.
+
+Podemos solucionarlo añadiendo una capa más de abstracción con un custom hook:
+
+```tsx
+// useTodos.ts
+const useTodos = ({key, fetcher}: UseTodos): Response => {
+    const { data: todos, error, isValidating} = useSWR(key, fetcher)
+    return { todos, error, isValidating }
+}
+
+// Todo.tsx
+const Todo = () => {
+    const { todos } = useTodos({key: "/todos", fetcher})
+    // ...
+}
+```
+
+## Conclusión
+
+Los principios SOLID pueden ayudarnos a conseguir un **código más legible, mantenible y escalable**. Sin embargo, **no debemos tomarnos estos principios como leyes escritas en piedra**, todo principio llevado al límite puede suponer una piedra en el camino.
+
+## Bibliografía
+
+- [Código Sostenible](https://savvily.es/libros/codigo-sostenible/)
+- [SOLID: los 5 principios que te ayudarán a desarrollar software de calidad](https://profile.es/blog/principios-solid-desarrollo-software-calidad/)

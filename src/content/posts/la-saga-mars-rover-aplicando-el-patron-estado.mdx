@@ -1,0 +1,37 @@
+---
+title: "La saga Mars Rover - Aplicando el patrón estado"
+excerpt: "Este artículo ha sido coescrito con mi compañero Aitor Reviriego, y será el primer artículo de una saga, en la que iremos compartiendo como hemos ido desarrollando la kata mars rover..."
+date: "2024-07-17"
+readingTime: "10 min"
+tags: ["Clean Code", "Testing", "Java"]
+featured: false
+---
+
+## Introducción
+
+Este artículo ha sido coescrito con mi compañero [Aitor Reviriego](https://aitorevi.dev/), y será el primer artículo de una saga, en la que iremos compartiendo como hemos ido desarrollando la kata [mars rover](https://kata-log.rocks/mars-rover-kata), explicando paso por paso patrones o estrategias que usamos en cada sección del ejercicio, con el objetivo de documentarlo y compartir estas técnicas.
+
+## Primeros Pasos
+
+El lenguaje que hemos utilizado para la kata es Java, en concreto su versión 17 con Gradle (Groovy). La idea es una vez acabado el ejercicio, implementar un servicio con Spring(Webflux) y poder interactuar a través de un frontend.
+
+Lo primero que hicimos fue un test inicial que nos permitiera ir construyendo el código que sabemos que queremos escribir, apoyándonos en el IDE (IntelliJ) para ello:
+
+```java
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class RoverShould {
+    @Test
+    void start_with_and_initial_position_facing_initial_direction () {
+
+        Rover rover = new Rover(new Position(0,0), new North());
+
+        assertThat(rover.getPosition()).isEqualTo(new Position(0,0));
+        assertThat(rover.getDirection()).isEqualTo(new North());
+    }
+}
+```
+
+[Leer el artículo completo en Leanmind](https://leanmind.es/es/blog/la-saga-mars-rover-aplicando-el-patron-estado/)

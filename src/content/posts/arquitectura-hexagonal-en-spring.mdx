@@ -1,0 +1,44 @@
+---
+title: "Arquitectura hexagonal en Spring"
+excerpt: "En estas semanas he estado redescubriendo Java, con el objetivo de pulir las bases y practicar muchos de los conceptos comunes del desarrollo..."
+date: "2024-03-12"
+readingTime: "5 min"
+tags: ["Clean Code", "Java", "Spring", "Arquitectura Hexagonal"]
+featured: false
+---
+
+En estas semanas he estado redescubriendo Java, con el objetivo de pulir las bases y practicar muchos de los conceptos comunes del desarrollo. Además, también empecé a aprender uno de sus frameworks más conocidos, Spring Boot.
+
+Para ello decidí hacer una pequeña API para un market-place en el que tuviera 4-5 entidades para ir probando un poco el funcionamiento.
+
+También quería aprender un poco de arquitectura, por lo que decidí implementar la API siguiendo una arquitectura hexagonal.
+
+Mi idea era tener el siguiente esquema:
+
+```
+src/main/java/com/sstark/generalmarket/
+|-- application/
+|   |-- services/
+|   |
+|   |-- repositories/
+|   |
+|-- domain/
+|   |-- models/
+|   |
+|-- infrasctructure/
+|   |-- adapters/
+|   |
+|   |-- configuration/
+|   |
+|   |-- entities/
+|   |
+|   |-- repositories/
+|   |
+|   |-- controllers/
+```
+
+De está estructura lo más importante en la carpeta de configuración y los diferentes adaptadores, que serán los repositorios que inyecte Spring en los servicios.
+
+Veamos paso a paso el proceso para que funcione todo correctamente.
+
+[Leer el artículo completo en Leanmind](https://leanmind.es/es/blog/arquitectura-hexagonal-en-spring/)
