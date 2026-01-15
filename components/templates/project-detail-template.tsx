@@ -1,11 +1,11 @@
 import Link from "next/link"
 import { ArrowLeft, Github, ExternalLink, Star, GitFork, Calendar, Scale } from "lucide-react"
-import type { ProjectFrontmatter } from "@/types/content"
+import type { Project } from "@/src/lib/content"
 import type { ReactNode } from "react"
 
-interface ProjectDetailTemplateProps {
-  frontmatter: ProjectFrontmatter
-  children: ReactNode // Markdown content will be injected here
+type ProjectDetailTemplateProps = {
+  project: Omit<Project, "content">
+  children: ReactNode
 }
 
 const statusConfig = {
@@ -19,9 +19,8 @@ const statusConfig = {
   archived: { label: "Archivado", color: "text-[#888888]", bgColor: "bg-[#888888]/10", dotColor: "bg-[#555555]" },
 }
 
-export function ProjectDetailTemplate({ frontmatter, children }: ProjectDetailTemplateProps) {
-  const { title, description, heroImage, tags, repoUrl, demoUrl, status, stars, forks, lastCommit, license } =
-    frontmatter
+export function ProjectDetailTemplate({ project, children }: ProjectDetailTemplateProps): React.ReactElement {
+  const { title, description, heroImage, tags, repoUrl, demoUrl, status, stars, forks, lastCommit, license } = project
 
   return (
     <div className="box-border min-h-screen w-full max-w-full overflow-hidden bg-[#1a1a1a] px-6 sm:px-0">
@@ -59,7 +58,7 @@ export function ProjectDetailTemplate({ frontmatter, children }: ProjectDetailTe
                 <span className={`h-1.5 w-1.5 rounded-full ${statusConfig[status].dotColor}`} />
                 {statusConfig[status].label}
               </span>
-              {tags.map((tag) => (
+              {tags.map((tag: string) => (
                 <span
                   key={tag}
                   className="rounded-full border border-[#444444] bg-[#1a1a1a]/80 px-2.5 py-1 font-mono text-xs text-[#aaaaaa]"
@@ -167,7 +166,7 @@ export function ProjectDetailTemplate({ frontmatter, children }: ProjectDetailTe
               <div className="w-full rounded-xl border border-[#333333] bg-[#222222] p-4 sm:p-5 md:p-6">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-[#888888] sm:text-sm">Tech Stack</h3>
                 <div className="mt-3 flex flex-wrap gap-2 sm:mt-4">
-                  {tags.map((tech) => (
+                  {tags.map((tech: string) => (
                     <span
                       key={tech}
                       className="rounded-lg border border-[#444444] bg-[#1a1a1a] px-2.5 py-1.5 font-mono text-xs text-[#aaaaaa] sm:px-3 sm:py-2 sm:text-sm"

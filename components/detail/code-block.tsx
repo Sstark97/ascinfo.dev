@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Check, Copy } from "lucide-react"
+import { codeToHtml } from "shiki"
 
 interface CodeBlockProps {
   code: string
@@ -9,10 +10,28 @@ interface CodeBlockProps {
   filename?: string
 }
 
-export function CodeBlock({ code, language = "typescript", filename }: CodeBlockProps) {
+export function CodeBlock({ code, language = "typescript", filename }: CodeBlockProps): React.ReactElement {
   const [copied, setCopied] = useState(false)
+  const [highlightedCode, setHighlightedCode] = useState("")
 
-  const handleCopy = async () => {
+  useEffect(() => {
+    const highlightCode = async (): Promise<void> => {
+      try {
+        const html = await codeToHtml(code, {
+          lang: language,
+          theme: "one-dark-pro",
+        })
+        setHighlightedCode(html)
+      } catch (error) {
+        console.error("Error highlighting code:", error)
+        setHighlightedCode(`<pre><code>${code}</code></pre>`)
+      }
+    }
+
+    void highlightCode()
+  }, [code, language])
+
+  const handleCopy = async (): Promise<void> => {
     await navigator.clipboard.writeText(code)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -53,25 +72,14 @@ export function CodeBlock({ code, language = "typescript", filename }: CodeBlock
       </div>
 
       {/* Code content */}
-      <div className="overflow-x-auto p-4">
-        <pre className="font-mono text-sm leading-relaxed">
-          <code
-            dangerouslySetInnerHTML={{
-              __html: code
-                .replace(
-                  /\b(const|let|var|function|return|import|export|from|class|interface|type)\b/g,
-                  '<span class="text-[#c678dd]">$1</span>',
-                )
-                .replace(/\b(async|await|new|this)\b/g, '<span class="text-[#c678dd]">$1</span>')
-                .replace(/"([^"]*)"/g, '<span class="text-[#98c379]">"$1"</span>')
-                .replace(/'([^']*)'/g, "<span class=\"text-[#98c379]\">'$1'</span>")
-                .replace(/\/\/(.*)/g, '<span class="text-[#5c6370] italic">//$1</span>')
-                .replace(/\b(\d+)\b/g, '<span class="text-[#d19a66]">$1</span>')
-                .replace(/\b(true|false|null|undefined)\b/g, '<span class="text-[#d19a66]">$1</span>'),
-            }}
-            className="text-[#abb2bf]"
-          />
-        </pre>
+      <div className="overflow-x-auto [&>div>pre]:!bg-[#111111] [&>div>pre]:!m-0 [&>div>pre]:p-4 [&>div>pre]:font-mono [&>div>pre]:text-sm [&>div>pre]:leading-relaxed">
+        {highlightedCode ? (
+          <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
+        ) : (
+          <pre className="!bg-[#111111] !m-0 p-4 font-mono text-sm leading-relaxed text-[#abb2bf]">
+            <code>{code}</code>
+          </pre>
+        )}
       </div>
     </div>
   )

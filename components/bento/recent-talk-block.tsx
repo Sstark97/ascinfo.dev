@@ -3,7 +3,12 @@
 import Link from "next/link"
 import { ArrowUpRight, Presentation } from "lucide-react"
 
-export function RecentTalkBlock() {
+type RecentTalkBlockProps = {
+  title: string
+  event: string
+}
+
+export function RecentTalkBlock({ title, event }: RecentTalkBlockProps): React.ReactElement {
   return (
     <Link href="/charlas" className="group block h-full">
       <div className="flex h-full flex-col rounded-xl border border-white/5 bg-[#222222] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#FCA311]/50 hover:shadow-lg hover:shadow-[#FCA311]/5">
@@ -21,12 +26,12 @@ export function RecentTalkBlock() {
           {/* Event Badge */}
           <div className="inline-flex items-center gap-2 rounded-lg bg-[#1a1a1a] px-3 py-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-[#FCA311]" />
-            <span className="font-mono text-xs text-[#FCA311]">JSDay Canarias</span>
+            <span className="font-mono text-xs text-[#FCA311]">{event}</span>
           </div>
 
           {/* Talk Title */}
           <h3 className="mt-3 text-base font-semibold leading-tight text-foreground transition-colors group-hover:text-[#FCA311]">
-            TDD: Desde cero a producción
+            {title}
           </h3>
         </div>
 

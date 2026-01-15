@@ -3,9 +3,16 @@
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 
-export function LatestArticleBlock() {
+type LatestArticleBlockProps = {
+  slug: string
+  title: string
+  excerpt: string
+  tag: string
+}
+
+export function LatestArticleBlock({ slug, title, excerpt, tag }: LatestArticleBlockProps): React.ReactElement {
   return (
-    <Link href="/blog" className="group block h-full">
+    <Link href={`/blog/${slug}`} className="group block h-full">
       <article className="flex h-full min-h-[280px] flex-col rounded-xl border border-white/5 bg-[#222222] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#FCA311]/50 hover:shadow-lg hover:shadow-[#FCA311]/5">
         {/* Header */}
         <div className="flex items-start justify-between">
@@ -19,17 +26,17 @@ export function LatestArticleBlock() {
         <div className="mt-4 flex-1">
           {/* Tag */}
           <span className="inline-block rounded-full bg-[#FCA311]/10 px-3 py-1 font-mono text-xs font-medium text-[#FCA311]">
-            Spring Boot
+            {tag}
           </span>
 
           {/* Title */}
           <h2 className="mt-4 text-xl font-semibold leading-tight text-foreground transition-colors group-hover:text-[#FCA311] md:text-2xl">
-            Arquitectura Hexagonal en Spring
+            {title}
           </h2>
 
           {/* Snippet */}
           <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-            Cómo desacoplar tu dominio del framework usando Beans de configuración...
+            {excerpt}
           </p>
         </div>
 
