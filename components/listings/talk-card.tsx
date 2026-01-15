@@ -1,6 +1,8 @@
+import Link from "next/link"
 import { ExternalLink, PlayCircle, Calendar, MapPin } from "lucide-react"
 
 interface TalkCardProps {
+  slug: string
   title: string
   event: string
   date: string
@@ -10,9 +12,10 @@ interface TalkCardProps {
   tags: string[]
 }
 
-export function TalkCard({ title, event, date, location, slidesUrl, videoUrl, tags }: TalkCardProps) {
+export function TalkCard({ slug, title, event, date, location, slidesUrl, videoUrl, tags }: TalkCardProps) {
   return (
-    <article className="group relative overflow-hidden rounded-xl border border-white/5 bg-[#222222] transition-all duration-300 hover:border-[#fca311]/30 hover:shadow-[0_0_30px_rgba(252,163,17,0.05)]">
+    <Link href={`/charlas/${slug}`}>
+      <article className="group relative overflow-hidden rounded-xl border border-white/5 bg-[#222222] transition-all duration-300 hover:border-[#fca311]/30 hover:shadow-[0_0_30px_rgba(252,163,17,0.05)] cursor-pointer">
       {/* Top decorative stripe */}
       <div className="h-1 w-full bg-gradient-to-r from-[#fca311]/0 via-[#fca311]/50 to-[#fca311]/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
@@ -80,5 +83,6 @@ export function TalkCard({ title, event, date, location, slidesUrl, videoUrl, ta
         ))}
       </div>
     </article>
+    </Link>
   )
 }

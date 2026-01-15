@@ -20,6 +20,7 @@ export function CharlasListingClient({ talks, allTags }: CharlasListingClientPro
       getSearchableText={(item) => `${item.title} ${item.event}`}
       renderItem={(item) => (
         <TalkCard
+          slug={item.slug}
           title={item.title}
           event={item.event}
           date={item.date}
