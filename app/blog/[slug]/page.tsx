@@ -118,7 +118,7 @@ export default async function BlogDetailPage({ params }: PageProps): Promise<Rea
       </header>
 
       {/* Content */}
-      <div className="mx-auto max-w-5xl px-4 py-12 md:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 lg:px-8">
         <article className="mx-auto w-full">
           <div className="max-w-none text-lg">
             <MDXRemote source={post.content} components={mdxComponents} />
