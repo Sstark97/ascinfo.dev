@@ -6,7 +6,7 @@ import type { TalkRepository } from "../domain/repositories/TalkRepository"
 
 const TALKS_DIR = path.join(process.cwd(), "src/content/talks")
 
-type TalkFrontmatter = Omit<Talk, "slug">
+type TalkFrontmatter = Omit<Talk, "slug" | "content">
 
 export class MDXTalkRepository implements TalkRepository {
   async getAll(): Promise<Talk[]> {
@@ -20,6 +20,31 @@ export class MDXTalkRepository implements TalkRepository {
     const tagsSet = new Set<string>()
     talks.forEach((talk) => talk.tags.forEach((tag) => tagsSet.add(tag)))
     return Array.from(tagsSet).sort()
+  }
+
+  async getBySlug(slug: string): Promise<Talk | null> {
+    try {
+      const filePath = path.join(TALKS_DIR, `${slug}.mdx`)
+      const fileContent = await fs.readFile(filePath, "utf-8")
+      const { data, content } = matter(fileContent)
+      const frontmatter = data as TalkFrontmatter
+
+      return {
+        slug,
+        title: frontmatter.title,
+        event: frontmatter.event,
+        date: frontmatter.date,
+        location: frontmatter.location,
+        slidesUrl: frontmatter.slidesUrl,
+        videoUrl: frontmatter.videoUrl,
+        tags: frontmatter.tags,
+        featured: frontmatter.featured,
+        description: frontmatter.description,
+        content,
+      }
+    } catch {
+      return null
+    }
   }
 
   async getFeatured(): Promise<Talk | null> {
@@ -39,7 +64,7 @@ export class MDXTalkRepository implements TalkRepository {
 
   private async parseTalkFile(filePath: string): Promise<Talk> {
     const fileContent = await fs.readFile(filePath, "utf-8")
-    const { data } = matter(fileContent)
+    const { data, content } = matter(fileContent)
     const slug = path.basename(filePath, ".mdx")
     const frontmatter = data as TalkFrontmatter
 
@@ -54,6 +79,7 @@ export class MDXTalkRepository implements TalkRepository {
       tags: frontmatter.tags,
       featured: frontmatter.featured,
       description: frontmatter.description,
+      content,
     }
   }
 }

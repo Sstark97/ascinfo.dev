@@ -9,4 +9,5 @@ export type Talk = {
   tags: string[]
   featured?: boolean
   description?: string
+  content: string
 }
