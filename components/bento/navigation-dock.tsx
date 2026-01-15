@@ -1,10 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { Home, FileText, Mic2, FolderKanban } from "lucide-react"
+import { FileText, Mic2, FolderKanban } from "lucide-react"
 
 const navItems = [
-  { href: "/", icon: Home, label: "Home" },
   { href: "/blog", icon: FileText, label: "Blog" },
   { href: "/charlas", icon: Mic2, label: "Charlas" },
   { href: "/proyectos", icon: FolderKanban, label: "Proyectos" },
