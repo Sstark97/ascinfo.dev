@@ -1,0 +1,118 @@
+---
+title: "Vibe Coding vs. Clean Code"
+excerpt: "Cómo rediseñé mi portfolio con IA (v0 y Next.js) sin que la deuda técnica me comiera vivo."
+date: "2026-01-17"
+readingTime: "3 min"
+tags: ["Vibe Coding", "Next.js", "Clean Code", "IA"]
+featured: true
+---
+En los últimos años, mi filosofía de desarrollo se ha basado en 3 pilares: **Clean Code**, **TDD** (Test Driven Development) y **Arquitectura Evolutiva**. Para mí, el código no es solo un conjunto de instrucciones para una máquina; es contenido técnico que debe ser legible, mantenible y robusto, una documentación viva.
+
+Sin embargo, para el reciente rediseño de mi web personal, decidí hacer algo que, sobre el papel, va en contra de mis instintos: abrazar el **"Vibe Coding"**.
+
+Si no has oído el término, el *Vibe Coding* es esa tendencia reciente de iterar software a velocidad de vértigo usando IAs generativas, priorizando el resultado visual y la funcionalidad inmediata sobre la implementación subyacente. Básicamente: *"Si funciona y se ve bien, tira millas"*.
+
+¿Puede un Software Crafter sobrevivir a esto sin perder su alma (y la calidad de su código) en el proceso? **Spoiler: Sí, pero con matices.**
+
+## El problema: La parálisis del tiempo
+
+Mi web anterior estaba construida en Astro. Era bastante rápida y me había preocupado por la calidad del código. Pero visualmente... bueno, digamos que necesitaba una renovación y no podía dedicarle mucho tiempo.
+
+Cada vez que quería cambiar el diseño, me encontraba peleando con CSS Grid, alineaciones y paletas de colores. Esa fricción hacía que pospusiera las actualizaciones indefinidamente. Tenía parálisis por análisis (y por CSS).
+
+Necesitaba un cambio de enfoque. Necesitaba velocidad para romper el folio en blanco.
+
+## El Stack del experimento
+
+Decidí probar un flujo de trabajo "AI-First":
+
+* **El Motor:** Migración de Astro a **Next.js**. ¿Por qué? Porque la integración con las herramientas de IA actuales es mucho más fluida en el ecosistema React.
+* **El Artista:** **v0 (de Vercel)** para generar la interfaz de usuario (UI).
+* **El Copiloto:** **Gemini** y **Claude** para la lógica, textos y refactorización.
+
+## La fase de "Vibe Coding": Magia y Caos
+
+Empecé pidiéndole a Gemini que me ayudara a hacer los prompts para v0, algo específico: *"Un portfolio estilo Bento Grid, oscuro, con acentos naranjas, tipografía técnica. Que parezca el IDE de un desarrollador."*
+
+En menos de 60 segundos, tenía una interfaz visualmente impactante. Algo que a mí, picando código a mano, me habría llevado un fin de semana entero maquetar. **La sensación de velocidad es adictiva.** Copias el componente, lo pegas en tu proyecto y *voilà*: funciona.
+
+Aunque para llegar a este punto tuve que iterar varias veces con los prompts, ajustando colores, tamaños y disposición. La IA no es perfecta, pero su rapidez permite un ciclo de prueba y error muy ágil.
+
+## El eslabón perdido: Claude como "Pair Programmer"
+
+Aquí es donde entró la segunda pieza del puzzle. Si v0 era el diseñador creativo, **Claude** se convirtió en el ingeniero de soporte. Su rol fue crucial para cerrar la brecha entre el prototipo y el producto final:
+
+1.  **Limpiar los errores de v0:** A veces, v0 generaba estilos que se veían bien en desktop pero rompían el responsive en móvil, o usaba librerías que yo no tenía instaladas. En lugar de pelearme con el CSS, le pedía a Claude: *"Este componente tiene scroll horizontal indeseado en móvil, arréglalo usando clases estándar de Tailwind"*.
+2.  **Migración de contenido masiva:** Tenía decenas de posts y charlas en mi antigua web (en formato Astro/Markdown). Moverlos a mano a la nueva estructura de Next.js hubiera sido un dolor. Le pasé a Claude mis archivos antiguos y los nuevos componentes de v0, y él se encargó de transformar y adaptar todo el contenido para que encajara en los nuevos *props* automáticamente.
+
+Pero aquí es donde termina la magia y empieza la realidad.
+
+Al revisar el código generado, mi "yo" desarrollador empezó a ver las grietas:
+* Componentes monolíticos de 400 líneas.
+* Textos "hardcodeados" dentro del JSX.
+* Mala semántica HTML (divs dentro de botones, falta de `aria-labels`).
+* Lógica de negocio mezclada con la presentación.
+
+La IA me había dado un prototipo precioso, pero estructuralmente frágil.
+
+## El retorno al Clean Code: El rol del Editor
+
+Aquí es donde creo que reside el futuro de nuestra profesión. No se trata de rechazar la IA por "sucia", ni de aceptarla ciegamente. Se trata de **elevar el nivel de abstracción.**
+
+Mi rol dejó de ser el de "Albañil de Código" (escribir cada `<div>`) y pasó a ser el de **Arquitecto y Editor**.
+
+El proceso que seguí fue:
+
+1.  **Aceptación:** Usar el código de v0 como base visual. Me ahorró el 80% del trabajo tedioso de estilos.
+2.  **Extracción y Componentización:** Romper ese bloque monolítico en piezas reutilizables.
+3.  **Tipado Fuerte:** Añadir interfaces de TypeScript. La IA suele ser laxa con los tipos.
+4.  **Separación de Responsabilidades:** Asegurarme de que los componentes de UI sean "tontos" (solo pintan datos) y la lógica viva separada.
+
+## Un ejemplo práctico: Refactorizando el caos
+
+Para que veas a qué me refiero, aquí tienes un ejemplo real. La IA me generó un componente de tarjeta visualmente perfecto, pero con este aspecto en el código:
+```tsx
+// ❌ El código "Vibe" (Generado por IA)
+// Funciona, pero es difícil de mantener
+<div className="w-full border rounded-lg p-6 bg-zinc-900">
+  <div className="flex justify-between mb-4">
+    <h3 className="text-xl font-bold">Lean Mind Tools</h3>
+    <span className="text-green-500 text-xs">Active</span>
+  </div>
+  <p className="text-gray-400 text-sm">Herramientas internas...</p>
+  {/* ... sopa de divs ... */}
+</div>
+```
+
+Funciona, pero si quiero cambiar el diseño mañana, sufro. Aplicando Clean Code, extraje la UI a componentes atómicos y definí una interfaz clara:
+```tsx
+// ✅ El código "Crafted" (Refactorizado)
+// Robusto, reutilizable y testeable
+interface ProjectCardProps {
+  title: string;
+  status: 'active' | 'archived';
+  description: string;
+  tags: string[];
+}
+
+export const ProjectCard = ({ title, status, description, tags }: ProjectCardProps) => {
+  return (
+    <Card className="hover:border-brand-orange">
+      <CardHeader title={title} status={status} />
+      <CardBody>{description}</CardBody>
+      <CardFooter tags={tags} />
+    </Card>
+  );
+};
+```
+
+El resultado visual es idéntico (pixel-perfect gracias a la IA), pero la arquitectura subyacente ahora es sólida.
+
+## Conclusión: Velocidad vs. Artesanía
+Este rediseño me ha enseñado una lección de humildad. A veces, nuestro afán por la perfección técnica nos frena a la hora de aportar valor (o simplemente, de lanzar cosas).
+
+La IA me permitió romper el bloqueo del diseño. El Clean Code me permitió dormir tranquilo sabiendo que el proyecto es mantenible.
+
+No creo que el "Vibe Coding" sea el enemigo del "Clean Code". Si se usa con criterio, es simplemente una herramienta más en el cinturón del artesano. La clave está en no olvidar que, al final del día, tú eres el responsable de lo que llega a producción, no el prompt.
+
+¿Te ha gustado el nuevo diseño? Puedes ver el código (ya refactorizado y limpio 😉) en mi [GitHub](https://github.com/Sstark97/ascinfo.dev).
