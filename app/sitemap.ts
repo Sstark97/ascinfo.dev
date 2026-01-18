@@ -1,14 +1,12 @@
 import type { MetadataRoute } from "next"
-import { postRepository } from "@/src/lib/content"
-import { projectRepository } from "@/src/lib/content"
-import { talkRepository } from "@/src/lib/content"
+import { posts, projects, talks } from "@/src/lib/content"
 
 const siteUrl = "https://ascinfo.dev"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Obtener todos los posts
-  const posts = await postRepository.getAll()
-  const postEntries: MetadataRoute.Sitemap = posts.map((post) => ({
+  const allPosts = await posts.getAll.execute()
+  const postEntries: MetadataRoute.Sitemap = allPosts.map((post) => ({
     url: `${siteUrl}/blog/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: "monthly",
@@ -16,8 +14,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   // Obtener todos los proyectos
-  const projects = await projectRepository.getAll()
-  const projectEntries: MetadataRoute.Sitemap = projects.map((project) => ({
+  const allProjects = await projects.getAll.execute()
+  const projectEntries: MetadataRoute.Sitemap = allProjects.map((project) => ({
     url: `${siteUrl}/proyectos/${project.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly",
@@ -25,8 +23,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   // Obtener todas las charlas
-  const talks = await talkRepository.getAll()
-  const talkEntries: MetadataRoute.Sitemap = talks.map((talk) => ({
+  const allTalks = await talks.getAll.execute()
+  const talkEntries: MetadataRoute.Sitemap = allTalks.map((talk) => ({
     url: `${siteUrl}/charlas/${talk.slug}`,
     lastModified: new Date(talk.date),
     changeFrequency: "yearly",

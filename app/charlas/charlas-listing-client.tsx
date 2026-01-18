@@ -2,10 +2,10 @@
 
 import { ListingGrid } from "@/components/templates/listing-grid"
 import { TalkCard } from "@/components/listings/talk-card"
-import type { Talk } from "@/src/lib/content"
+import type { TalkDto } from "@/src/lib/content/application/dto/TalkDto"
 
 type CharlasListingClientProps = {
-  talks: Talk[]
+  talks: TalkDto[]
   allTags: string[]
 }
 

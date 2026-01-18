@@ -2,10 +2,10 @@
 
 import { ListingGrid } from "@/components/templates/listing-grid"
 import { BlogCard } from "@/components/listings/blog-card"
-import type { Post } from "@/src/lib/content"
+import type { PostDto } from "@/src/lib/content/application/dto/PostDto"
 
 type BlogListingClientProps = {
-  posts: Post[]
+  posts: PostDto[]
   allTags: string[]
 }
 

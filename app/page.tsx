@@ -3,14 +3,18 @@ import { LatestArticleBlock } from "@/components/bento/latest-article-block"
 import { FeaturedProjectBlock } from "@/components/bento/featured-project-block"
 import { RecentTalkBlock } from "@/components/bento/recent-talk-block"
 import { NavigationDock } from "@/components/bento/navigation-dock"
-import { postRepository, projectRepository, talkRepository } from "@/src/lib/content"
+import { posts, projects, talks } from "@/src/lib/content"
 
 export default async function Home(): Promise<React.ReactElement> {
   const [featuredPost, featuredProject, featuredTalk] = await Promise.all([
-    postRepository.getFeatured(),
-    projectRepository.getFeatured(),
-    talkRepository.getFeatured(),
+    posts.getFeatured.execute(),
+    projects.getFeatured.execute(),
+    talks.getFeatured.execute(),
   ])
+
+  const featuredPostDto = featuredPost?.toDto()
+  const featuredProjectDto = featuredProject?.toDto()
+  const featuredTalkDto = featuredTalk?.toDto()
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#1a1a1a] p-4 md:p-6 lg:p-8">
@@ -21,32 +25,32 @@ export default async function Home(): Promise<React.ReactElement> {
             <ProfileBlock />
           </div>
           <div className="md:col-span-6">
-            {featuredPost && (
+            {featuredPostDto && (
               <LatestArticleBlock
-                slug={featuredPost.slug}
-                title={featuredPost.title}
-                excerpt={featuredPost.excerpt}
-                tag={featuredPost.tags[0] ?? "Blog"}
+                slug={featuredPostDto.slug}
+                title={featuredPostDto.title}
+                excerpt={featuredPostDto.excerpt}
+                tag={featuredPostDto.tags[0] ?? "Blog"}
               />
             )}
           </div>
 
           {/* Row 2: Featured Project (4 cols) + Recent Talk (4 cols) + Nav Dock (4 cols) */}
           <div className="md:col-span-4">
-            {featuredProject && (
+            {featuredProjectDto && (
               <FeaturedProjectBlock
-                slug={featuredProject.slug}
-                title={featuredProject.title}
-                status={featuredProject.status}
+                slug={featuredProjectDto.slug}
+                title={featuredProjectDto.title}
+                status={featuredProjectDto.status}
               />
             )}
           </div>
           <div className="md:col-span-4">
-            {featuredTalk && (
+            {featuredTalkDto && (
               <RecentTalkBlock
-                slug={featuredTalk.slug}
-                title={featuredTalk.title}
-                event={featuredTalk.event}
+                slug={featuredTalkDto.slug}
+                title={featuredTalkDto.title}
+                event={featuredTalkDto.event}
               />
             )}
           </div>

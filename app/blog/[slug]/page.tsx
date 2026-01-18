@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import type { Metadata } from "next"
 import { ChevronRight } from "lucide-react"
-import { postRepository, mdxComponents } from "@/src/lib/content"
+import { posts as postsUseCases, mdxComponents } from "@/src/lib/content"
 import { MDXRemote } from "next-mdx-remote/rsc"
 
 type PageProps = {
@@ -12,13 +12,13 @@ type PageProps = {
 const siteUrl = "https://ascinfo.dev"
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
-  const posts = await postRepository.getAll()
-  return posts.map((post) => ({ slug: post.slug }))
+  const allPosts = await postsUseCases.getAll.execute()
+  return allPosts.map((post) => ({ slug: post.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const post = await postRepository.getBySlug(slug)
+  const post = await postsUseCases.getBySlug.execute(slug)
 
   if (!post) {
     return {
@@ -67,13 +67,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function BlogDetailPage({ params }: PageProps): Promise<React.ReactElement> {
   const { slug } = await params
-  const post = await postRepository.getBySlug(slug)
+  const post = await postsUseCases.getBySlug.execute(slug)
 
   if (!post) {
     notFound()
   }
 
-  const allPosts = await postRepository.getAll()
+  const allPosts = await postsUseCases.getAll.execute()
   const currentIndex = allPosts.findIndex((p) => p.slug === slug)
   const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null

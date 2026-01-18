@@ -1,9 +1,9 @@
-import { postRepository } from "@/src/lib/content"
+import { posts } from "@/src/lib/content"
 import { BlogListingClient } from "./blog-listing-client"
 
 export default async function BlogPage(): Promise<React.ReactElement> {
-  const posts = await postRepository.getAll()
-  const allTags = await postRepository.getAllTags()
+  const allPosts = await posts.getAll.execute()
+  const allTags = await posts.getAllTags.execute()
 
-  return <BlogListingClient posts={posts} allTags={allTags} />
+  return <BlogListingClient posts={allPosts.map((post) => post.toDto())} allTags={allTags} />
 }

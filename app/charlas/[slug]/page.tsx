@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import type { Metadata } from "next"
 import { ChevronRight, Calendar, MapPin, Presentation, Video } from "lucide-react"
-import { talkRepository, mdxComponents } from "@/src/lib/content"
+import { talks, mdxComponents } from "@/src/lib/content"
 import { MDXRemote } from "next-mdx-remote/rsc"
 
 type PageProps = {
@@ -12,13 +12,13 @@ type PageProps = {
 const siteUrl = "https://ascinfo.dev"
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
-  const talks = await talkRepository.getAll()
-  return talks.map((talk) => ({ slug: talk.slug }))
+  const allTalks = await talks.getAll.execute()
+  return allTalks.map((talk) => ({ slug: talk.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const talk = await talkRepository.getBySlug(slug)
+  const talk = await talks.getBySlug.execute(slug)
 
   if (!talk) {
     return {
@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function TalkDetailPage({ params }: PageProps): Promise<React.ReactElement> {
   const { slug } = await params
-  const talk = await talkRepository.getBySlug(slug)
+  const talk = await talks.getBySlug.execute(slug)
 
   if (!talk) {
     notFound()

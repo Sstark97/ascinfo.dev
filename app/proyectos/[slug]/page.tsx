@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
 import { ProjectDetailTemplate } from "@/components/templates/project-detail-template"
-import { projectRepository, mdxComponents } from "@/src/lib/content"
+import { projects, mdxComponents } from "@/src/lib/content"
 import { MDXRemote } from "next-mdx-remote/rsc"
 
 type PageProps = {
@@ -11,13 +11,13 @@ type PageProps = {
 const siteUrl = "https://ascinfo.dev"
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
-  const projects = await projectRepository.getAll()
-  return projects.map((project) => ({ slug: project.slug }))
+  const allProjects = await projects.getAll.execute()
+  return allProjects.map((project) => ({ slug: project.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const project = await projectRepository.getBySlug(slug)
+  const project = await projects.getBySlug.execute(slug)
 
   if (!project) {
     return {
@@ -68,7 +68,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProjectDetailPage({ params }: PageProps): Promise<React.ReactElement> {
   const { slug } = await params
-  const project = await projectRepository.getBySlug(slug)
+  const project = await projects.getBySlug.execute(slug)
 
   if (!project) {
     notFound()

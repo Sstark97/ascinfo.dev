@@ -2,10 +2,10 @@
 
 import { ListingGrid } from "@/components/templates/listing-grid"
 import { ProjectCard } from "@/components/listings/project-card"
-import type { Project } from "@/src/lib/content"
+import type { ProjectDto } from "@/src/lib/content/application/dto/ProjectDto"
 
 type ProyectosListingClientProps = {
-  projects: Project[]
+  projects: ProjectDto[]
   allTags: string[]
 }
 
