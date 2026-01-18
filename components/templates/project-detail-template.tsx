@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowLeft, Github, ExternalLink, Star, GitFork, Calendar, Scale } from "lucide-react"
+import { ChevronRight, Github, ExternalLink, Star, GitFork, Calendar, Scale } from "lucide-react"
 import type { Project } from "@/src/lib/content"
 import type { ReactNode } from "react"
 
@@ -24,15 +24,19 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
 
   return (
     <div className="box-border min-h-screen w-full overflow-x-hidden bg-[#1a1a1a]">
-      {/* Back link */}
-      <div className="mx-auto w-full max-w-6xl px-4 pt-6 sm:px-6 md:px-8">
-        <Link
-          href="/proyectos"
-          className="inline-flex items-center gap-1.5 text-sm text-[#888888] transition-colors hover:text-[#fca311]"
-        >
-          <ArrowLeft className="h-4 w-4 shrink-0" />
-          <span className="truncate">Volver a proyectos</span>
-        </Link>
+      {/* Breadcrumbs */}
+      <div className="mx-auto w-full max-w-6xl px-4 pt-8 sm:px-6 md:px-8">
+        <nav className="flex items-center gap-1 text-sm">
+          <Link href="/" className="text-[#888888] transition-colors hover:text-[#fca311]">
+            Inicio
+          </Link>
+          <ChevronRight className="h-4 w-4 text-[#666666]" />
+          <Link href="/proyectos" className="text-[#888888] transition-colors hover:text-[#fca311]">
+            Proyectos
+          </Link>
+          <ChevronRight className="h-4 w-4 text-[#666666]" />
+          <span className="truncate text-[#f5f5f5]">{title}</span>
+        </nav>
       </div>
 
       {/* Hero Section */}
