@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { talks } from "@/src/lib/content"
 import { CharlasListingClient } from "./charlas-listing-client"
 import { JsonLd } from "@/components/json-ld"
+import { CollectionPageSchemaBuilder } from "@/src/lib/seo"
 
 const siteUrl = "https://ascinfo.dev"
 
@@ -42,20 +43,7 @@ export default async function CharlasPage(): Promise<React.ReactElement> {
     talks.getAllTags.execute(),
   ])
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: "Charlas de Aitor Santana",
-    description:
-      "Charlas y ponencias sobre desarrollo de software, TDD, Clean Code y arquitectura hexagonal.",
-    url: `${siteUrl}/charlas`,
-    author: {
-      "@type": "Person",
-      name: "Aitor Santana Cabrera",
-      url: siteUrl,
-    },
-    inLanguage: "es-ES",
-  }
+  const jsonLd = CollectionPageSchemaBuilder.forTalks()
 
   return (
     <>

@@ -4,6 +4,7 @@ import { talks, mdxComponents } from "@/src/lib/content"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { TalkHeader } from "@/components/detail/talk-header"
 import { JsonLd } from "@/components/json-ld"
+import { EventSchemaBuilder } from "@/src/lib/seo"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -73,50 +74,7 @@ export default async function TalkDetailPage({ params }: PageProps): Promise<Rea
     notFound()
   }
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Event",
-    name: talk.title,
-    description: talk.description ?? "",
-    startDate: talk.date,
-    eventStatus: "https://schema.org/EventScheduled",
-    eventAttendanceMode: talk.location.toLowerCase().includes("online")
-      ? "https://schema.org/OnlineEventAttendanceMode"
-      : "https://schema.org/OfflineEventAttendanceMode",
-    location: {
-      "@type": "Place",
-      name: talk.location,
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: talk.location,
-      },
-    },
-    performer: {
-      "@type": "Person",
-      name: "Aitor Santana Cabrera",
-      url: siteUrl,
-    },
-    organizer: {
-      "@type": "Organization",
-      name: talk.event,
-    },
-    ...(talk.slidesUrl && {
-      workFeatured: {
-        "@type": "PresentationDigitalDocument",
-        name: `${talk.title} - Diapositivas`,
-        url: talk.slidesUrl,
-      },
-    }),
-    ...(talk.videoUrl && {
-      recordedIn: {
-        "@type": "VideoObject",
-        name: `${talk.title} - Video`,
-        url: talk.videoUrl,
-      },
-    }),
-    keywords: talk.tags.join(", "),
-    inLanguage: "es-ES",
-  }
+  const jsonLd = EventSchemaBuilder.build(talk)
 
   return (
     <>

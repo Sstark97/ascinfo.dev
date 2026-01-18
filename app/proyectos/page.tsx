@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { projects } from "@/src/lib/content"
 import { ProyectosListingClient } from "./proyectos-listing-client"
 import { JsonLd } from "@/components/json-ld"
+import { CollectionPageSchemaBuilder } from "@/src/lib/seo"
 
 const siteUrl = "https://ascinfo.dev"
 
@@ -41,19 +42,7 @@ export default async function ProyectosPage(): Promise<React.ReactElement> {
     projects.getAllTags.execute(),
   ])
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: "Proyectos de Aitor Santana",
-    description: "Portfolio de proyectos de software desarrollados por Aitor Santana.",
-    url: `${siteUrl}/proyectos`,
-    author: {
-      "@type": "Person",
-      name: "Aitor Santana Cabrera",
-      url: siteUrl,
-    },
-    inLanguage: "es-ES",
-  }
+  const jsonLd = CollectionPageSchemaBuilder.forProjects()
 
   return (
     <>

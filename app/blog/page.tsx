@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { posts } from "@/src/lib/content"
 import { BlogListingClient } from "./blog-listing-client"
 import { JsonLd } from "@/components/json-ld"
+import { BlogSchemaBuilder } from "@/src/lib/seo"
 
 const siteUrl = "https://ascinfo.dev"
 
@@ -42,20 +43,7 @@ export default async function BlogPage(): Promise<React.ReactElement> {
     posts.getAllTags.execute(),
   ])
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Blog",
-    name: "Blog de Aitor Santana",
-    description:
-      "Artículos sobre desarrollo de software, TDD, Clean Code, arquitectura hexagonal y buenas prácticas de programación.",
-    url: `${siteUrl}/blog`,
-    author: {
-      "@type": "Person",
-      name: "Aitor Santana Cabrera",
-      url: siteUrl,
-    },
-    inLanguage: "es-ES",
-  }
+  const jsonLd = BlogSchemaBuilder.build()
 
   return (
     <>

@@ -5,6 +5,7 @@ import { RecentTalkBlock } from "@/components/bento/recent-talk-block"
 import { NavigationDock } from "@/components/bento/navigation-dock"
 import { JsonLd } from "@/components/json-ld"
 import { posts, projects, talks } from "@/src/lib/content"
+import { PersonSchemaBuilder } from "@/src/lib/seo"
 
 export default async function Home(): Promise<React.ReactElement> {
   const [featuredPost, featuredProject, featuredTalk] = await Promise.all([
@@ -17,20 +18,7 @@ export default async function Home(): Promise<React.ReactElement> {
   const featuredProjectDto = featuredProject?.toDto()
   const featuredTalkDto = featuredTalk?.toDto()
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Aitor Santana Cabrera",
-    url: "https://ascinfo.dev",
-    image: "https://ascinfo.dev/aitor_profile.webp",
-    jobTitle: "Desarrollador de Software",
-    worksFor: {
-      "@type": "Organization",
-      name: "Lean Mind",
-    },
-    sameAs: ["https://twitter.com/aitorsci", "https://bsky.app/profile/aitorsci.bsky.social"],
-    knowsAbout: ["TDD", "Clean Code", "DDD", "Arquitectura Hexagonal", "TypeScript", "React"],
-  }
+  const jsonLd = PersonSchemaBuilder.build()
 
   return (
     <>
