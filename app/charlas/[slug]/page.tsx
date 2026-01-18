@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { talks, mdxComponents } from "@/src/lib/content"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { TalkHeader } from "@/components/detail/talk-header"
+import { JsonLd } from "@/components/json-ld"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -72,25 +73,73 @@ export default async function TalkDetailPage({ params }: PageProps): Promise<Rea
     notFound()
   }
 
-  return (
-    <div className="min-h-screen bg-[#1a1a1a]">
-      <TalkHeader
-        title={talk.title}
-        date={talk.date}
-        location={talk.location}
-        event={talk.event}
-        tags={talk.tags}
-        slidesUrl={talk.slidesUrl}
-        videoUrl={talk.videoUrl}
-      />
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: talk.title,
+    description: talk.description ?? "",
+    startDate: talk.date,
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: talk.location.toLowerCase().includes("online")
+      ? "https://schema.org/OnlineEventAttendanceMode"
+      : "https://schema.org/OfflineEventAttendanceMode",
+    location: {
+      "@type": "Place",
+      name: talk.location,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: talk.location,
+      },
+    },
+    performer: {
+      "@type": "Person",
+      name: "Aitor Santana Cabrera",
+      url: siteUrl,
+    },
+    organizer: {
+      "@type": "Organization",
+      name: talk.event,
+    },
+    ...(talk.slidesUrl && {
+      workFeatured: {
+        "@type": "PresentationDigitalDocument",
+        name: `${talk.title} - Diapositivas`,
+        url: talk.slidesUrl,
+      },
+    }),
+    ...(talk.videoUrl && {
+      recordedIn: {
+        "@type": "VideoObject",
+        name: `${talk.title} - Video`,
+        url: talk.videoUrl,
+      },
+    }),
+    keywords: talk.tags.join(", "),
+    inLanguage: "es-ES",
+  }
 
-      <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 lg:px-8">
-        <article className="mx-auto w-full">
-          <div className="max-w-none text-lg">
-            <MDXRemote source={talk.content} components={mdxComponents} />
-          </div>
-        </article>
+  return (
+    <>
+      <JsonLd data={jsonLd} />
+      <div className="min-h-screen bg-[#1a1a1a]">
+        <TalkHeader
+          title={talk.title}
+          date={talk.date}
+          location={talk.location}
+          event={talk.event}
+          tags={talk.tags}
+          slidesUrl={talk.slidesUrl}
+          videoUrl={talk.videoUrl}
+        />
+
+        <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 lg:px-8">
+          <article className="mx-auto w-full">
+            <div className="max-w-none text-lg">
+              <MDXRemote source={talk.content} components={mdxComponents} />
+            </div>
+          </article>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

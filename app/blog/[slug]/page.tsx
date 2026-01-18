@@ -4,6 +4,7 @@ import { posts as postsUseCases, mdxComponents } from "@/src/lib/content"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { BlogHeader } from "@/components/detail/blog-header"
 import { BlogNavigation } from "@/components/detail/blog-navigation"
+import { JsonLd } from "@/components/json-ld"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -80,24 +81,57 @@ export default async function BlogDetailPage({ params }: PageProps): Promise<Rea
   const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    image: `${siteUrl}/aitor_profile.webp`,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      "@type": "Person",
+      name: "Aitor Santana Cabrera",
+      url: siteUrl,
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Aitor Santana Cabrera",
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/aitor_profile.webp`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/blog/${post.slug}`,
+    },
+    keywords: post.tags.join(", "),
+    articleSection: post.tags[0] ?? "Blog",
+    inLanguage: "es-ES",
+  }
+
   return (
-    <div className="min-h-screen bg-[#1a1a1a]">
-      <BlogHeader
-        title={post.title}
-        date={post.date}
-        readingTime={post.readingTime}
-        tags={post.tags}
-      />
+    <>
+      <JsonLd data={jsonLd} />
+      <div className="min-h-screen bg-[#1a1a1a]">
+        <BlogHeader
+          title={post.title}
+          date={post.date}
+          readingTime={post.readingTime}
+          tags={post.tags}
+        />
 
-      <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 lg:px-8">
-        <article className="mx-auto w-full">
-          <div className="max-w-none text-lg">
-            <MDXRemote source={post.content} components={mdxComponents} />
-          </div>
+        <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 lg:px-8">
+          <article className="mx-auto w-full">
+            <div className="max-w-none text-lg">
+              <MDXRemote source={post.content} components={mdxComponents} />
+            </div>
 
-          <BlogNavigation prevPost={prevPost} nextPost={nextPost} />
-        </article>
+            <BlogNavigation prevPost={prevPost} nextPost={nextPost} />
+          </article>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

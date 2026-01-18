@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { ProjectDetailTemplate } from "@/components/templates/project-detail-template"
 import { projects, mdxComponents } from "@/src/lib/content"
 import { MDXRemote } from "next-mdx-remote/rsc"
+import { JsonLd } from "@/components/json-ld"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -74,9 +75,45 @@ export default async function ProjectDetailPage({ params }: PageProps): Promise<
     notFound()
   }
 
+  const imageUrl = project.heroImage
+    ? project.heroImage.startsWith("http")
+      ? project.heroImage
+      : `${siteUrl}${project.heroImage}`
+    : `${siteUrl}/og-image.png`
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: project.title,
+    description: project.description,
+    url: `${siteUrl}/proyectos/${project.slug}`,
+    image: imageUrl,
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "Web",
+    author: {
+      "@type": "Person",
+      name: "Aitor Santana Cabrera",
+      url: siteUrl,
+    },
+    ...(project.repoUrl && { codeRepository: project.repoUrl }),
+    ...(project.demoUrl && {
+      offers: {
+        "@type": "Offer",
+        url: project.demoUrl,
+        price: "0",
+        priceCurrency: "EUR",
+      },
+    }),
+    keywords: project.tags.join(", "),
+    inLanguage: "es-ES",
+  }
+
   return (
-    <ProjectDetailTemplate project={project}>
-      <MDXRemote source={project.content} components={mdxComponents} />
-    </ProjectDetailTemplate>
+    <>
+      <JsonLd data={jsonLd} />
+      <ProjectDetailTemplate project={project}>
+        <MDXRemote source={project.content} components={mdxComponents} />
+      </ProjectDetailTemplate>
+    </>
   )
 }

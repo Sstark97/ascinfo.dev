@@ -3,6 +3,7 @@ import { LatestArticleBlock } from "@/components/bento/latest-article-block"
 import { FeaturedProjectBlock } from "@/components/bento/featured-project-block"
 import { RecentTalkBlock } from "@/components/bento/recent-talk-block"
 import { NavigationDock } from "@/components/bento/navigation-dock"
+import { JsonLd } from "@/components/json-ld"
 import { posts, projects, talks } from "@/src/lib/content"
 
 export default async function Home(): Promise<React.ReactElement> {
@@ -16,9 +17,26 @@ export default async function Home(): Promise<React.ReactElement> {
   const featuredProjectDto = featuredProject?.toDto()
   const featuredTalkDto = featuredTalk?.toDto()
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Aitor Santana Cabrera",
+    url: "https://ascinfo.dev",
+    image: "https://ascinfo.dev/aitor_profile.webp",
+    jobTitle: "Desarrollador de Software",
+    worksFor: {
+      "@type": "Organization",
+      name: "Lean Mind",
+    },
+    sameAs: ["https://twitter.com/aitorsci", "https://bsky.app/profile/aitorsci.bsky.social"],
+    knowsAbout: ["TDD", "Clean Code", "DDD", "Arquitectura Hexagonal", "TypeScript", "React"],
+  }
+
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#1a1a1a] p-4 md:p-6 lg:p-8">
-      <div className="mx-auto w-full max-w-6xl">
+    <>
+      <JsonLd data={jsonLd} />
+      <main className="flex min-h-screen items-center justify-center bg-[#1a1a1a] p-4 md:p-6 lg:p-8">
+        <div className="mx-auto w-full max-w-6xl">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:grid-rows-[auto_auto_auto]">
           {/* Row 1: Profile (6 cols) + Latest Article (6 cols) */}
           <div className="md:col-span-6">
@@ -58,7 +76,8 @@ export default async function Home(): Promise<React.ReactElement> {
             <NavigationDock />
           </div>
         </div>
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   )
 }
