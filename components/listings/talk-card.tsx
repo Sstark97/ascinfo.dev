@@ -12,23 +12,22 @@ interface TalkCardProps {
   tags: string[]
 }
 
-export function TalkCard({ slug, title, event, date, location, slidesUrl, videoUrl, tags }: TalkCardProps) {
+export function TalkCard({ slug, title, event, date, location, slidesUrl, videoUrl, tags }: TalkCardProps): React.ReactElement {
   return (
-    <Link href={`/charlas/${slug}`}>
-      <article className="group relative overflow-hidden rounded-xl border border-white/5 bg-[#222222] transition-all duration-300 hover:border-[#fca311]/30 hover:shadow-[0_0_30px_rgba(252,163,17,0.05)] cursor-pointer">
+    <article className="group relative overflow-hidden rounded-xl border border-white/5 bg-[#222222] transition-all duration-300 hover:border-[#fca311]/30 hover:shadow-[0_0_30px_rgba(252,163,17,0.05)]">
       {/* Top decorative stripe */}
       <div className="h-1 w-full bg-gradient-to-r from-[#fca311]/0 via-[#fca311]/50 to-[#fca311]/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
       <div className="flex flex-col gap-4 p-5 md:flex-row">
         {/* Date Badge */}
-        <div className="flex shrink-0 flex-col items-center justify-center rounded-lg bg-[#2a2a2a] p-3 md:w-20">
+        <Link href={`/charlas/${slug}`} className="flex shrink-0 flex-col items-center justify-center rounded-lg bg-[#2a2a2a] p-3 md:w-20">
           <span className="text-2xl font-bold text-[#fca311]">{date.split(" ")[0]}</span>
           <span className="font-mono text-xs uppercase text-[#888888]">{date.split(" ")[1]}</span>
           <span className="font-mono text-xs text-[#666666]">{date.split(" ")[2]}</span>
-        </div>
+        </Link>
 
         {/* Content */}
-        <div className="min-w-0 flex-1">
+        <Link href={`/charlas/${slug}`} className="min-w-0 flex-1">
           <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-[#fca311]">
             <Calendar className="h-3 w-3" />
             {event}
@@ -47,7 +46,7 @@ export function TalkCard({ slug, title, event, date, location, slidesUrl, videoU
               </span>
             ))}
           </div>
-        </div>
+        </Link>
 
         {/* Actions */}
         <div className="flex shrink-0 flex-row gap-2 md:flex-col">
@@ -83,6 +82,5 @@ export function TalkCard({ slug, title, event, date, location, slidesUrl, videoU
         ))}
       </div>
     </article>
-    </Link>
   )
 }
