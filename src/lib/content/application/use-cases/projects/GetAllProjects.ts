@@ -1,6 +1,6 @@
 import path from "path"
-import { Project, ProjectFrontmatter } from "../../entities/Project"
-import type { ContentRepository } from "../../repositories/ContentRepository"
+import { Project, ProjectFrontmatter } from "../../../domain/entities/Project"
+import type { ContentRepository } from "../../../domain/repositories/ContentRepository"
 
 const PROJECTS_DIR = path.join(process.cwd(), "src/content/projects")
 

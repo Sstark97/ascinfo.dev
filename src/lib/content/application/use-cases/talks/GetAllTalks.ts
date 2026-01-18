@@ -1,6 +1,6 @@
 import path from "path"
-import { Talk, TalkFrontmatter } from "../../entities/Talk"
-import type { ContentRepository } from "../../repositories/ContentRepository"
+import { Talk, TalkFrontmatter } from "../../../domain/entities/Talk"
+import type { ContentRepository } from "../../../domain/repositories/ContentRepository"
 
 const TALKS_DIR = path.join(process.cwd(), "src/content/talks")
 

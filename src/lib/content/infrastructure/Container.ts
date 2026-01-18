@@ -1,19 +1,19 @@
 import { MDXContentRepository } from "./MDXContentRepository"
 
-import { GetAllPosts } from "../domain/use-cases/posts/GetAllPosts"
-import { GetPostBySlug } from "../domain/use-cases/posts/GetPostBySlug"
-import { GetAllPostTags } from "../domain/use-cases/posts/GetAllPostTags"
-import { GetFeaturedPost } from "../domain/use-cases/posts/GetFeaturedPost"
+import { GetAllPosts } from "../application/use-cases/posts/GetAllPosts"
+import { GetPostBySlug } from "../application/use-cases/posts/GetPostBySlug"
+import { GetAllPostTags } from "../application/use-cases/posts/GetAllPostTags"
+import { GetFeaturedPost } from "../application/use-cases/posts/GetFeaturedPost"
 
-import { GetAllProjects } from "../domain/use-cases/projects/GetAllProjects"
-import { GetProjectBySlug } from "../domain/use-cases/projects/GetProjectBySlug"
-import { GetAllProjectTags } from "../domain/use-cases/projects/GetAllProjectTags"
-import { GetFeaturedProject } from "../domain/use-cases/projects/GetFeaturedProject"
+import { GetAllProjects } from "../application/use-cases/projects/GetAllProjects"
+import { GetProjectBySlug } from "../application/use-cases/projects/GetProjectBySlug"
+import { GetAllProjectTags } from "../application/use-cases/projects/GetAllProjectTags"
+import { GetFeaturedProject } from "../application/use-cases/projects/GetFeaturedProject"
 
-import { GetAllTalks } from "../domain/use-cases/talks/GetAllTalks"
-import { GetTalkBySlug } from "../domain/use-cases/talks/GetTalkBySlug"
-import { GetAllTalkTags } from "../domain/use-cases/talks/GetAllTalkTags"
-import { GetFeaturedTalk } from "../domain/use-cases/talks/GetFeaturedTalk"
+import { GetAllTalks } from "../application/use-cases/talks/GetAllTalks"
+import { GetTalkBySlug } from "../application/use-cases/talks/GetTalkBySlug"
+import { GetAllTalkTags } from "../application/use-cases/talks/GetAllTalkTags"
+import { GetFeaturedTalk } from "../application/use-cases/talks/GetFeaturedTalk"
 
 const contentRepository = new MDXContentRepository()
 

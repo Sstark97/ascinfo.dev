@@ -1,6 +1,6 @@
-import { Project } from "../../entities/Project"
+import { Project } from "../../../domain/entities/Project"
 import { GetAllProjects } from "./GetAllProjects"
-import type { ContentRepository } from "../../repositories/ContentRepository"
+import type { ContentRepository } from "../../../domain/repositories/ContentRepository"
 
 export class GetFeaturedProject {
   private readonly getAllProjects: GetAllProjects

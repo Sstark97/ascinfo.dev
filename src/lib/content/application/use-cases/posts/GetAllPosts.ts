@@ -1,6 +1,6 @@
 import path from "path"
-import { Post, PostFrontmatter } from "../../entities/Post"
-import type { ContentRepository } from "../../repositories/ContentRepository"
+import { Post, PostFrontmatter } from "../../../domain/entities/Post"
+import type { ContentRepository } from "../../../domain/repositories/ContentRepository"
 
 const POSTS_DIR = path.join(process.cwd(), "src/content/posts")
 
