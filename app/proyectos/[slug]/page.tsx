@@ -74,11 +74,9 @@ export default async function ProjectDetailPage({ params }: PageProps): Promise<
     notFound()
   }
 
-  const { content, ...projectData } = project
-
   return (
-    <ProjectDetailTemplate project={projectData}>
-      <MDXRemote source={content} components={mdxComponents} />
+    <ProjectDetailTemplate project={project}>
+      <MDXRemote source={project.content} components={mdxComponents} />
     </ProjectDetailTemplate>
   )
 }
