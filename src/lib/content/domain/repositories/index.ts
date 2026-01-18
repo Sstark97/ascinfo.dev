@@ -1,3 +1,1 @@
-export type { PostRepository } from "./PostRepository"
-export type { ProjectRepository } from "./ProjectRepository"
-export type { TalkRepository } from "./TalkRepository"
+export type { ContentRepository, RawContent } from "./ContentRepository"
