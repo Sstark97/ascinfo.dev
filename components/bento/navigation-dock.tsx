@@ -53,9 +53,9 @@ export function NavigationDock() {
           <Link
             key={item.href}
             href={item.href}
-            className="group flex flex-col items-center gap-1.5 rounded-lg px-3 py-2 transition-all duration-200 hover:bg-[#FCA311]/10 md:px-4 md:py-3"
+            className="group flex flex-col items-center gap-1.5 rounded-lg px-3 py-2 transition-all duration-200 hover:bg-[#FCA311]/10 focus-visible:bg-[#FCA311]/10 focus-visible:outline-2 focus-visible:outline-[#FCA311] md:px-4 md:py-3"
           >
-            <item.icon className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-[#FCA311]" />
+            <item.icon aria-hidden="true" className="h-5 w-5 text-muted-foreground transition-colors group-hover:text-[#FCA311]" />
             <span className="text-xs font-medium text-muted-foreground transition-colors group-hover:text-[#FCA311]">
               {item.label}
             </span>
@@ -77,9 +77,9 @@ export function NavigationDock() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={social.label}
-              className="group rounded-lg p-2 transition-all duration-200 hover:bg-[#FCA311]/10"
+              className="group rounded-lg p-3 transition-all duration-200 hover:bg-[#FCA311]/10 focus-visible:bg-[#FCA311]/10 focus-visible:outline-2 focus-visible:outline-[#FCA311]"
             >
-              <div className="h-5 w-5 text-[#888888] transition-colors group-hover:text-[#FCA311]">
+              <div className="h-5 w-5 text-[#999999] transition-colors group-hover:text-[#FCA311]">
                 <IconComponent />
               </div>
             </a>

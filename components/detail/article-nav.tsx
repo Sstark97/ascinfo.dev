@@ -19,11 +19,11 @@ export function ArticleNav({ prev, next, basePath }: ArticleNavProps) {
       {prev ? (
         <Link
           href={`${basePath}/${prev.slug}`}
-          className="group flex items-center gap-3 rounded-xl border border-white/5 bg-[#222222] p-4 transition-all duration-300 hover:border-[#fca311]/30"
+          className="group flex items-center gap-3 rounded-xl border border-white/5 bg-[#222222] p-4 transition-all duration-300 hover:border-[#fca311]/30 focus-visible:border-[#fca311]/30 focus-visible:outline-2 focus-visible:outline-[#fca311]"
         >
-          <ArrowLeft className="h-5 w-5 text-[#888888] transition-all duration-200 group-hover:-translate-x-1 group-hover:text-[#fca311]" />
+          <ArrowLeft aria-hidden="true" className="h-5 w-5 text-[#999999] transition-all duration-200 group-hover:-translate-x-1 group-hover:text-[#fca311]" />
           <div>
-            <p className="text-xs text-[#888888]">Anterior</p>
+            <p className="text-xs text-[#999999]">Anterior</p>
             <p className="text-sm font-medium text-[#f5f5f5] transition-colors duration-200 group-hover:text-[#fca311]">
               {prev.title}
             </p>
@@ -36,15 +36,15 @@ export function ArticleNav({ prev, next, basePath }: ArticleNavProps) {
       {next && (
         <Link
           href={`${basePath}/${next.slug}`}
-          className="group flex items-center justify-end gap-3 rounded-xl border border-white/5 bg-[#222222] p-4 text-right transition-all duration-300 hover:border-[#fca311]/30"
+          className="group flex items-center justify-end gap-3 rounded-xl border border-white/5 bg-[#222222] p-4 text-right transition-all duration-300 hover:border-[#fca311]/30 focus-visible:border-[#fca311]/30 focus-visible:outline-2 focus-visible:outline-[#fca311]"
         >
           <div>
-            <p className="text-xs text-[#888888]">Siguiente</p>
+            <p className="text-xs text-[#999999]">Siguiente</p>
             <p className="text-sm font-medium text-[#f5f5f5] transition-colors duration-200 group-hover:text-[#fca311]">
               {next.title}
             </p>
           </div>
-          <ArrowRight className="h-5 w-5 text-[#888888] transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#fca311]" />
+          <ArrowRight aria-hidden="true" className="h-5 w-5 text-[#999999] transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#fca311]" />
         </Link>
       )}
     </nav>

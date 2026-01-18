@@ -12,14 +12,14 @@ type LatestArticleBlockProps = {
 
 export function LatestArticleBlock({ slug, title, excerpt, tag }: LatestArticleBlockProps): React.ReactElement {
   return (
-    <Link href={`/blog/${slug}`} className="group block h-full">
+    <Link href={`/blog/${slug}`} className="group block h-full focus-visible:outline-2 focus-visible:outline-[#FCA311] focus-visible:outline-offset-2 focus-visible:rounded-xl">
       <article className="flex h-full min-h-[280px] flex-col rounded-xl border border-white/5 bg-[#222222] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#FCA311]/50 hover:shadow-lg hover:shadow-[#FCA311]/5">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground/60">Último artículo</span>
+            <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Último artículo</span>
           </div>
-          <ArrowUpRight className="h-5 w-5 text-muted-foreground/40 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#FCA311]" />
+          <ArrowUpRight aria-hidden="true" className="h-5 w-5 text-muted-foreground/40 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#FCA311]" />
         </div>
 
         {/* Content */}
@@ -43,7 +43,7 @@ export function LatestArticleBlock({ slug, title, excerpt, tag }: LatestArticleB
         {/* Footer CTA */}
         <div className="mt-4 flex items-center gap-2 pt-4 border-t border-white/5">
           <span className="text-sm font-medium text-[#FCA311] transition-colors">Leer artículo</span>
-          <ArrowUpRight className="h-4 w-4 text-[#FCA311] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          <ArrowUpRight aria-hidden="true" className="h-4 w-4 text-[#FCA311] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </div>
       </article>
     </Link>
