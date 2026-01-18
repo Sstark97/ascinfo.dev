@@ -25,6 +25,15 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@/content/domain/*": [
+        "./src/lib/content/domain/*"
+      ],
+      "@/content/application/*": [
+        "./src/lib/content/application/*"
+      ],
+      "@/content/infrastructure/*": [
+        "./src/lib/content/infrastructure/*"
       ]
     }
   },

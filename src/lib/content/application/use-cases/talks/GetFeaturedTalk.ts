@@ -1,6 +1,6 @@
-import { Talk } from "../../../domain/entities/Talk"
+import { Talk } from "@/content/domain/entities/Talk"
 import { GetAllTalks } from "./GetAllTalks"
-import type { ContentRepository } from "../../../domain/repositories/ContentRepository"
+import type { ContentRepository } from "@/content/domain/repositories/ContentRepository"
 
 export class GetFeaturedTalk {
   private readonly getAllTalks: GetAllTalks

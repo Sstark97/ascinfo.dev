@@ -1,7 +1,7 @@
 import fs from "fs/promises"
 import path from "path"
 import matter from "gray-matter"
-import type { ContentRepository, RawContent } from "../domain/repositories/ContentRepository"
+import type { ContentRepository, RawContent } from "@/content/domain/repositories/ContentRepository"
 
 export class MDXContentRepository implements ContentRepository {
   async readAll<F>(directory: string): Promise<RawContent<F>[]> {

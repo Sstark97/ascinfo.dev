@@ -1,4 +1,4 @@
-import type { PostDto } from "../../application/dto/PostDto"
+import type { PostDto } from "@/content/application/dto/PostDto"
 
 export type PostFrontmatter = {
   title: string

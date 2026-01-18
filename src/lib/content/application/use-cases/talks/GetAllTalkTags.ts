@@ -1,5 +1,5 @@
 import { GetAllTalks } from "./GetAllTalks"
-import type { ContentRepository } from "../../../domain/repositories/ContentRepository"
+import type { ContentRepository } from "@/content/domain/repositories/ContentRepository"
 
 export class GetAllTalkTags {
   private readonly getAllTalks: GetAllTalks

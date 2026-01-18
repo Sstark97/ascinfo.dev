@@ -1,4 +1,4 @@
-import type { TalkDto } from "../../application/dto/TalkDto"
+import type { TalkDto } from "@/content/application/dto/TalkDto"
 
 export type TalkFrontmatter = {
   title: string

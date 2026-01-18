@@ -1,5 +1,5 @@
 import { GetAllPosts } from "./GetAllPosts"
-import type { ContentRepository } from "../../../domain/repositories/ContentRepository"
+import type { ContentRepository } from "@/content/domain/repositories/ContentRepository"
 
 export class GetAllPostTags {
   private readonly getAllPosts: GetAllPosts

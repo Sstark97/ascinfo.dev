@@ -1,4 +1,4 @@
-import type { ProjectDto } from "../../application/dto/ProjectDto"
+import type { ProjectDto } from "@/content/application/dto/ProjectDto"
 
 export type ProjectStatus = "active" | "maintenance" | "archived"
 
