@@ -28,10 +28,10 @@ export function Callout({ type, title, children }: CalloutProps) {
   return (
     <div className={`my-6 rounded-r-lg border-l-4 ${borderColor} ${bgColor} p-4`}>
       <div className="flex gap-3">
-        <Icon className={`h-5 w-5 shrink-0 ${iconColor}`} />
+        <Icon aria-hidden="true" className={`h-5 w-5 shrink-0 ${iconColor}`} />
         <div>
           {title && <p className="mb-1 font-semibold text-[#f5f5f5]">{title}</p>}
-          <div className="text-sm leading-relaxed text-[#888888]">{children}</div>
+          <div className="text-sm leading-relaxed text-[#999999]">{children}</div>
         </div>
       </div>
     </div>

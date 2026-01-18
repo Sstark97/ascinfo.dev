@@ -48,22 +48,23 @@ export function CodeBlock({ code, language = "typescript", filename }: CodeBlock
             <div className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
             <div className="h-3 w-3 rounded-full bg-[#27c93f]" />
           </div>
-          {filename && <span className="font-mono text-xs text-[#666666]">{filename}</span>}
+          {filename && <span className="font-mono text-xs text-[#999999]">{filename}</span>}
         </div>
         <div className="flex items-center gap-2">
-          <span className="font-mono text-xs uppercase text-[#666666]">{language}</span>
+          <span className="font-mono text-xs uppercase text-[#999999]">{language}</span>
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-[#888888] opacity-0 transition-all duration-200 hover:bg-white/5 hover:text-[#f5f5f5] group-hover:opacity-100"
+            className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-[#999999] opacity-0 transition-all duration-200 hover:bg-white/5 hover:text-[#f5f5f5] group-hover:opacity-100"
+            aria-label="Copiar código al portapapeles"
           >
             {copied ? (
               <>
-                <Check className="h-3 w-3 text-green-500" />
+                <Check aria-hidden="true" className="h-3 w-3 text-green-500" />
                 Copiado
               </>
             ) : (
               <>
-                <Copy className="h-3 w-3" />
+                <Copy aria-hidden="true" className="h-3 w-3" />
                 Copiar
               </>
             )}

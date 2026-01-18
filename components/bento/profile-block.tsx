@@ -36,9 +36,9 @@ export function ProfileBlock() {
       </div>
 
       {/* Home anchor indicator */}
-      <div className="mt-4 flex items-center gap-2">
+      <div aria-hidden="true" className="mt-4 flex items-center gap-2">
         <div className="h-1.5 w-1.5 rounded-full bg-[#FCA311]" />
-        <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground/60">Home</span>
+        <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Home</span>
       </div>
     </div>
   )

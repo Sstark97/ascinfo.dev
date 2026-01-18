@@ -22,26 +22,26 @@ export function TalkCard({ slug, title, event, date, location, slidesUrl, videoU
         {/* Date Badge */}
         <Link href={`/charlas/${slug}`} className="flex shrink-0 flex-col items-center justify-center rounded-lg bg-[#2a2a2a] p-3 md:w-20">
           <span className="text-2xl font-bold text-[#fca311]">{date.split(" ")[0]}</span>
-          <span className="font-mono text-xs uppercase text-[#888888]">{date.split(" ")[1]}</span>
-          <span className="font-mono text-xs text-[#666666]">{date.split(" ")[2]}</span>
+          <span className="font-mono text-xs uppercase text-[#999999]">{date.split(" ")[1]}</span>
+          <span className="font-mono text-xs text-[#999999]">{date.split(" ")[2]}</span>
         </Link>
 
         {/* Content */}
         <Link href={`/charlas/${slug}`} className="min-w-0 flex-1">
           <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-[#fca311]">
-            <Calendar className="h-3 w-3" />
+            <Calendar aria-hidden="true" className="h-3 w-3" />
             {event}
           </p>
           <h3 className="mt-1.5 text-lg font-semibold text-[#f5f5f5]">{title}</h3>
-          <p className="mt-1 flex items-center gap-1 text-xs text-[#888888]">
-            <MapPin className="h-3 w-3" />
+          <p className="mt-1 flex items-center gap-1 text-xs text-[#999999]">
+            <MapPin aria-hidden="true" className="h-3 w-3" />
             {location}
           </p>
 
           {/* Tags */}
           <div className="mt-3 flex flex-wrap gap-1.5">
             {tags.map((tag) => (
-              <span key={tag} className="rounded bg-[#2a2a2a] px-2 py-0.5 font-mono text-xs text-[#666666]">
+              <span key={tag} className="rounded bg-[#2a2a2a] px-2 py-0.5 font-mono text-xs text-[#999999]">
                 {tag}
               </span>
             ))}
@@ -55,9 +55,9 @@ export function TalkCard({ slug, title, event, date, location, slidesUrl, videoU
               href={slidesUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-1.5 text-xs text-[#888888] transition-all duration-200 hover:border-[#fca311]/50 hover:text-[#fca311]"
+              className="flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-1.5 text-xs text-[#999999] transition-all duration-200 hover:border-[#fca311]/50 hover:text-[#fca311]"
             >
-              <ExternalLink className="h-3 w-3" />
+              <ExternalLink aria-hidden="true" className="h-3 w-3" />
               Slides
             </a>
           )}
@@ -68,7 +68,7 @@ export function TalkCard({ slug, title, event, date, location, slidesUrl, videoU
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 rounded-lg border border-[#fca311]/50 bg-[#fca311]/10 px-3 py-1.5 text-xs text-[#fca311] transition-all duration-200 hover:bg-[#fca311]/20"
             >
-              <PlayCircle className="h-3 w-3" />
+              <PlayCircle aria-hidden="true" className="h-3 w-3" />
               Video
             </a>
           )}
@@ -76,7 +76,7 @@ export function TalkCard({ slug, title, event, date, location, slidesUrl, videoU
       </div>
 
       {/* Bottom ticket perforation effect */}
-      <div className="flex justify-between px-2">
+      <div aria-hidden="true" className="flex justify-between px-2">
         {Array.from({ length: 20 }).map((_, i) => (
           <div key={i} className="h-2 w-2 rounded-full bg-[#1a1a1a]" />
         ))}
