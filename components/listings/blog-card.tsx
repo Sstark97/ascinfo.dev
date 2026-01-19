@@ -22,9 +22,9 @@ export function BlogCard({ slug, title, excerpt, date, readingTime, tags }: Blog
 
         {/* Content Column */}
         <div className="min-w-0 flex-1">
-          <h3 className="text-lg font-semibold text-[#f5f5f5] transition-colors duration-200 group-hover:text-[#fca311]">
+          <h2 className="text-lg font-semibold text-[#f5f5f5] transition-colors duration-200 group-hover:text-[#fca311]">
             {title}
-          </h3>
+          </h2>
           <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-[#999999]">{excerpt}</p>
         </div>
 

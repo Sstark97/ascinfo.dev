@@ -73,7 +73,7 @@ export function ListingGrid<T>({
         onSearchChange={setSearchQuery}
       />
 
-      <main className="mx-auto max-w-6xl px-4 py-8 md:px-6">
+      <main id="main-content" className="mx-auto max-w-6xl px-4 py-8 md:px-6">
         <div className={gridClassName}>
           {filteredItems.length > 0 ? (
             filteredItems.map((item, index) => <div key={index}>{renderItem(item)}</div>)

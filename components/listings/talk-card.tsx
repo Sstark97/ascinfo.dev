@@ -32,7 +32,7 @@ export function TalkCard({ slug, title, event, date, location, slidesUrl, videoU
             <Calendar aria-hidden="true" className="h-3 w-3" />
             {event}
           </p>
-          <h3 className="mt-1.5 text-lg font-semibold text-[#f5f5f5]">{title}</h3>
+          <h2 className="mt-1.5 text-lg font-semibold text-[#f5f5f5]">{title}</h2>
           <p className="mt-1 flex items-center gap-1 text-xs text-[#999999]">
             <MapPin aria-hidden="true" className="h-3 w-3" />
             {location}

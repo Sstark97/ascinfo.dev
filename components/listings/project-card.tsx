@@ -66,9 +66,9 @@ export function ProjectCard({
             <Github aria-hidden="true" className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="font-semibold text-[#f5f5f5] transition-colors duration-300 group-hover:text-[#fca311]">
+            <h2 className="font-semibold text-[#f5f5f5] transition-colors duration-300 group-hover:text-[#fca311]">
               {title}
-            </h3>
+            </h2>
             {(stars !== undefined || forks !== undefined) && (
               <div className="mt-0.5 flex items-center gap-3 text-xs text-[#999999]">
                 {stars !== undefined && (
