@@ -86,6 +86,7 @@ export default async function TalkDetailPage({ params }: PageProps): Promise<Rea
           location={talk.location}
           event={talk.event}
           tags={talk.tags}
+          plainTextContent={talk.plainTextContent}
           slidesUrl={talk.slidesUrl}
           videoUrl={talk.videoUrl}
         />

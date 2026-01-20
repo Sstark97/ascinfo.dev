@@ -1,4 +1,5 @@
 import type { PostDto } from "@/content/application/dto/PostDto"
+import { PlainTextContent } from "../value-objects/PlainTextContent"
 
 export type PostFrontmatter = {
   title: string
@@ -18,6 +19,7 @@ export class Post {
     public readonly readingTime: string,
     public readonly tags: string[],
     public readonly content: string,
+    private readonly plainText: PlainTextContent,
     public readonly featured?: boolean
   ) {}
 
@@ -30,8 +32,13 @@ export class Post {
       frontmatter.readingTime,
       frontmatter.tags,
       content,
+      PlainTextContent.fromMarkdown(content),
       frontmatter.featured
     )
+  }
+
+  get plainTextContent(): string {
+    return this.plainText.toString()
   }
 
   toDto(): PostDto {
@@ -43,6 +50,7 @@ export class Post {
       readingTime: this.readingTime,
       tags: this.tags,
       content: this.content,
+      plainTextContent: this.plainText.toString(),
       featured: this.featured,
     }
   }

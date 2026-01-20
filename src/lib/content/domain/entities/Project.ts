@@ -1,4 +1,5 @@
 import type { ProjectDto } from "@/content/application/dto/ProjectDto"
+import { PlainTextContent } from "../value-objects/PlainTextContent"
 
 export type ProjectStatus = "active" | "maintenance" | "archived"
 
@@ -26,6 +27,7 @@ export class Project {
     public readonly repoUrl: string,
     public readonly status: ProjectStatus,
     public readonly content: string,
+    private readonly plainText: PlainTextContent,
     public readonly heroImage?: string,
     public readonly demoUrl?: string,
     public readonly featured?: boolean,
@@ -44,6 +46,7 @@ export class Project {
       frontmatter.repoUrl,
       frontmatter.status,
       content,
+      PlainTextContent.fromMarkdown(content),
       frontmatter.heroImage,
       frontmatter.demoUrl,
       frontmatter.featured,
@@ -54,6 +57,10 @@ export class Project {
     )
   }
 
+  get plainTextContent(): string {
+    return this.plainText.toString()
+  }
+
   toDto(): ProjectDto {
     return {
       slug: this.slug,
@@ -62,6 +69,7 @@ export class Project {
       status: this.status,
       tags: this.tags,
       content: this.content,
+      plainTextContent: this.plainText.toString(),
       featured: this.featured,
       repoUrl: this.repoUrl,
       demoUrl: this.demoUrl,

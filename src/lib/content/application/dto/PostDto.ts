@@ -7,4 +7,5 @@ export type PostDto = {
   tags: string[]
   featured?: boolean
   content: string
+  plainTextContent: string
 }

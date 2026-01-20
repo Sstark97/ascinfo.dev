@@ -7,6 +7,7 @@ export type ProjectDto = {
   status: ProjectStatus
   tags: string[]
   content: string
+  plainTextContent: string
   featured?: boolean
   repoUrl: string
   demoUrl?: string

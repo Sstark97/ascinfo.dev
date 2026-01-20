@@ -1,14 +1,16 @@
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
+import { TextToSpeechButton } from "./text-to-speech-button"
 
 interface BlogHeaderProps {
   title: string
   date: string
   readingTime: string
   tags: string[]
+  plainTextContent: string
 }
 
-export function BlogHeader({ title, date, readingTime, tags }: BlogHeaderProps) {
+export function BlogHeader({ title, date, readingTime, tags, plainTextContent }: BlogHeaderProps) {
   return (
     <header className="border-b border-white/5">
       <div className="mx-auto max-w-6xl px-4 py-8 md:px-6">
@@ -42,6 +44,11 @@ export function BlogHeader({ title, date, readingTime, tags }: BlogHeaderProps) 
               {tag}
             </span>
           ))}
+        </div>
+
+        {/* TTS Button */}
+        <div className="mt-6">
+          <TextToSpeechButton text={plainTextContent} />
         </div>
       </div>
     </header>

@@ -1,4 +1,5 @@
 import type { TalkDto } from "@/content/application/dto/TalkDto"
+import { PlainTextContent } from "../value-objects/PlainTextContent"
 
 export type TalkFrontmatter = {
   title: string
@@ -21,6 +22,7 @@ export class Talk {
     public readonly location: string,
     public readonly tags: string[],
     public readonly content: string,
+    private readonly plainText: PlainTextContent,
     public readonly slidesUrl?: string,
     public readonly videoUrl?: string,
     public readonly featured?: boolean,
@@ -36,11 +38,16 @@ export class Talk {
       frontmatter.location,
       frontmatter.tags,
       content,
+      PlainTextContent.fromMarkdown(content),
       frontmatter.slidesUrl,
       frontmatter.videoUrl,
       frontmatter.featured,
       frontmatter.description
     )
+  }
+
+  get plainTextContent(): string {
+    return this.plainText.toString()
   }
 
   toDto(): TalkDto {
@@ -53,6 +60,7 @@ export class Talk {
       location: this.location,
       tags: this.tags,
       content: this.content,
+      plainTextContent: this.plainText.toString(),
       featured: this.featured,
       slidesUrl: this.slidesUrl,
       videoUrl: this.videoUrl,

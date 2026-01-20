@@ -93,6 +93,7 @@ export default async function BlogDetailPage({ params }: PageProps): Promise<Rea
           date={post.date}
           readingTime={post.readingTime}
           tags={post.tags}
+          plainTextContent={post.plainTextContent}
         />
 
         <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 lg:px-8">

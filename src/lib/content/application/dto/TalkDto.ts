@@ -7,6 +7,7 @@ export type TalkDto = {
   location: string
   tags: string[]
   content: string
+  plainTextContent: string
   featured?: boolean
   slidesUrl?: string
   videoUrl?: string

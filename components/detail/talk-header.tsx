@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { ChevronRight, Calendar, MapPin, Presentation, Video } from "lucide-react"
+import { TextToSpeechButton } from "./text-to-speech-button"
 
 interface TalkHeaderProps {
   title: string
@@ -7,11 +8,12 @@ interface TalkHeaderProps {
   location: string
   event: string
   tags: string[]
+  plainTextContent: string
   slidesUrl?: string
   videoUrl?: string
 }
 
-export function TalkHeader({ title, date, location, event, tags, slidesUrl, videoUrl }: TalkHeaderProps) {
+export function TalkHeader({ title, date, location, event, tags, plainTextContent, slidesUrl, videoUrl }: TalkHeaderProps) {
   return (
     <header className="border-b border-white/5">
       <div className="mx-auto max-w-6xl px-4 py-8 md:px-6">
@@ -87,6 +89,11 @@ export function TalkHeader({ title, date, location, event, tags, slidesUrl, vide
             )}
           </div>
         )}
+
+        {/* TTS Button */}
+        <div className="mt-6">
+          <TextToSpeechButton text={plainTextContent} />
+        </div>
       </div>
     </header>
   )
