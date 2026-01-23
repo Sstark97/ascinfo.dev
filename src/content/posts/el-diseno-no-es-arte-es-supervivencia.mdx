@@ -1,0 +1,153 @@
+---
+title: "El diseño no es arte, es supervivencia: Practical Object Oriented Design (I-II)"
+excerpt: "Conclusiones clave de los dos primeros capítulos de 'Practical Object-Oriented Design in Ruby' de Sandi Metz, aplicadas a C#."
+date: "2026-01-23"
+readingTime: "6 min"
+tags: ["Arquitectura", "Practical Object Oriented Design", "Clean Code"]
+featured: true
+---
+
+# El diseño no es arte, es supervivencia: Practical Object Oriented Design (I-II)
+
+Si llevas un tiempo en esto del desarrollo, seguro que conoces esa sensación: abres un proyecto, te piden un cambio "sencillo" y, de repente, te das cuenta de que para tocar una línea tienes que entender todo el sistema.
+
+Eso es lo que pasa cuando el diseño falla.
+
+Hace poco empecé a estudiar a fondo **"Practical Object-Oriented Design in Ruby" (POODR)** de Sandi Metz. Aunque el libro usa Ruby, sus lecciones sobre arquitectura trascienden el lenguaje. Son verdades universales sobre cómo gestionar dependencias.
+
+En este post quiero destilar los aprendizajes de los dos primeros capítulos y traducir esos conceptos (y sus ejemplos de bicicletas) a **C#**.
+
+---
+
+## 1. El diseño es el arte de gestionar el cambio
+
+Sandi Metz empieza con una verdad incómoda: **Si tu aplicación no tuviera que cambiar nunca, el diseño daría igual.**
+
+Podrías escribir todo en un solo archivo `Program.cs` de 5000 líneas y, si compila y funciona, estaría "bien". El problema es que **el cambio es inevitable**.
+
+El diseño es, por tanto, un recorrido por un camino ramificado. No se trata de seguir reglas fijas, sino de tomar decisiones hoy que no te cierren puertas mañana.
+
+* **Mal diseño:** Los cambios pequeños provocan efectos secundarios en cascada.
+* **Buen diseño:** Preserva la variabilidad. Puedes cambiar de opinión sin reescribir la app.
+
+## 2. ¿Tu código es TRUE?
+
+Definir "código limpio" es subjetivo. Metz nos da un acrónimo concreto para evaluar si una clase es realmente fácil de cambiar: **TRUE**.
+
+* **T (Transparent):** Las consecuencias de un cambio deben ser evidentes en el código local y en el remoto.
+* **R (Reasonable):** El coste del cambio es proporcional al beneficio.
+* **U (Usable):** El código debe poder reutilizarse en contextos nuevos e inesperados.
+* **E (Exemplary):** El código anima a quienes lo toquen después a perpetuar estas cualidades.
+
+---
+
+## 3. El Principio de Responsabilidad Única (SRP)
+
+La base de un sistema mantenible es que cada clase haga la menor tarea útil posible.
+
+Miremos esta clase `Gear` (Engranaje). Su responsabilidad es calcular el ratio entre el plato y el piñón.
+
+```csharp
+public class Gear
+{
+    public int Chainring { get; }
+    public int Cog { get; }
+
+    public Gear(int chainring, int cog)
+    {
+        Chainring = chainring;
+        Cog = cog;
+    }
+
+    public double Ratio()
+    {
+        return (double)Chainring / Cog; 
+    }
+}
+```
+
+¿Cómo sabemos si cumple SRP? Sandi sugiere interrogar a la clase:
+
+🧑‍💻 "Oye Gear, ¿cuál es tu ratio?" -> ✅ Tiene sentido.
+
+🧑‍💻 "Oye Gear, ¿cuál es el tamaño de tu neumático?" -> ❌ Suena raro.
+
+Si la clase tuviera métodos sobre neumáticos o llantas, estaríamos violando la cohesión. Una clase con múltiples responsabilidades es difícil de reutilizar porque, si solo quieres una parte (el ratio), te obligas a cargar con el resto (las ruedas), aumentando el riesgo de fallos.
+
+---
+
+## 4. El peligro de las estructuras de datos complejas
+Aquí es donde más fallamos en el día a día. A menudo pasamos datos "crudos" (arrays, listas de listas, JSONs parseados) por toda la aplicación. Esto crea una dependencia brutal de la estructura de esos datos.
+
+Imagina que recibimos una lista de datos de ruedas, donde la posición 0 es la llanta y la 1 es el neumático.
+
+### ❌ El enfoque acoplado (Obscuring References)
+
+```csharp
+public class ObscuringReferences
+{
+    private readonly List<int[]> _data;
+
+    public ObscuringReferences(List<int[]> data)
+    {
+        _data = data;
+    }
+
+    public List<int> Diameters()
+    {
+        // ⚠️ PELIGRO: El 0 es la llanta, el 1 es el neumático.
+        // Si la estructura del array cambia, esto se rompe.
+        // El código "sabe" demasiado sobre la estructura interna.
+        return _data.Select(cell => cell[0] + (cell[1] * 2)).ToList();
+    }
+}
+```
+
+Este código es frágil. Si el proveedor de datos cambia el orden del array, tenemos que buscar cada lugar donde hayamos escrito cell[0] y arreglarlo. Además, leer cell[1] no nos dice nada sobre qué representa ese dato.
+
+### ✅ El enfoque revelador (Revealing References)
+La solución es separar la estructura del significado. Convertimos esa lista cruda en objetos con nombre (usando un record de C#, por ejemplo) en cuanto entran en nuestra clase.
+
+```csharp
+public class RevealingReferences
+{
+    public List<Wheel> Wheels { get; }
+
+    public RevealingReferences(List<int[]> data)
+    {
+        // Convertimos los datos crudos en objetos con significado al inicio
+        Wheels = Wheelify(data);
+    }
+
+    public List<int> Diameters()
+    {
+        // Ahora el código habla el lenguaje del dominio
+        return Wheels.Select(wheel => wheel.Rim + (wheel.Tire * 2)).ToList();
+    }
+
+    private List<Wheel> Wheelify(List<int[]> data)
+    {
+        return data.Select(cell => new Wheel(cell[0], cell[1])).ToList();
+    }
+    
+    // Un simple record nos da semántica y protección
+    private record Wheel(int Rim, int Tire);
+}
+```
+
+Ahora, si la estructura del array cambia, solo tenemos un punto de fallo: el método `Wheelify`. El resto de la aplicación está protegida y es mucho más legible.
+
+---
+
+## Conclusión: Diseña para el futuro, codifica para el presente
+La lección más importante de estos primeros capítulos es sobre cuándo tomar decisiones.
+
+A menudo sentimos la presión de crear la arquitectura perfecta desde el día uno. Pero el diseño prematuro es tan dañino como la falta de diseño.
+
+Si el coste de arreglarlo en el futuro es el mismo que hacerlo ahora, pospón la decisión.
+
+Usa principios como SRP y TRUE para escribir código que sea tolerante al cambio, no código que intente adivinar el futuro.
+
+El camino hacia un software mantenible empieza por reconocer que las aplicaciones no son estáticas. Son conversaciones vivas entre objetos.
+
+![el-diseno-no-es-arte-es-supervivencia.webp](/images/blog/el-diseno-no-es-arte-es-supervivencia.webp)
