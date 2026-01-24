@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { FileText, Mic2, FolderKanban } from "lucide-react"
+import { FileText, Mic2, FolderKanban, User } from "lucide-react"
 
 const GitHubIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -35,6 +35,7 @@ const NAV_ITEMS = [
   { href: "/blog", icon: FileText, label: "Blog" },
   { href: "/charlas", icon: Mic2, label: "Charlas" },
   { href: "/proyectos", icon: FolderKanban, label: "Proyectos" },
+  { href: "/sobre-mi", icon: User, label: "Sobre mí" },
 ] as const
 
 const SOCIAL_LINKS = [

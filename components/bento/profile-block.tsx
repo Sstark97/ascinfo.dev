@@ -19,19 +19,24 @@ export function ProfileBlock() {
       </div>
 
       {/* Bio */}
-      <div className="mt-6 flex-1">
+      <div className="mt-6 flex-1 space-y-3">
         <p className="text-base leading-relaxed text-muted-foreground">
-          Amante del{" "}
-          <span className="rounded bg-[#FCA311]/10 px-1.5 py-0.5 font-medium text-[#FCA311]">Código limpio</span>,{" "}
-          <span className="rounded bg-[#FCA311]/10 px-1.5 py-0.5 font-medium text-[#FCA311]">TDD</span>, y{" "}
-          <span className="rounded bg-[#FCA311]/10 px-1.5 py-0.5 font-medium text-[#FCA311]">
-            Arquitecturas escalables
-          </span>
-          .
+          Hola, soy Aitor Santana. Como{" "}
+          <span className="font-semibold text-gray-100">Desarrollador de Software</span>{" "}
+          y{" "}
+          <span className="font-semibold text-gray-100">Software Crafter</span>, ayudo
+          a equipos a construir código sostenible.
         </p>
         <p className="text-base leading-relaxed text-muted-foreground">
-          Aplicando estas prácticas en {" "}
-          <a className="rounded bg-[#FCA311]/10 px-1.5 py-0.5 font-medium text-[#FCA311]" href="https://leanmind.es/es">LeanMind</a>,{" "}
+          Mi especialidad está en la intersección entre el{" "}
+          <span className="font-semibold text-gray-100">Clean Code</span>, la{" "}
+          <span className="font-semibold text-gray-100">Arquitectura Hexagonal</span>{" "}
+          y la nueva ola de{" "}
+          <span className="font-semibold text-[#FCA311]">IA Generativa</span>.
+        </p>
+        <p className="text-base leading-relaxed text-muted-foreground">
+          Escribo, doy charlas y desarrollo software de calidad desde{" "}
+          <span className="font-semibold text-gray-100">Canarias</span> para el mundo.
         </p>
       </div>
 

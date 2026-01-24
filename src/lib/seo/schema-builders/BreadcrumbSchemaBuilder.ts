@@ -42,4 +42,11 @@ export class BreadcrumbSchemaBuilder {
       { name: title }
     ])
   }
+
+  static forAboutPage() {
+    return this.build([
+      { name: "Inicio", item: SITE_URL },
+      { name: "Sobre mí" }
+    ])
+  }
 }
