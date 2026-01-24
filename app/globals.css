@@ -133,6 +133,43 @@
     clip: auto;
     white-space: normal;
   }
+
+  /* Custom scrollbar styles matching the site theme */
+  .scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .scrollbar-custom:hover {
+    scrollbar-color: #525252 transparent;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 4px 0;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 9999px;
+    transition: background 0.2s ease;
+  }
+
+  .scrollbar-custom:hover::-webkit-scrollbar-thumb {
+    background: #525252;
+    border-right: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background: #fca311;
+    border-right: 2px solid transparent;
+    background-clip: padding-box;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

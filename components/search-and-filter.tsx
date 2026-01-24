@@ -209,32 +209,43 @@ export function SearchAndFilter({
       {/* Collapsible Tag List */}
       <div
         id="filter-tags"
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          isFilterOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        className={`rounded-lg border border-white/5 bg-[#222222] transition-all duration-300 ease-in-out ${
+          isFilterOpen
+            ? "max-h-[60vh] opacity-100"
+            : "max-h-0 opacity-0 overflow-hidden border-transparent"
         }`}
       >
-        <div className="flex flex-wrap gap-2 rounded-lg border border-white/5 bg-[#222222] p-4">
-          {canonicalTags.length > 0 ? (
-            canonicalTags.map((tag) => {
-              const isSelected = selectedTags.includes(tag)
-              return (
-                <button
-                  key={tag}
-                  onClick={() => handleTagToggle(tag)}
-                  className={`rounded-full px-3 py-1 font-mono text-xs transition-all duration-200 ${
-                    isSelected
-                      ? "bg-[#fca311] text-[#1a1a1a] ring-2 ring-[#fca311]/30"
-                      : "border border-white/10 bg-[#2a2a2a] text-[#888888] hover:border-[#fca311]/50 hover:bg-[#2a2a2a]/80 hover:text-[#f5f5f5]"
-                  }`}
-                  aria-pressed={isSelected}
-                >
-                  {tag}
-                </button>
-              )
-            })
-          ) : (
-            <p className="text-sm text-[#888888]">No hay tags disponibles</p>
-          )}
+        <div
+          className={`scrollbar-custom flex flex-wrap gap-2 p-4 pr-3 ${
+            isFilterOpen ? "overflow-y-auto overscroll-contain" : "overflow-hidden"
+          }`}
+          style={{
+            maxHeight: isFilterOpen ? "60vh" : "0",
+          }}
+        >
+          <div className="flex flex-wrap gap-2 w-full">
+            {canonicalTags.length > 0 ? (
+              canonicalTags.map((tag) => {
+                const isSelected = selectedTags.includes(tag)
+                return (
+                  <button
+                    key={tag}
+                    onClick={() => handleTagToggle(tag)}
+                    className={`rounded-full px-3 py-1 font-mono text-xs transition-all duration-200 ${
+                      isSelected
+                        ? "bg-[#fca311] text-[#1a1a1a] ring-2 ring-[#fca311]/30"
+                        : "border border-white/10 bg-[#2a2a2a] text-[#888888] hover:border-[#fca311]/50 hover:bg-[#2a2a2a]/80 hover:text-[#f5f5f5]"
+                    }`}
+                    aria-pressed={isSelected}
+                  >
+                    {tag}
+                  </button>
+                )
+              })
+            ) : (
+              <p className="text-sm text-[#888888]">No hay tags disponibles</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
