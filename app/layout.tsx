@@ -2,6 +2,8 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { JsonLd } from "@/components/json-ld"
+import { WebSiteSchemaBuilder } from "@/src/lib/seo/schema-builders/WebSiteSchemaBuilder"
 import "./globals.css"
 
 const _inter = Inter({ subsets: ["latin"] })
@@ -11,21 +13,26 @@ const defaultImage = `${siteUrl}/aitor_profile.webp`
 
 export const metadata: Metadata = {
   title: {
-    default: "Aitor Santana | Desarrollador de Software",
+    default: "Aitor Santana | Software Crafter & TDD",
     template: "%s | Aitor Santana",
   },
   description:
     "Soy Aitor Santana, Desarrollador de Software apasionado por escribir código limpio y sostenible, aplicando TDD y buenas prácticas como patrones de diseño y arquitecturas limpias. En Lean Mind, colaboro con un equipo que me impulsa a crecer profesionalmente.",
   keywords: [
-    "aitor santana cabrera",
-    "aitor santana",
+    "Aitor Santana",
+    "Aitor Santana Cabrera",
     "ascinfo",
     "ascinfo.dev",
     "TDD",
+    "Test-Driven Development",
+    "Software Crafter",
     "Clean Code",
     "Código Limpio",
+    "IA",
+    "Inteligencia Artificial",
     "DDD",
     "Arquitectura Hexagonal",
+    "Clean Architecture",
     "Lean Mind",
   ],
   authors: [{ name: "Aitor Santana Cabrera", url: siteUrl }],
@@ -39,7 +46,7 @@ export const metadata: Metadata = {
     locale: "es_ES",
     url: siteUrl,
     siteName: "ascinfo.dev",
-    title: "Aitor Santana | Desarrollador de Software",
+    title: "Aitor Santana | Software Crafter & TDD",
     description:
       "Soy Aitor Santana, Desarrollador de Software apasionado por escribir código limpio y sostenible, aplicando TDD y buenas prácticas como patrones de diseño y arquitecturas limpias.",
     images: [
@@ -55,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@aitorsci",
     creator: "@aitorsci",
-    title: "Aitor Santana | Desarrollador de Software",
+    title: "Aitor Santana | Software Crafter & TDD",
     description:
       "Soy Aitor Santana, Desarrollador de Software apasionado por escribir código limpio y sostenible, aplicando TDD y buenas prácticas.",
     images: [defaultImage],
@@ -88,6 +95,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="font-sans antialiased">
+        <JsonLd data={WebSiteSchemaBuilder.build()} />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-[#FCA311] focus:px-4 focus:py-2 focus:text-[#1a1a1a] focus:font-medium focus:outline-none focus:ring-2 focus:ring-[#FCA311] focus:ring-offset-2 focus:ring-offset-[#1a1a1a]"

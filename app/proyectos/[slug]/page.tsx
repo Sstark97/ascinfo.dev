@@ -5,6 +5,7 @@ import { projects, mdxComponents } from "@/src/lib/content"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { JsonLd } from "@/components/json-ld"
 import { SoftwareApplicationSchemaBuilder } from "@/src/lib/seo"
+import { BreadcrumbSchemaBuilder } from "@/src/lib/seo/schema-builders/BreadcrumbSchemaBuilder"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -77,10 +78,12 @@ export default async function ProjectDetailPage({ params }: PageProps): Promise<
   }
 
   const jsonLd = SoftwareApplicationSchemaBuilder.build(project)
+  const breadcrumbSchema = BreadcrumbSchemaBuilder.forProject(project.title)
 
   return (
     <>
       <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumbSchema} />
       <ProjectDetailTemplate project={project}>
         <MDXRemote source={project.content} components={mdxComponents} />
       </ProjectDetailTemplate>

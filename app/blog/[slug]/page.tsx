@@ -6,6 +6,7 @@ import { BlogHeader } from "@/components/detail/blog-header"
 import { BlogNavigation } from "@/components/detail/blog-navigation"
 import { JsonLd } from "@/components/json-ld"
 import { BlogPostingSchemaBuilder } from "@/src/lib/seo"
+import { BreadcrumbSchemaBuilder } from "@/src/lib/seo/schema-builders/BreadcrumbSchemaBuilder"
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -83,10 +84,12 @@ export default async function BlogDetailPage({ params }: PageProps): Promise<Rea
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null
 
   const jsonLd = BlogPostingSchemaBuilder.build(post)
+  const breadcrumbSchema = BreadcrumbSchemaBuilder.forBlogPost(post.title, post.slug)
 
   return (
     <>
       <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumbSchema} />
       <div className="min-h-screen bg-[#1a1a1a]">
         <BlogHeader
           title={post.title}

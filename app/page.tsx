@@ -6,6 +6,7 @@ import { NavigationDock } from "@/components/bento/navigation-dock"
 import { JsonLd } from "@/components/json-ld"
 import { posts, projects, talks } from "@/src/lib/content"
 import { PersonSchemaBuilder } from "@/src/lib/seo"
+import { ProfilePageSchemaBuilder } from "@/src/lib/seo/schema-builders/ProfilePageSchemaBuilder"
 
 export default async function Home(): Promise<React.ReactElement> {
   const [featuredPost, featuredProject, featuredTalk] = await Promise.all([
@@ -18,11 +19,13 @@ export default async function Home(): Promise<React.ReactElement> {
   const featuredProjectDto = featuredProject?.toDto()
   const featuredTalkDto = featuredTalk?.toDto()
 
-  const jsonLd = PersonSchemaBuilder.build()
+  const personSchema = PersonSchemaBuilder.build()
+  const profilePageSchema = ProfilePageSchemaBuilder.build()
 
   return (
     <>
-      <JsonLd data={jsonLd} />
+      <JsonLd data={personSchema} />
+      <JsonLd data={profilePageSchema} />
       <main id="main-content" className="flex min-h-screen items-center justify-center bg-[#1a1a1a] p-4 md:p-6 lg:p-8">
         <div className="mx-auto w-full max-w-6xl">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:grid-rows-[auto_auto_auto]">
