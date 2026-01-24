@@ -9,15 +9,22 @@ import { PersonSchemaBuilder } from "@/src/lib/seo"
 import { ProfilePageSchemaBuilder } from "@/src/lib/seo/schema-builders/ProfilePageSchemaBuilder"
 
 export default async function Home(): Promise<React.ReactElement> {
-  const [featuredPost, featuredProject, featuredTalk] = await Promise.all([
+  const [featuredPost, featuredProject, featuredTalk, allPosts] = await Promise.all([
     posts.getFeatured.execute(),
     projects.getFeatured.execute(),
     talks.getFeatured.execute(),
+    posts.getAll.execute(),
   ])
 
   const featuredPostDto = featuredPost?.toDto()
   const featuredProjectDto = featuredProject?.toDto()
   const featuredTalkDto = featuredTalk?.toDto()
+
+  // Get recent posts (excluding featured one)
+  const recentPosts = allPosts
+    .filter((post) => post.slug !== featuredPost?.slug)
+    .slice(0, 2)
+    .map((post) => post.toDto())
 
   const personSchema = PersonSchemaBuilder.build()
   const profilePageSchema = ProfilePageSchemaBuilder.build()
@@ -30,16 +37,17 @@ export default async function Home(): Promise<React.ReactElement> {
         <div className="mx-auto w-full max-w-6xl">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:grid-rows-[auto_auto_auto]">
           {/* Row 1: Profile (6 cols) + Latest Article (6 cols) */}
-          <div className="md:col-span-6">
+          <div className="md:col-span-6 flex">
             <ProfileBlock />
           </div>
-          <div className="md:col-span-6">
+          <div className="md:col-span-6 flex">
             {featuredPostDto && (
               <LatestArticleBlock
                 slug={featuredPostDto.slug}
                 title={featuredPostDto.title}
                 excerpt={featuredPostDto.excerpt}
-                tag={featuredPostDto.tags[0] ?? "Blog"}
+                tags={featuredPostDto.tags}
+                recentPosts={recentPosts}
               />
             )}
           </div>
