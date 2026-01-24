@@ -32,9 +32,15 @@ export function CareerTimeline() {
                 <p className="mt-1 text-sm font-medium text-[#FCA311]">
                   {position.role}
                 </p>
-                <p className="mt-1 font-mono text-xs uppercase tracking-wider text-muted-foreground">
-                  {position.dateRange}
-                </p>
+                <div className="mt-1 flex flex-wrap items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                  <span>{position.dateRange}</span>
+                  {position.location && (
+                    <>
+                      <span className="h-1 w-1 rounded-full bg-muted-foreground" />
+                      <span>{position.location}</span>
+                    </>
+                  )}
+                </div>
               </div>
               {position.isActive && (
                 <span className="flex items-center gap-1.5 rounded-full bg-[#FCA311]/10 px-3 py-1.5 font-mono text-xs font-medium text-[#FCA311]">

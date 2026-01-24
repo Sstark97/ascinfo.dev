@@ -10,6 +10,7 @@ export interface CareerPosition {
   company: string;
   role: string;
   dateRange: string;
+  location?: string;
   isActive: boolean;
   stack?: string[];
   description: string;
@@ -22,6 +23,7 @@ export const careerData: CareerPosition[] = [
     company: "Lean Mind",
     role: "Software Developer",
     dateRange: "Mar 2023 - Actualidad",
+    location: "Canarias, Remoto",
     isActive: true,
     description: "Consultoría especializada en desarrollo de software, aportando valor mediante prácticas de Extreme Programming (XP), TDD y arquitecturas evolutivas en equipos de alto rendimiento.",
     isPrimary: true,
@@ -61,6 +63,7 @@ export const careerData: CareerPosition[] = [
     company: "NEWE",
     role: "Frontend Lead",
     dateRange: "Nov 2021 - Abr 2022",
+    location: "Valencia, Remoto",
     isActive: false,
     stack: ["React", "TypeScript", "Redux", "Material UI"],
     description: "Liderazgo técnico en una startup de Economía Circular y Retail Tech. Desarrollo de una plataforma SaaS B2B para la gestión de logística inversa y modelos de pago por uso (Renting) en e-commerce.",
