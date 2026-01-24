@@ -148,8 +148,13 @@ describe("ListingGrid", () => {
       />
     )
 
-    const reactTag = screen.getByRole("button", { name: /^react$/i })
-    const testingTag = screen.getByRole("button", { name: /testing/i })
+    // Open filter panel
+    const filterButton = screen.getByRole("button", { name: /Tags/i })
+    await user.click(filterButton)
+
+    // Select "react" and "testing" tags
+    const reactTag = screen.getByRole("button", { name: "react", pressed: false })
+    const testingTag = screen.getByRole("button", { name: "testing", pressed: false })
 
     await user.click(reactTag)
     await user.click(testingTag)

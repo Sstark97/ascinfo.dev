@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo, type ReactNode } from "react"
-import { ListingHeader } from "@/components/listings/listing-header"
+import { SearchAndFilter } from "@/components/search-and-filter"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 
@@ -35,10 +35,6 @@ export function ListingGrid<T>({
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedTags, setSelectedTags] = useState<string[]>([])
 
-  const handleTagToggle = (tag: string) => {
-    setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
-  }
-
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
       const matchesSearch =
@@ -63,15 +59,24 @@ export function ListingGrid<T>({
         </Link>
       </div>
 
-      <ListingHeader
-        title={title}
-        subtitle={subtitle}
-        tags={allTags}
-        selectedTags={selectedTags}
-        onTagToggle={handleTagToggle}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-      />
+      {/* Header Section */}
+      <header className="sticky top-0 z-10 border-b border-white/5 bg-[#1a1a1a]/95 backdrop-blur-md">
+        <div className="mx-auto max-w-6xl px-4 py-6 md:px-6">
+          <div className="mb-4">
+            <h1 className="text-2xl font-bold text-[#f5f5f5] md:text-3xl">{title}</h1>
+            {subtitle && <p className="mt-1 text-sm text-[#888888]">{subtitle}</p>}
+          </div>
+
+          {/* Search and Filter Component */}
+          <SearchAndFilter
+            tags={allTags}
+            onSearch={setSearchQuery}
+            onTagSelect={setSelectedTags}
+            selectedTags={selectedTags}
+            searchQuery={searchQuery}
+          />
+        </div>
+      </header>
 
       <main id="main-content" className="mx-auto max-w-6xl px-4 py-8 md:px-6">
         <div className={gridClassName}>

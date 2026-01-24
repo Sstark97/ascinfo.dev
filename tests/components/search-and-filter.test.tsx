@@ -1,0 +1,267 @@
+import { describe, it, expect, vi } from "vitest"
+import { render, screen, fireEvent } from "@testing-library/react"
+import { SearchAndFilter } from "@/components/search-and-filter"
+
+describe("SearchAndFilter", () => {
+  const mockTags = ["Arquitectura", "TDD", "React", "TypeScript"]
+  const mockOnSearch = vi.fn()
+  const mockOnTagSelect = vi.fn()
+
+  it("should render search input", () => {
+    render(
+      <SearchAndFilter
+        tags={mockTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={[]}
+      />
+    )
+
+    expect(screen.getByPlaceholderText("Buscar...")).toBeInTheDocument()
+  })
+
+  it("should render filter button", () => {
+    render(
+      <SearchAndFilter
+        tags={mockTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={[]}
+      />
+    )
+
+    expect(screen.getByRole("button", { name: /Filtrar/i })).toBeInTheDocument()
+  })
+
+  it("should call onSearch when typing in search input", () => {
+    render(
+      <SearchAndFilter
+        tags={mockTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={[]}
+      />
+    )
+
+    const input = screen.getByPlaceholderText("Buscar...")
+    fireEvent.change(input, { target: { value: "arquitectura" } })
+
+    expect(mockOnSearch).toHaveBeenCalledWith("arquitectura")
+  })
+
+  it("should toggle filter panel when clicking filter button", () => {
+    render(
+      <SearchAndFilter
+        tags={mockTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={[]}
+      />
+    )
+
+    const filterButton = screen.getByRole("button", { name: /Filtrar/i })
+    const tagContainer = document.querySelector("#filter-tags")
+
+    // Initially collapsed
+    expect(tagContainer).toHaveClass("max-h-0")
+
+    // Click to expand
+    fireEvent.click(filterButton)
+    expect(tagContainer).toHaveClass("max-h-96")
+
+    // Click to collapse
+    fireEvent.click(filterButton)
+    expect(tagContainer).toHaveClass("max-h-0")
+  })
+
+  it("should show active filter state when tag is selected", () => {
+    render(
+      <SearchAndFilter
+        tags={mockTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={["Arquitectura"]}
+      />
+    )
+
+    // Filter button should show "Filtrado" text with count
+    expect(screen.getByText(/Filtrado \(1\)/i)).toBeInTheDocument()
+
+    // Active filter badge should be visible
+    expect(screen.getByText("Filtro activo:")).toBeInTheDocument()
+    expect(screen.getByLabelText("Quitar filtro: Arquitectura")).toBeInTheDocument()
+  })
+
+  it("should call onTagSelect when clicking a tag", () => {
+    render(
+      <SearchAndFilter
+        tags={mockTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={[]}
+      />
+    )
+
+    // Open filter panel
+    const filterButton = screen.getByRole("button", { name: /Filtrar/i })
+    fireEvent.click(filterButton)
+
+    // Click on a tag
+    const tag = screen.getByRole("button", { name: "TDD" })
+    fireEvent.click(tag)
+
+    expect(mockOnTagSelect).toHaveBeenCalledWith(["TDD"])
+  })
+
+  it("should call onTagSelect with empty array when clicking active tag to deselect", () => {
+    render(
+      <SearchAndFilter
+        tags={mockTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={["TDD"]}
+      />
+    )
+
+    // Open filter panel
+    const filterButton = screen.getByRole("button", { name: /Filtrado/i })
+    fireEvent.click(filterButton)
+
+    // Click on the selected tag to deselect
+    const tag = screen.getByRole("button", { name: "TDD", pressed: true })
+    fireEvent.click(tag)
+
+    expect(mockOnTagSelect).toHaveBeenCalledWith([])
+  })
+
+  it("should normalize duplicate tags (canonicalization)", () => {
+    const duplicateTags = ["Architecture", "Arquitectura", "TDD", "Test-Driven Development"]
+
+    render(
+      <SearchAndFilter
+        tags={duplicateTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={[]}
+      />
+    )
+
+    // Open filter panel
+    const filterButton = screen.getByRole("button", { name: /Filtrar/i })
+    fireEvent.click(filterButton)
+
+    // Should only show canonical tags (no duplicates)
+    const tagButtons = screen.getAllByRole("button", { pressed: false }).filter(
+      (btn) => btn.closest("#filter-tags")
+    )
+
+    // Should have 2 unique tags: "Arquitectura" and "TDD" (duplicates merged)
+    expect(tagButtons).toHaveLength(2)
+  })
+
+  it("should clear search when clicking X button", () => {
+    render(
+      <SearchAndFilter
+        tags={mockTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={[]}
+        searchQuery="test"
+      />
+    )
+
+    const clearButton = screen.getByLabelText("Limpiar búsqueda")
+    fireEvent.click(clearButton)
+
+    expect(mockOnSearch).toHaveBeenCalledWith("")
+  })
+
+  it("should clear filter when clicking X on active badge", () => {
+    render(
+      <SearchAndFilter
+        tags={mockTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={["React"]}
+      />
+    )
+
+    const clearFilterButton = screen.getByLabelText("Quitar filtro: React")
+    fireEvent.click(clearFilterButton)
+
+    expect(mockOnTagSelect).toHaveBeenCalledWith([])
+  })
+
+  it("should render all canonical tags when filter is open", () => {
+    render(
+      <SearchAndFilter
+        tags={mockTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={[]}
+      />
+    )
+
+    // Open filter panel
+    const filterButton = screen.getByRole("button", { name: /Filtrar/i })
+    fireEvent.click(filterButton)
+
+    // All tags should be rendered
+    mockTags.forEach((tag) => {
+      expect(screen.getByRole("button", { name: tag })).toBeInTheDocument()
+    })
+  })
+
+  it("should show empty message when no tags available", () => {
+    render(
+      <SearchAndFilter
+        tags={[]}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={[]}
+      />
+    )
+
+    // Open filter panel
+    const filterButton = screen.getByRole("button", { name: /Filtrar/i })
+    fireEvent.click(filterButton)
+
+    expect(screen.getByText("No hay tags disponibles")).toBeInTheDocument()
+  })
+  it("should show multiple selected tags", () => {
+    render(
+      <SearchAndFilter
+        tags={mockTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={["Arquitectura", "React"]}
+      />
+    )
+
+    // Filter button should show count
+    expect(screen.getByText(/Filtrado \(2\)/i)).toBeInTheDocument()
+
+    // Both badges should be visible
+    expect(screen.getByText("Filtros activos:")).toBeInTheDocument()
+    expect(screen.getByLabelText("Quitar filtro: Arquitectura")).toBeInTheDocument()
+    expect(screen.getByLabelText("Quitar filtro: React")).toBeInTheDocument()
+
+    // "Limpiar todo" button should be visible
+    expect(screen.getByLabelText("Limpiar todos los filtros")).toBeInTheDocument()
+  })
+
+  it("should clear all filters when clicking 'Limpiar todo'", () => {
+    render(
+      <SearchAndFilter
+        tags={mockTags}
+        onSearch={mockOnSearch}
+        onTagSelect={mockOnTagSelect}
+        selectedTags={["Arquitectura", "React", "TDD"]}
+      />
+    )
+
+    const clearAllButton = screen.getByLabelText("Limpiar todos los filtros")
+    fireEvent.click(clearAllButton)
+
+    expect(mockOnTagSelect).toHaveBeenCalledWith([])
+  })})
