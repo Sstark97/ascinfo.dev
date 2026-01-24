@@ -31,7 +31,15 @@ test.describe("Talks Flow", () => {
     // Wait for page to load
     await expect(page.locator("h1")).toContainText("Charlas")
 
-    const tag = page.locator("button").filter({ hasText: /typescript|react|nextjs/i }).first()
+    // Open filter panel by clicking the filter button
+    const filterButton = page.getByRole("button", { name: /Filtrar por tag|Tags/i })
+    await filterButton.click()
+
+    // Wait for filter panel to be visible
+    await page.locator("#filter-tags").waitFor({ state: "visible" })
+
+    // Click a tag inside the filter panel
+    const tag = page.locator("#filter-tags button").filter({ hasText: /typescript|react|nextjs/i }).first()
     if (await tag.isVisible()) {
       await tag.click()
 
