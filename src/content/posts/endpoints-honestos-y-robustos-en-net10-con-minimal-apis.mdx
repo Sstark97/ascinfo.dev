@@ -1,0 +1,366 @@
+---
+title: "Endpoints Honestos y Robustos en .NET 10 con Minimal APIs"
+excerpt: "Explorando cómo .NET 10 y Minimal APIs facilitan la implementación de arquitecturas limpias siguiendo principios de DDD, combinando potencia con simplicidad y código expresivo."
+date: "2026-01-25"
+readingTime: "12 min"
+tags: ["Clean Code", ".NET", "DDD", "Minimal APIs", "Arquitectura"]
+featured: true
+---
+
+En estas semanas he estado explorando .NET 10, con el objetivo de aplicar todo lo que he aprendido sobre arquitectura limpia y DDD en un ecosistema diferente. Llevo tiempo admirando cómo la comunidad .NET ha evolucionado hacia arquitecturas más expresivas y minimalistas, especialmente con la llegada de Minimal APIs.
+
+Para ponerlo en práctica, decidí construir una API de reembolsos corporativos (Expense Reimbursement), centrada inicialmente en la vertical slice de "Submit Expense". Quería implementar una arquitectura limpia siguiendo principios de DDD, y descubrir cómo .NET 10 facilita este tipo de implementaciones.
+
+## Mi Estructura: Vertical Slice Architecture
+
+Decidí organizar el proyecto siguiendo Vertical Slice Architecture, donde cada feature es autocontenida:
+
+```text
+Features/Expenses/
+├── Domain/
+│   ├── Entities/
+│   │   └── Expense.cs
+│   └── Repositories/
+│       └── IExpenseRepository.cs
+├── Application/
+│   └── UseCases/
+│       └── SubmitExpenseUseCase.cs
+└── Infrastructure/
+    ├── Adapters/
+    │   └── InMemoryExpenseAdapter.cs
+    ├── Api/
+    │   └── Endpoints/
+    │       └── SubmitExpenseEndpoint.cs
+    └── ExpenseModule.cs
+```
+
+Lo interesante de esta estructura es que cada feature encapsula toda su funcionalidad: desde el dominio hasta la infraestructura. Esto hace que el código sea más cohesivo y fácil de mantener.
+
+## Modularidad con Métodos de Extensión
+
+Una de las características que más me gusta de .NET es cómo facilita la modularidad. El archivo `ExpenseModule.cs` encapsula toda la configuración de inyección de dependencias de forma muy concisa:
+
+```csharp
+public static class ExpenseModule
+{
+    public static void AddExpensesModule(this IServiceCollection services)
+    {
+        services.AddTransient<SubmitExpenseUseCase>();
+        services.AddTransient<IExpenseRepository, InMemoryExpenseAdapter>();
+    }
+}
+```
+
+Y en el `Program.cs`, el registro es tan simple como:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddExpensesModule(); // ✨ Un solo método
+
+var app = builder.Build();
+
+var expensesGroup = app.MapGroup("/api/expenses").WithTags("Expenses");
+expensesGroup.MapSubmitExpenseEndpoint();
+
+app.Run();
+```
+
+Esta capacidad de crear métodos de extensión hace que la configuración sea declarativa y fácil de leer. Cada módulo se encarga de su propia configuración, manteniendo el `Program.cs` limpio y enfocado.
+
+## Un Dominio Puro: La Estrella del Show
+
+Uno de los principios que más valoro de DDD es mantener el dominio libre de detalles de infraestructura. En .NET esto se logra de forma muy natural:
+
+```csharp
+public class Expense
+{
+    public Guid Id { get; private init; }
+    private ExpenseState state { get; init; }
+    private Guid receiptId { get; init; }
+
+    public ErrorOr<Expense> Submit()
+    {
+        if(state is not ExpenseState.Draft || receiptId == Guid.Empty)
+        {
+            return Error.Validation("Expense.InvalidState", 
+                "El gasto no se encuentra en un estado válido para ser enviado.");
+        }
+        return ChangeTo(ExpenseState.PendingApproval);
+    }
+    
+    public static Expense Draft(Guid seedExpenseId, Guid receiptId)
+    {
+        return new Expense
+        {
+            Id = seedExpenseId,
+            state = ExpenseState.Draft,
+            receiptId = receiptId
+        };
+    }
+    
+    private Expense ChangeTo(ExpenseState newState)
+    {
+        return new Expense
+        {
+            Id = Id,
+            state = newState,
+            receiptId = receiptId
+        };
+    }
+}
+```
+
+**Cero referencias a Entity Framework**. La entidad no sabe nada sobre persistencia, y eso está perfecto.
+
+La entidad:
+- ✅ Valida sus propias invariantes (recibo obligatorio para enviar)
+- ✅ Controla sus transiciones de estado
+- ✅ Encapsula el comportamiento del dominio
+- ✅ Es completamente testeable sin mocks
+
+¿Cómo se mapea a la base de datos? Eso es responsabilidad de infraestructura, usando **Fluent API** de EF Core en archivos de configuración separados. El dominio permanece puro.
+
+## Minimal APIs: Endpoints Expresivos y Directos
+
+Aquí es donde Minimal APIs realmente destaca. La definición de endpoints es declarativa y funcional:
+
+```csharp
+public static void MapSubmitExpenseEndpoint(this IEndpointRouteBuilder app)
+{
+    app.MapPost("{id:guid}/submit", HandleAsync)
+        .WithName("SubmitExpense")
+        .WithSummary("Envía un gasto para su aprobación")
+        .Produces(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound)
+        .Produces(StatusCodes.Status400BadRequest);
+}
+
+private static async Task<IResult> HandleAsync(
+    Guid id, 
+    [FromServices] SubmitExpenseUseCase useCase)
+{
+    var result = await useCase.Execute(id);
+
+    return result.Match(
+        _ => Results.Ok(),
+        errors => Results.Problem(
+            detail: string.Join(", ", from error in errors select error.Description),
+            statusCode: errors.First().Type switch
+            {
+                ErrorType.NotFound => StatusCodes.Status404NotFound,
+                ErrorType.Validation => StatusCodes.Status400BadRequest,
+                _ => StatusCodes.Status500InternalServerError
+            }
+        )
+    );
+}
+```
+
+Me gusta especialmente:
+
+- **Métodos de extensión**: Cada endpoint extiende `IEndpointRouteBuilder`, haciéndolo composable
+- **Inyección directa**: Las dependencias se inyectan en el método con `[FromServices]`, sin necesidad de constructores
+- **Configuración fluida**: `.WithName()`, `.WithSummary()`, `.Produces()` hacen que sea autodocumentado
+- **Sin clases controladoras**: Solo funciones puras que mapean requests a responses
+
+## Manejo de Errores Funcional con ErrorOr
+
+Una de las bibliotecas que más me ha gustado es **ErrorOr**, que trae conceptos de programación funcional para el manejo de errores:
+
+```csharp
+public async Task<ErrorOr<Success>> Execute(Guid expenseId)
+{
+    var expense = await expenseRepository.GetById(expenseId);
+    
+    if (expense.IsEmpty()) 
+        return Error.NotFound("Expense.NotFound", "El gasto no existe.");
+
+    var submitResult = expense.Submit();
+
+    if (submitResult.IsError)
+        return submitResult.Errors;
+
+    await expenseRepository.Save(submitResult.Value);
+    return Result.Success;
+}
+```
+
+**Sin try-catch para control de flujo**. Todo es explícito y tipado:
+
+- El tipo de retorno `ErrorOr<Success>` comunica claramente que esta operación puede fallar
+- Los errores se propagan funcionalmente sin lanzar excepciones
+- El método `.Match()` en el endpoint mapea errores a códigos HTTP de forma declarativa
+
+Esto hace que el código sea:
+- ✅ **Más predecible**: No hay excepciones ocultas
+- ✅ **Más testeable**: Sin necesidad de mockear excepciones
+- ✅ **Más expresivo**: El signature del método documenta los posibles fallos
+
+## Repository Pattern sin Ceremonia
+
+La implementación del patrón Repository es directa y sin boilerplate:
+
+```csharp
+// Interfaz en el dominio
+public interface IExpenseRepository
+{
+    Task<Expense> GetById(Guid expenseId);
+    Task Save(Expense expense);
+}
+
+// Implementación en infraestructura
+public class InMemoryExpenseAdapter : IExpenseRepository
+{
+    private static readonly Guid SeedExpenseId = 
+        Guid.Parse("a52397ad-eb8c-4090-99b1-55cf768530f8");
+    
+    private readonly List<Expense> expenses = 
+    [
+        Expense.Draft(SeedExpenseId, Guid.NewGuid()),
+    ];
+    
+    public Task<Expense> GetById(Guid expenseId)
+    {
+        return Task.FromResult(
+            expenses.FirstOrDefault(e => e.Id == expenseId) ?? Expense.NotFound()
+        );
+    }
+
+    public Task Save(Expense expense)
+    {
+        var index = expenses.FindIndex(e => e.Id == expense.Id);
+        if (index >= 0)
+            expenses[index] = expense;
+        else
+            expenses.Add(expense);
+    
+        return Task.CompletedTask;
+    }
+}
+```
+
+El patrón Repository funciona como un puerto entre el dominio y la infraestructura:
+- El dominio define **qué** necesita (`IExpenseRepository`)
+- La infraestructura implementa **cómo** lo hace (`InMemoryExpenseAdapter`)
+- La inyección de dependencias los conecta (`services.AddTransient<IExpenseRepository, InMemoryExpenseAdapter>()`)
+
+## Testing: Primera Clase Citizen
+
+.NET tiene un soporte excepcional para testing. Los tests de integración son especialmente elegantes:
+
+```csharp
+public class SubmitExpenseEndpointShould : IClassFixture<WebApplicationFactory<Program>>
+{
+    private readonly HttpClient client;
+
+    public SubmitExpenseEndpointShould(WebApplicationFactory<Program> factory)
+    {
+        client = factory.CreateClient();
+    }
+
+    [Fact]
+    public async Task return_ok_when_submitting_valid_expense()
+    {
+        var response = await client.PostAsync(
+            $"/api/expenses/{expenseId}/submit", 
+            null
+        );
+        
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+}
+```
+
+Solo necesitas exponer el `Program` como parcial:
+
+```csharp
+var app = builder.Build();
+app.Run();
+
+public partial class Program { } // ✨ Accesible para tests
+```
+
+Y automáticamente tienes acceso a toda la infraestructura HTTP para tests end-to-end.
+
+Para tests unitarios de dominio, la pureza de las entidades hace que sea trivial:
+
+```csharp
+[Fact]
+public void return_error_when_submitting_draft_without_receipt()
+{
+    var expense = Expense.Draft(Guid.NewGuid(), Guid.Empty);
+
+    var result = expense.Submit();
+
+    Assert.True(result.IsError);
+    Assert.Equal("Expense.InvalidState", result.FirstError.Code);
+}
+```
+
+**Sin infraestructura, sin mocks, sin configuración**. Solo instancias tu entidad y verificas comportamiento.
+
+## Lo Que Me Ha Sorprendido
+
+Después de implementar esta vertical slice, algunas cosas me han llamado la atención:
+
+### 1. Inmutabilidad First-Class
+
+Los records y los `init` accessors hacen que trabajar con inmutabilidad sea natural:
+
+```csharp
+public Guid Id { get; private init; } // Solo se puede setear en construcción
+```
+
+### 2. Pattern Matching Potente
+
+El switch expression es muy expresivo:
+
+```csharp
+statusCode: errors.First().Type switch
+{
+    ErrorType.NotFound => StatusCodes.Status404NotFound,
+    ErrorType.Validation => StatusCodes.Status400BadRequest,
+    _ => StatusCodes.Status500InternalServerError
+}
+```
+
+### 3. Async/Await Consistente
+
+Todo el stack es naturalmente asíncrono, desde los endpoints hasta los repositorios.
+
+### 4. Menos Boilerplate
+
+Comparado con otros frameworks, .NET permite expresar arquitecturas complejas con código sorprendentemente conciso.
+
+## Lo Que Viene
+
+Esta es solo la primera vertical slice de la aplicación. En los próximos artículos exploraré:
+
+- ✨ Persistencia real con EF Core y Fluent API
+- ✨ Implementación de Value Objects (Money, Receipt)
+- ✨ Domain Events para auditoría
+- ✨ Validación de comandos con FluentValidation
+- ✨ Más verticales: Approve/Reject, Attach Receipt
+
+## Conclusión
+
+Minimal APIs en .NET 10 combina potencia con simplicidad. Consigues:
+
+- ✅ Arquitectura limpia sin ceremonias
+- ✅ Dominio puro sin contaminación
+- ✅ Endpoints minimalistas pero robustos
+- ✅ Inyección de dependencias explícita
+- ✅ Testing de primera clase
+- ✅ Manejo de errores funcional
+
+El código completo está en [mi repositorio](https://github.com/Sstark97/ExpenseReimbursementContext) por si quieres explorarlo en profundidad.
+
+**Si te interesa ver cómo implementar una arquitectura similar en Spring Boot**, te recomiendo [mi artículo sobre arquitectura hexagonal en Spring](https://leanmind.es/es/blog/arquitectura-hexagonal-en-spring/), donde explico paso a paso el proceso con Java y Spring.
+
+---
+
+## Fuentes
+
+- [Minimal APIs en .NET](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis)
+- [ErrorOr - Functional Error Handling](https://github.com/amantinband/error-or)
+- [Vertical Slice Architecture - Jimmy Bogard](https://www.jimmybogard.com/vertical-slice-architecture/)
