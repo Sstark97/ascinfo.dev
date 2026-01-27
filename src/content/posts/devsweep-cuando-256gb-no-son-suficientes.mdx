@@ -1,0 +1,284 @@
+---
+title: "DevSweep: Cuando 256GB ya no son suficientes"
+excerpt: "La historia de cómo un MacBook M1 con poco almacenamiento me llevó a crear una herramienta open source para recuperar gigabytes de espacio perdido en caches de desarrollo."
+date: "2026-01-27"
+readingTime: "10 min"
+tags: ["Open Source", "Bash", "Developer Tools", "Clean Code", "Testing"]
+featured: true
+---
+
+Hace unos meses me encontré con un problema que probablemente te suene familiar: mi MacBook M1 con sus 256GB de almacenamiento me estaba gritando "disco lleno" cada dos por tres. Y no estaba descargando películas ni acumulando fotos, simplemente estaba desarrollando.
+
+El culpable silencioso: las cachés de desarrollo.
+
+Docker con sus imágenes fantasma, JetBrains con sus múltiples versiones de IDEs, Homebrew guardando cada versión antigua de cada paquete "por si acaso", npm/yarn/pnpm con sus `node_modules` globales... La lista seguía creciendo, y mi espacio disponible seguía menguando.
+
+Probé las soluciones típicas: DaisyDisk, CleanMyMac, scripts random de Stack Overflow. Algunas funcionaban, otras eran demasiado agresivas, ninguna me daba el control que necesitaba. Así que hice lo que cualquier desarrollador haría cuando está frustrado: **crear mi propia herramienta**.
+
+Así nació [DevSweep](https://github.com/Sstark97/dev_sweep).
+
+## El Problema: La Deuda Oculta del Desarrollo
+
+Cuando desarrollas, acumulas basura. No es tu culpa, es el ecosistema:
+
+- **Docker/OrbStack** guarda cada imagen que has descargado, cada contenedor que has ejecutado, cada volumen que has creado. Resultado: 5-20GB de espacio ocupado.
+- **JetBrains** mantiene versiones antiguas de IntelliJ, WebStorm, PyCharm... cada una con sus propios plugins y cachés. Resultado: 2-5GB por IDE.
+- **Homebrew** conserva cada versión antigua de cada paquete que has instalado. Resultado: 500MB-2GB.
+- **Node.js** con npm, yarn, pnpm... cada uno con su propia caché global. Resultado: 5-15GB.
+- **Maven y Gradle** descargando dependencias que nunca volverás a usar. Resultado: más GBs perdidos.
+
+En mi caso, recuperé **23GB** la primera vez que ejecuté DevSweep. Veintitrés gigabytes de espacio que mi Mac estaba guardando "por si acaso".
+
+## La Solución: Una CLI Honesta
+
+Decidí que DevSweep tenía que cumplir tres principios:
+
+### 1. Seguridad Primero
+
+No quería una herramienta que borrara cosas alegremente. Implementé:
+
+- **Modo dry-run**: Puedes ver exactamente qué se va a borrar antes de confirmar
+- **Confirmaciones explícitas**: Para operaciones destructivas, tienes que decir "sí, estoy seguro"
+- **Preservación inteligente**: Automáticamente mantiene la última versión de cada IDE de JetBrains
+
+```bash
+# Ver qué se borraría sin tocar nada
+devsweep --dry-run --all
+
+# Limpiar con confirmaciones
+devsweep --all
+```
+
+### 2. Modularidad y Testing
+
+El proyecto está estructurado siguiendo principios de código limpio:
+
+```text
+src/
+├── modules/              # Cada módulo es independiente
+│   ├── jetbrains.sh      # Limpieza de IDEs JetBrains
+│   ├── docker.sh         # Docker/OrbStack
+│   ├── homebrew.sh       # Homebrew
+│   └── devtools.sh       # Maven, Gradle, npm, yarn, etc.
+└── utils/
+    ├── config.sh         # Configuración centralizada
+    ├── common.sh         # Funciones compartidas
+    └── menu.sh           # UI interactiva
+```
+
+Cada módulo:
+- Es completamente independiente
+- Tiene su propia suite de tests
+- Sigue el patrón: detectar → validar → limpiar
+
+Y hablando de tests... **101 tests, 123 assertions, 100% passing**. Sí, para un script bash. Usando [bashunit](https://bashunit.typeddevs.com), conseguí aplicar TDD en Bash como si fuera un lenguaje de primera clase.
+
+```bash
+# Ejecutar toda la suite
+make test
+
+# Tests: 101 passed, 101 total
+# Assertions: 123 passed, 123 total
+# Time: ~11 seconds
+```
+
+### 3. Experiencia de Usuario
+
+Podía haber hecho un script de 200 líneas que ejecutas y esperas. Pero quería algo más profesional:
+
+- **Modo interactivo**: Un menú visual para elegir qué limpiar
+- **Output colorizado**: Para saber exactamente qué está pasando
+- **Estimaciones de espacio**: Te dice cuánto vas a recuperar antes de borrar nada
+- **Progreso visual**: Barras de progreso y logs organizados
+
+```bash
+# Modo interactivo - te guía paso a paso
+devsweep
+
+# CLI directa - para automatizar
+devsweep --jetbrains --docker --homebrew
+```
+
+## Aprendizajes: Bash en 2026 No Es Lo Que Pensabas
+
+Trabajar en DevSweep me hizo redescubrir Bash, pero aplicando todo lo que sé de clean code y testing.
+
+### Testing en Bash
+
+Sí, es posible. Bashunit te permite escribir tests como en cualquier lenguaje moderno:
+
+```bash
+function test_jetbrains_cleanup_removes_old_versions() {
+    # Arrange
+    setup_test_environment
+    create_fake_jetbrains_versions "2023.1" "2023.2" "2024.1"
+    
+    # Act
+    cleanup_jetbrains --keep-latest
+    
+    # Assert
+    assert_directory_exists "$JETBRAINS_PATH/2024.1"
+    assert_directory_not_exists "$JETBRAINS_PATH/2023.1"
+    assert_directory_not_exists "$JETBRAINS_PATH/2023.2"
+}
+```
+
+### Modularidad
+
+Separé responsabilidades como en cualquier proyecto:
+
+- **modules/**: Lógica de negocio específica
+- **utils/**: Funciones compartidas
+- **tests/**: Suite de tests unitarios
+
+Cada función tiene una responsabilidad única. Cada módulo es independiente. Cada test valida un comportamiento específico.
+
+### Make Como Orquestador
+
+El `Makefile` se convirtió en el centro de operaciones:
+
+```makefile
+test:           # Ejecutar tests
+lint:           # Validar con shellcheck
+install-local:  # Instalar sin sudo
+publish:        # Workflow completo de release
+```
+
+Incluso automaticé todo el proceso de release:
+
+```bash
+make publish VERSION=1.0.0
+# ✅ Ejecuta tests
+# ✅ Crea tarball
+# ✅ Crea tag de git
+# ✅ Genera fórmula de Homebrew con SHA256
+# ✅ Todo listo para GitHub release
+```
+
+## El Roadmap: Hacia Multiplataforma
+
+Ahora mismo DevSweep funciona en macOS. La arquitectura está preparada para soportar Windows y Linux, solo necesito:
+
+1. **Adaptar rutas**: Cada SO tiene sus propias ubicaciones de caché
+2. **Comandos específicos**: Algunos módulos necesitan comandos diferentes por plataforma
+3. **Testing multiplataforma**: GitHub Actions para validar en cada SO
+
+Y aquí es donde entra la magia del open source.
+
+## Por Qué Necesito Tu Ayuda
+
+Este proyecto empezó porque yo tenía un problema. Pero sé que no soy el único:
+
+- Si tienes un Mac con poco espacio
+- Si trabajas con Docker y ves cómo tu disco desaparece
+- Si tienes 5 versiones de IntelliJ instaladas sin saberlo
+- Si quieres una herramienta que respete tu sistema
+
+**DevSweep es para ti**.
+
+Pero también necesito:
+
+### 🐛 Reportes de Bugs
+
+¿Encontraste un caso edge? ¿Algo se rompió? [Abre un issue](https://github.com/Sstark97/dev_sweep/issues).
+
+### 💡 Ideas de Nuevos Módulos
+
+¿Qué otras herramientas acumulan basura? Podemos agregar módulos para:
+- Rust (cargo cache)
+- Go (go build cache)
+- Python (pip cache, pyc files)
+- Android Studio
+- Xcode (Derived Data)
+
+### 🔧 Contribuciones de Código
+
+
+¿Quieres agregar soporte para Linux? ¿Mejorar la UI? ¿Optimizar algún módulo?
+
+El proyecto tiene:
+- ✅ [Guía de contribución](https://github.com/Sstark97/dev_sweep/blob/main/CONTRIBUTING.md) clara
+- ✅ Tests automatizados
+- ✅ Estructura modular fácil de extender
+- ✅ Makefile con todos los comandos necesarios
+
+### 🌟 Stars en GitHub
+
+Si el proyecto te resulta útil, una ⭐ ayuda a que más gente lo descubra.
+
+## Cómo Empezar
+
+Instalar DevSweep es trivial:
+
+```bash
+# Clona el repo
+git clone https://github.com/Sstark97/dev_sweep.git
+cd dev_sweep
+
+# Instala localmente (sin sudo)
+make install-local
+
+# Ejecuta
+devsweep
+```
+
+O si prefieres instalación global:
+
+```bash
+sudo make install
+devsweep --version
+```
+
+## Primeros Pasos
+
+```bash
+# 1. Modo seguro - solo ver qué se borraría
+devsweep --dry-run --all
+
+# 2. Limpieza interactiva
+devsweep
+
+# 3. Limpiar módulos específicos
+devsweep --jetbrains --docker
+
+# 4. Limpieza completa (con confirmaciones)
+devsweep --all
+```
+
+## Roadmap Público
+
+Las próximas features planeadas:
+
+- [ ] Soporte para Windows
+- [ ] Soporte para Linux
+- [ ] Módulo de Xcode (Derived Data)
+- [ ] Módulo de Rust/Cargo
+- [ ] Módulo de Go
+- [ ] Configuración persistente (qué limpiar siempre)
+- [ ] Scheduled cleanups (cron jobs)
+- [ ] Publicación en Homebrew Core
+
+Puedes ver y votar las features en [GitHub Issues](https://github.com/Sstark97/dev_sweep/issues).
+
+## Conclusión
+
+DevSweep nació de una necesidad personal: recuperar espacio en un Mac con 256GB. Pero se convirtió en algo más:
+
+- Una oportunidad de aplicar **clean code y testing en Bash**
+- Un proyecto **open source** para la comunidad de desarrolladores
+- Una herramienta que prioriza **seguridad y transparencia**
+
+Si alguna vez te has encontrado peleando con "disco lleno" mientras desarrollas, prueba DevSweep. Y si encuentras valor en el proyecto, **contribuye**. Puede ser reportando un bug, sugiriendo una feature, o escribiendo código.
+
+El código está en [GitHub](https://github.com/Sstark97/dev_sweep). La licencia es MIT. La puerta está abierta.
+
+**¿Te animas a ayudar a hacer DevSweep mejor?**
+
+---
+
+## Links
+
+- **[Repositorio](https://github.com/Sstark97/dev_sweep)**
+- **[Issues](https://github.com/Sstark97/dev_sweep/issues)**
+- **[Contributing Guide](https://github.com/Sstark97/dev_sweep/blob/main/CONTRIBUTING.md)**
+- **[Releases](https://github.com/Sstark97/dev_sweep/releases)**

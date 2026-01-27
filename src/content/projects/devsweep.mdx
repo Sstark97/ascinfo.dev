@@ -1,0 +1,156 @@
+---
+title: "DevSweep"
+description: "CLI profesional para limpiar cachés de desarrollo en macOS y recuperar gigabytes de espacio de forma segura."
+tags: ["Bash", "CLI", "Developer Tools", "Testing", "Open Source"]
+repoUrl: "https://github.com/Sstark97/dev_sweep"
+demoUrl: ""
+status: "active"
+featured: true
+---
+
+DevSweep es una herramienta CLI profesional para macOS que ayuda a los desarrolladores a recuperar espacio en disco limpiando cachés de herramientas de desarrollo de forma segura e inteligente.
+
+## El Problema
+
+Cuando desarrollas, acumulas gigabytes de cachés innecesarias:
+- **Docker/OrbStack**: Imágenes y contenedores antiguos (5-20GB)
+- **JetBrains**: Múltiples versiones de IDEs y cachés corruptas (2-5GB por IDE)
+- **Homebrew**: Versiones antiguas de paquetes (500MB-2GB)
+- **Node.js**: Cachés de npm, yarn, pnpm (5-15GB)
+- **Maven/Gradle**: Dependencias no utilizadas
+
+En mi caso, recuperé **23GB** la primera vez que ejecuté DevSweep.
+
+## Características
+
+- **🛡️ Seguridad primero**: Modo dry-run para previsualizar acciones
+- **🎛️ Menú interactivo**: Interfaz guiada para facilitar el uso
+- **🔧 Arquitectura modular**: Código limpio, testeable y extensible
+- **⚠️ Confirmaciones explícitas**: Aprobación manual para operaciones destructivas
+- **📊 Análisis inteligente**: Muestra el espacio que se recuperará
+- **🎨 Output profesional**: Logs organizados con colores y progreso
+- **✅ 100% testeado**: 101 tests, 123 assertions, todos pasando
+- **🚀 Rápido**: Optimizado para completarse en segundos
+
+## Módulos de Limpieza
+
+### JetBrains IDEs
+- Elimina versiones antiguas de IntelliJ, WebStorm, PyCharm, etc.
+- Limpia cachés corruptas automáticamente
+- Preserva inteligentemente la última versión
+
+### Docker/OrbStack
+- Elimina contenedores detenidos
+- Limpia imágenes no utilizadas
+- Remueve volúmenes huérfanos
+
+### Homebrew
+- Limpia cachés de descargas
+- Elimina versiones antiguas de paquetes
+
+### Dev Tools
+- Maven y Gradle (dependencias antiguas)
+- npm, yarn, pnpm (cachés globales)
+- nvm (cachés de descarga)
+- SDKMan (archivos temporales)
+
+### Sistema
+- Logs de usuario y sistema
+- Cachés de aplicaciones
+- Papelera
+
+## Tecnologías
+
+- **Bash 5.0+**: Shell scripting moderno
+- **Bashunit**: Framework de testing profesional para Bash
+- **Make**: Orquestación y automatización
+- **Shellcheck**: Linting de código
+
+## Desarrollo con Testing
+
+Apliqué TDD y principios de código limpio en Bash:
+
+```bash
+function test_jetbrains_cleanup_removes_old_versions() {
+    # Arrange
+    setup_test_environment
+    create_fake_jetbrains_versions "2023.1" "2023.2" "2024.1"
+    
+    # Act
+    cleanup_jetbrains --keep-latest
+    
+    # Assert
+    assert_directory_exists "$JETBRAINS_PATH/2024.1"
+    assert_directory_not_exists "$JETBRAINS_PATH/2023.1"
+}
+```
+
+**Estadísticas de Testing:**
+- 101 tests pasando
+- 123 assertions
+- ~11 segundos de ejecución
+- Cobertura completa de módulos
+
+## Instalación
+
+```bash
+# Clonar repositorio
+git clone https://github.com/Sstark97/dev_sweep.git
+cd dev_sweep
+
+# Instalar localmente (sin sudo)
+make install-local
+
+# Ejecutar
+devsweep --version
+```
+
+## Uso
+
+```bash
+# Modo seguro - previsualizar sin borrar
+devsweep --dry-run --all
+
+# Modo interactivo guiado
+devsweep
+
+# Limpiar módulos específicos
+devsweep --jetbrains --docker
+
+# Limpieza completa con confirmaciones
+devsweep --all
+```
+
+## Roadmap
+
+- [ ] Soporte para Linux
+- [ ] Soporte para Windows
+- [ ] Módulo de Xcode (Derived Data)
+- [ ] Módulo de Rust/Cargo
+- [ ] Módulo de Go
+- [ ] Configuración persistente
+- [ ] Scheduled cleanups (cron jobs)
+- [ ] Publicación en Homebrew Core
+
+## Aprendizajes
+
+Este proyecto me permitió:
+
+1. **Aplicar Clean Code en Bash**: Funciones puras, responsabilidad única, naming descriptivo
+2. **TDD en shell scripting**: Testing profesional con bashunit
+3. **Arquitectura modular**: Cada módulo independiente y testeable
+4. **Automatización completa**: Make para build, test, release y deploy
+5. **Seguridad por diseño**: Validaciones exhaustivas antes de operaciones destructivas
+
+## Impacto
+
+DevSweep está diseñado para ser una herramienta que:
+- Ahorra tiempo a desarrolladores
+- Recupera espacio valioso en disco
+- Respeta el sistema del usuario
+- Sirve como ejemplo de código limpio en Bash
+
+---
+
+**Licencia:** MIT  
+**Estado:** Activo y en desarrollo
