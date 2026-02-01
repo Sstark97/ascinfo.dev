@@ -8,14 +8,20 @@ export interface PersonSchema extends JsonLdSchema {
   "@type": "Person"
   name: string
   url: string
-  image?: string
+  image?: {
+    "@type": "ImageObject"
+    url: string
+    width: number
+    height: number
+  }
   jobTitle?: string
   worksFor?: {
     "@type": "Organization"
     name: string
+    url: string
   }
-  sameAs?: string[]
-  knowsAbout?: string[]
+  sameAs?: readonly string[]
+  knowsAbout?: readonly string[]
 }
 
 export interface BlogSchema extends JsonLdSchema {

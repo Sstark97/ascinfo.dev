@@ -2,12 +2,13 @@
 
 import { Volume2, Pause, Play, VolumeX } from "lucide-react"
 import { useTextToSpeech } from "./use-text-to-speech"
+import type { ReactElement } from "react"
 
 interface TextToSpeechButtonProps {
   text: string
 }
 
-export function TextToSpeechButton({ text }: TextToSpeechButtonProps): JSX.Element {
+export function TextToSpeechButton({ text }: TextToSpeechButtonProps): ReactElement {
   const { status, isSupported, play, pause, resume, stop } = useTextToSpeech(text)
 
   const handleClick = (): void => {
@@ -20,7 +21,7 @@ export function TextToSpeechButton({ text }: TextToSpeechButtonProps): JSX.Eleme
     }
   }
 
-  const getIcon = (): JSX.Element => {
+  const getIcon = (): ReactElement => {
     switch (status) {
       case "playing":
         return <Pause className="h-4 w-4" aria-hidden="true" />
