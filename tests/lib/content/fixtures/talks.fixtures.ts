@@ -1,5 +1,5 @@
-import type { RawContent } from "@/src/lib/content/domain/repositories/ContentRepository"
-import type { TalkFrontmatter } from "@/src/lib/content/domain/entities/Talk"
+import type { RawContent } from "@/content/domain/repositories/ContentRepository"
+import type { TalkFrontmatter } from "@/content/domain/entities/Talk"
 
 export const mockTalkFrontmatter: TalkFrontmatter = {
   title: "Test Talk",

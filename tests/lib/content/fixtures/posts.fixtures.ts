@@ -1,5 +1,5 @@
-import type { RawContent } from "@/src/lib/content/domain/repositories/ContentRepository"
-import type { PostFrontmatter } from "@/src/lib/content/domain/entities/Post"
+import type { RawContent } from "@/content/domain/repositories/ContentRepository"
+import type { PostFrontmatter } from "@/content/domain/entities/Post"
 
 export const mockPostFrontmatter: PostFrontmatter = {
   title: "Test Post",

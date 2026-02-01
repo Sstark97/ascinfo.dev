@@ -286,7 +286,7 @@ describe("ListingGrid", () => {
 
   it("should handle empty items array", () => {
     render(
-      <ListingGrid
+      <ListingGrid<TestItem>
         title="Blog"
         subtitle="Posts"
         items={[]}

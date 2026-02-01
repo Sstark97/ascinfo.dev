@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest"
 import { GetAllTalkTags } from "@/src/lib/content/application/use-cases/talks/GetAllTalkTags"
-import type { ContentRepository } from "@/src/lib/content/domain/repositories/ContentRepository"
+import type { ContentRepository, RawContent } from "@/src/lib/content/domain/repositories/ContentRepository"
+import type { TalkFrontmatter } from "@/src/lib/content/domain/entities/Talk"
 import { mockMultipleTalks } from "@fixtures/talks.fixtures"
 
 describe("GetAllTalkTags", () => {
@@ -16,7 +17,7 @@ describe("GetAllTalkTags", () => {
   })
 
   it("should deduplicate tags", async () => {
-    const duplicateTags = mockMultipleTalks.map((t) => ({
+    const duplicateTags = mockMultipleTalks.map((t: RawContent<TalkFrontmatter>) => ({
       ...t,
       frontmatter: { ...t.frontmatter, tags: ["react", "react", "typescript"] },
     }))

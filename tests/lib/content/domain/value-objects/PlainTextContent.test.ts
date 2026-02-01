@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest"
 import { PlainTextContent } from "@/content/domain/value-objects/PlainTextContent"
 
 describe("PlainTextContent", () => {

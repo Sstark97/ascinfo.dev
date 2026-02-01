@@ -1,5 +1,5 @@
-import type { RawContent } from "@/src/lib/content/domain/repositories/ContentRepository"
-import type { ProjectFrontmatter } from "@/src/lib/content/domain/entities/Project"
+import type { RawContent } from "@/content/domain/repositories/ContentRepository"
+import type { ProjectFrontmatter } from "@/content/domain/entities/Project"
 
 export const mockProjectFrontmatter: ProjectFrontmatter = {
   title: "Test Project",

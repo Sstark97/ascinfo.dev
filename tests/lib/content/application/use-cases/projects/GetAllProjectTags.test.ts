@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest"
 import { GetAllProjectTags } from "@/src/lib/content/application/use-cases/projects/GetAllProjectTags"
-import type { ContentRepository } from "@/src/lib/content/domain/repositories/ContentRepository"
+import type { ContentRepository, RawContent } from "@/src/lib/content/domain/repositories/ContentRepository"
+import type { ProjectFrontmatter } from "@/src/lib/content/domain/entities/Project"
 import { mockMultipleProjects } from "@fixtures/projects.fixtures"
 
 describe("GetAllProjectTags", () => {
@@ -16,7 +17,7 @@ describe("GetAllProjectTags", () => {
   })
 
   it("should deduplicate tags", async () => {
-    const duplicateTags = mockMultipleProjects.map((p) => ({
+    const duplicateTags = mockMultipleProjects.map((p: RawContent<ProjectFrontmatter>) => ({
       ...p,
       frontmatter: { ...p.frontmatter, tags: ["react", "react", "typescript"] },
     }))
