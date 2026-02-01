@@ -68,9 +68,12 @@ test.describe("Talks Flow", () => {
   test("should navigate back to home from talks listing", async ({ page }) => {
     await page.goto("/charlas")
 
-    // Click back link
+    // Click back link and wait for navigation
     const backLink = page.getByRole("link", { name: /volver/i })
-    await backLink.click()
+    await Promise.all([
+      page.waitForURL("/"),
+      backLink.click(),
+    ])
 
     // Verify we're on home page
     await expect(page).toHaveURL("/")
