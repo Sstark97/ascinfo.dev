@@ -1,0 +1,23 @@
+name: Scheduled Deploy
+
+on:
+  # Cron: cada 30 minutos
+  schedule:
+    - cron: '*/30 * * * *'
+
+  # Botón manual desde GitHub Actions
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Razón del deploy manual'
+        required: false
+        default: 'Contenido actualizado en Notion'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel Deploy
+        run: |
+          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
+          echo "Deploy triggered successfully"
