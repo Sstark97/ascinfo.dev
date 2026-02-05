@@ -25,6 +25,18 @@ export class PersonSchemaBuilder {
       },
       sameAs: AUTHOR.socialLinks,
       knowsAbout: AUTHOR.skills,
+      alumniOf: {
+        "@type": "EducationalOrganization",
+        name: "Universidad de Las Palmas de Gran Canaria"
+      },
+      homeLocation: {
+        "@type": "Place",
+        address: {
+          "@type": "PostalAddress",
+          addressRegion: "Canarias",
+          addressCountry: "ES"
+        }
+      },
       mainEntityOfPage: {
         "@type": "WebPage",
         "@id": SITE_URL
