@@ -22,6 +22,18 @@ export interface PersonSchema extends JsonLdSchema {
   }
   sameAs?: readonly string[]
   knowsAbout?: readonly string[]
+  alumniOf?: {
+    "@type": "EducationalOrganization"
+    name: string
+  }
+  homeLocation?: {
+    "@type": "Place"
+    address: {
+      "@type": "PostalAddress"
+      addressRegion: string
+      addressCountry: string
+    }
+  }
 }
 
 export interface BlogSchema extends JsonLdSchema {
