@@ -14,4 +14,7 @@ export type ProjectDto = {
   stars?: number
   forks?: number
   lastCommit?: string
+  // SEO fields
+  metaTitle: string
+  metaDescription: string
 }

@@ -11,4 +11,7 @@ export type TalkDto = {
   featured?: boolean
   slidesUrl?: string
   videoUrl?: string
+  // SEO fields
+  metaTitle: string
+  metaDescription: string
 }

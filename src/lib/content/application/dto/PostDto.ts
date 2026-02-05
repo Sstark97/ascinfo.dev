@@ -8,4 +8,8 @@ export type PostDto = {
   featured?: boolean
   content: string
   plainTextContent: string
+  // SEO fields
+  metaTitle: string
+  metaDescription: string
+  focusKeyword?: string
 }
