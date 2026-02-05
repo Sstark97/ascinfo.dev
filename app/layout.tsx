@@ -13,11 +13,11 @@ const defaultImage = `${siteUrl}/aitor_profile.webp`
 
 export const metadata: Metadata = {
   title: {
-    default: "Aitor Santana | Software Crafter & TDD",
+    default: "Aitor Santana | Software Crafter & Clean Code",
     template: "%s | Aitor Santana",
   },
   description:
-    "Soy Aitor Santana, Desarrollador de Software apasionado por escribir código limpio y sostenible, aplicando TDD y buenas prácticas como patrones de diseño y arquitecturas limpias. En Lean Mind, colaboro con un equipo que me impulsa a crecer profesionalmente.",
+    "Aitor Santana - Software Crafter especializado en TDD, Clean Code y Arquitectura Hexagonal. Blog y charlas sobre desarrollo sostenible.",
   keywords: [
     "Aitor Santana",
     "Aitor Santana Cabrera",
@@ -45,10 +45,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_ES",
     url: siteUrl,
-    siteName: "ascinfo.dev",
-    title: "Aitor Santana | Software Crafter & TDD",
+    siteName: "Aitor Santana - ascinfo.dev",
+    title: "Aitor Santana | Software Crafter & Clean Code",
     description:
-      "Soy Aitor Santana, Desarrollador de Software apasionado por escribir código limpio y sostenible, aplicando TDD y buenas prácticas como patrones de diseño y arquitecturas limpias.",
+      "Aitor Santana - Software Crafter especializado en TDD, Clean Code y Arquitectura Hexagonal. Blog y charlas sobre desarrollo sostenible.",
     images: [
       {
         url: defaultImage,
@@ -62,9 +62,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@aitorsci",
     creator: "@aitorsci",
-    title: "Aitor Santana | Software Crafter & TDD",
+    title: "Aitor Santana | Software Crafter & Clean Code",
     description:
-      "Soy Aitor Santana, Desarrollador de Software apasionado por escribir código limpio y sostenible, aplicando TDD y buenas prácticas.",
+      "Aitor Santana - Software Crafter especializado en TDD, Clean Code y Arquitectura Hexagonal. Blog y charlas sobre desarrollo sostenible.",
     images: [defaultImage],
   },
   icons: {

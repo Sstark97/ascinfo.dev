@@ -30,11 +30,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const talkUrl = `${siteUrl}/charlas/${talk.slug}`
   const imageUrl = `${siteUrl}/aitor_profile.webp`
+  const dto = talk.toDto()
 
   return {
-    title: talk.title,
-    description: talk.description,
-    keywords: talk.tags,
+    title: dto.metaTitle,
+    description: dto.metaDescription,
+    keywords: dto.tags,
     alternates: {
       canonical: talkUrl,
     },
@@ -42,17 +43,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "article",
       locale: "es_ES",
       url: talkUrl,
-      siteName: "ascinfo.dev",
-      title: talk.title,
-      description: talk.description ?? "",
-      publishedTime: talk.date,
-      tags: talk.tags,
+      siteName: "Aitor Santana - ascinfo.dev",
+      title: dto.metaTitle,
+      description: dto.metaDescription,
+      publishedTime: dto.date,
+      tags: dto.tags,
       images: [
         {
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: talk.title,
+          alt: dto.metaTitle,
         },
       ],
     },
@@ -60,8 +61,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: "summary_large_image",
       site: "@aitorsci",
       creator: "@aitorsci",
-      title: talk.title,
-      description: talk.description ?? "",
+      title: dto.metaTitle,
+      description: dto.metaDescription,
       images: [imageUrl],
     },
   }

@@ -34,11 +34,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ? project.heroImage
       : `${siteUrl}${project.heroImage}`
     : `${siteUrl}/og-image.png`
+  const dto = project.toDto()
 
   return {
-    title: project.title,
-    description: project.description,
-    keywords: project.tags,
+    title: dto.metaTitle,
+    description: dto.metaDescription,
+    keywords: dto.tags,
     alternates: {
       canonical: projectUrl,
     },
@@ -46,15 +47,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "website",
       locale: "es_ES",
       url: projectUrl,
-      siteName: "ascinfo.dev",
-      title: project.title,
-      description: project.description,
+      siteName: "Aitor Santana - ascinfo.dev",
+      title: dto.metaTitle,
+      description: dto.metaDescription,
       images: [
         {
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: project.title,
+          alt: dto.metaTitle,
         },
       ],
     },
@@ -62,8 +63,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: "summary_large_image",
       site: "@aitorsci",
       creator: "@aitorsci",
-      title: project.title,
-      description: project.description,
+      title: dto.metaTitle,
+      description: dto.metaDescription,
       images: [imageUrl],
     },
   }

@@ -31,11 +31,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const postUrl = `${siteUrl}/blog/${post.slug}`
   const imageUrl = `${siteUrl}/aitor_profile.webp`
+  const dto = post.toDto()
 
   return {
-    title: post.title,
-    description: post.excerpt,
-    keywords: post.tags,
+    title: dto.metaTitle,
+    description: dto.metaDescription,
+    keywords: dto.focusKeyword
+      ? [dto.focusKeyword, ...dto.tags]
+      : dto.tags,
     alternates: {
       canonical: postUrl,
     },
@@ -43,17 +46,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "article",
       locale: "es_ES",
       url: postUrl,
-      siteName: "ascinfo.dev",
-      title: post.title,
-      description: post.excerpt,
-      publishedTime: post.date,
-      tags: post.tags,
+      siteName: "Aitor Santana - ascinfo.dev",
+      title: dto.metaTitle,
+      description: dto.metaDescription,
+      publishedTime: dto.date,
+      tags: dto.tags,
       images: [
         {
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: post.title,
+          alt: dto.metaTitle,
         },
       ],
     },
@@ -61,8 +64,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: "summary_large_image",
       site: "@aitorsci",
       creator: "@aitorsci",
-      title: post.title,
-      description: post.excerpt,
+      title: dto.metaTitle,
+      description: dto.metaDescription,
       images: [imageUrl],
     },
   }
