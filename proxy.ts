@@ -6,23 +6,23 @@ const CANONICAL_HOST = 'ascinfo.dev'
 export function proxy(request: NextRequest): NextResponse {
   const url = request.nextUrl.clone()
   const hostname = request.headers.get('host') ?? ''
+  let hasRedirect = false
 
   // Redirect www to non-www (301 permanent)
   if (hostname.startsWith('www.')) {
-    const redirectUrl = new URL(request.url)
-    redirectUrl.host = CANONICAL_HOST
-    return NextResponse.redirect(redirectUrl, 301)
+    url.host = CANONICAL_HOST
+    hasRedirect = true
   }
 
-  // Force lowercase URLs
-  if (url.pathname !== url.pathname.toLowerCase()) {
-    url.pathname = url.pathname.toLowerCase()
-    return NextResponse.redirect(url, 301)
+  // Force lowercase URLs (only for paths, not query strings)
+  const lowercasePath = url.pathname.toLowerCase()
+  if (url.pathname !== lowercasePath) {
+    url.pathname = lowercasePath
+    hasRedirect = true
   }
 
-  // Remove trailing slashes (except root)
-  if (url.pathname.length > 1 && url.pathname.endsWith('/')) {
-    url.pathname = url.pathname.slice(0, -1)
+  // Apply redirect if needed
+  if (hasRedirect) {
     return NextResponse.redirect(url, 301)
   }
 
