@@ -39,6 +39,9 @@ describe("PostPropertyMapper", () => {
         readingTime: "5 min read",
         tags: ["TypeScript", "Testing"],
         featured: undefined,
+        seoTitle: undefined,
+        seoDescription: undefined,
+        focusKeyword: undefined,
       })
     })
 
@@ -141,6 +144,62 @@ describe("PostPropertyMapper", () => {
       const result = mapper.mapToFrontmatter(properties)
 
       expect(result.date).toBe("")
+    })
+  })
+
+  describe("with SEO properties", () => {
+    it("should map SEO title, description and keyword when provided", () => {
+      const properties: NotionProperties = {
+        Title: { type: "title", title: [{ plain_text: "Original Title" }] },
+        Excerpt: { type: "rich_text", rich_text: [{ plain_text: "Excerpt" }] },
+        Date: { type: "date", date: { start: "2024-01-15" } },
+        "Reading Time": { type: "rich_text", rich_text: [{ plain_text: "5 min" }] },
+        Tags: { type: "multi_select", multi_select: [] },
+        "SEO Title": { type: "rich_text", rich_text: [{ plain_text: "Optimized SEO Title - Aitor Santana" }] },
+        "SEO Description": { type: "rich_text", rich_text: [{ plain_text: "Complete SEO description for search engines with keywords." }] },
+        "Focus Keyword": { type: "rich_text", rich_text: [{ plain_text: "seo optimization aitor santana" }] },
+      }
+
+      const result = mapper.mapToFrontmatter(properties)
+
+      expect(result.seoTitle).toBe("Optimized SEO Title - Aitor Santana")
+      expect(result.seoDescription).toBe("Complete SEO description for search engines with keywords.")
+      expect(result.focusKeyword).toBe("seo optimization aitor santana")
+    })
+
+    it("should handle missing SEO properties gracefully", () => {
+      const properties: NotionProperties = {
+        Title: { type: "title", title: [{ plain_text: "Post" }] },
+        Excerpt: { type: "rich_text", rich_text: [{ plain_text: "Excerpt" }] },
+        Date: { type: "date", date: { start: "2024-01-15" } },
+        "Reading Time": { type: "rich_text", rich_text: [{ plain_text: "5 min" }] },
+        Tags: { type: "multi_select", multi_select: [] },
+      }
+
+      const result = mapper.mapToFrontmatter(properties)
+
+      expect(result.seoTitle).toBeUndefined()
+      expect(result.seoDescription).toBeUndefined()
+      expect(result.focusKeyword).toBeUndefined()
+    })
+
+    it("should handle empty SEO properties", () => {
+      const properties: NotionProperties = {
+        Title: { type: "title", title: [{ plain_text: "Post" }] },
+        Excerpt: { type: "rich_text", rich_text: [{ plain_text: "Excerpt" }] },
+        Date: { type: "date", date: { start: "2024-01-15" } },
+        "Reading Time": { type: "rich_text", rich_text: [{ plain_text: "5 min" }] },
+        Tags: { type: "multi_select", multi_select: [] },
+        "SEO Title": { type: "rich_text", rich_text: [] },
+        "SEO Description": { type: "rich_text", rich_text: [] },
+        "Focus Keyword": { type: "rich_text", rich_text: [] },
+      }
+
+      const result = mapper.mapToFrontmatter(properties)
+
+      expect(result.seoTitle).toBeUndefined()
+      expect(result.seoDescription).toBeUndefined()
+      expect(result.focusKeyword).toBeUndefined()
     })
   })
 })

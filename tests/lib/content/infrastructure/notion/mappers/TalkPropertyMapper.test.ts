@@ -141,4 +141,41 @@ describe("TalkPropertyMapper", () => {
       expect(result.location).toBe("")
     })
   })
+
+  describe("with SEO properties", () => {
+    it("should map SEO title, description and keyword when provided", () => {
+      const properties: NotionProperties = {
+        Title: { type: "title", title: [{ plain_text: "Testing Talk" }] },
+        Event: { type: "rich_text", rich_text: [{ plain_text: "Codemotion 2024" }] },
+        Date: { type: "date", date: { start: "2024-05-21" } },
+        Location: { type: "rich_text", rich_text: [{ plain_text: "Madrid" }] },
+        Tags: { type: "multi_select", multi_select: [] },
+        "SEO Title": { type: "rich_text", rich_text: [{ plain_text: "Testing Talk Codemotion - Aitor Santana" }] },
+        "SEO Description": { type: "rich_text", rich_text: [{ plain_text: "Learn testing fundamentals in this talk by Aitor Santana at Codemotion." }] },
+        "Focus Keyword": { type: "rich_text", rich_text: [{ plain_text: "testing codemotion aitor santana" }] },
+      }
+
+      const result = mapper.mapToFrontmatter(properties)
+
+      expect(result.seoTitle).toBe("Testing Talk Codemotion - Aitor Santana")
+      expect(result.seoDescription).toBe("Learn testing fundamentals in this talk by Aitor Santana at Codemotion.")
+      expect(result.focusKeyword).toBe("testing codemotion aitor santana")
+    })
+
+    it("should handle missing SEO properties gracefully", () => {
+      const properties: NotionProperties = {
+        Title: { type: "title", title: [{ plain_text: "Talk" }] },
+        Event: { type: "rich_text", rich_text: [{ plain_text: "Event" }] },
+        Date: { type: "date", date: { start: "2024-01-15" } },
+        Location: { type: "rich_text", rich_text: [{ plain_text: "Location" }] },
+        Tags: { type: "multi_select", multi_select: [] },
+      }
+
+      const result = mapper.mapToFrontmatter(properties)
+
+      expect(result.seoTitle).toBeUndefined()
+      expect(result.seoDescription).toBeUndefined()
+      expect(result.focusKeyword).toBeUndefined()
+    })
+  })
 })

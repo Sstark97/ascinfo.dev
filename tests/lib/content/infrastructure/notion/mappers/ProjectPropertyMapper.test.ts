@@ -165,4 +165,41 @@ describe("ProjectPropertyMapper", () => {
       expect(result.license).toBeUndefined()
     })
   })
+
+  describe("with SEO properties", () => {
+    it("should map SEO title, description and keyword when provided", () => {
+      const properties: NotionProperties = {
+        Title: { type: "title", title: [{ plain_text: "DevSweep" }] },
+        Description: { type: "rich_text", rich_text: [{ plain_text: "CLI tool" }] },
+        Tags: { type: "multi_select", multi_select: [] },
+        "Repo URL": { type: "url", url: "https://github.com/user/repo" },
+        Status: { type: "select", select: { name: "active" } },
+        "SEO Title": { type: "rich_text", rich_text: [{ plain_text: "DevSweep: Clean Caches - Aitor Santana" }] },
+        "SEO Description": { type: "rich_text", rich_text: [{ plain_text: "Professional CLI tool by Aitor Santana to recover disk space." }] },
+        "Focus Keyword": { type: "rich_text", rich_text: [{ plain_text: "devsweep cli aitor santana" }] },
+      }
+
+      const result = mapper.mapToFrontmatter(properties)
+
+      expect(result.seoTitle).toBe("DevSweep: Clean Caches - Aitor Santana")
+      expect(result.seoDescription).toBe("Professional CLI tool by Aitor Santana to recover disk space.")
+      expect(result.focusKeyword).toBe("devsweep cli aitor santana")
+    })
+
+    it("should handle missing SEO properties gracefully", () => {
+      const properties: NotionProperties = {
+        Title: { type: "title", title: [{ plain_text: "Project" }] },
+        Description: { type: "rich_text", rich_text: [{ plain_text: "Description" }] },
+        Tags: { type: "multi_select", multi_select: [] },
+        "Repo URL": { type: "url", url: "https://github.com/user/repo" },
+        Status: { type: "select", select: { name: "active" } },
+      }
+
+      const result = mapper.mapToFrontmatter(properties)
+
+      expect(result.seoTitle).toBeUndefined()
+      expect(result.seoDescription).toBeUndefined()
+      expect(result.focusKeyword).toBeUndefined()
+    })
+  })
 })
