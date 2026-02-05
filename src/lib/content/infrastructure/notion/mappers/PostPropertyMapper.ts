@@ -16,6 +16,10 @@ export class PostPropertyMapper {
       readingTime: this.extractRichText(properties, "Reading Time"),
       tags: this.extractMultiSelect(properties, "Tags"),
       featured: this.extractCheckbox(properties, "Featured"),
+      // SEO fields
+      seoTitle: this.extractRichText(properties, "SEO Title") || undefined,
+      seoDescription: this.extractRichText(properties, "SEO Description") || undefined,
+      focusKeyword: this.extractRichText(properties, "Focus Keyword") || undefined,
     }
   }
 

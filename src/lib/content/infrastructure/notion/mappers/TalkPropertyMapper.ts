@@ -19,6 +19,10 @@ export class TalkPropertyMapper {
       tags: this.extractMultiSelect(properties, "Tags"),
       featured: this.extractCheckbox(properties, "Featured"),
       description: this.extractRichText(properties, "Description") || undefined,
+      // SEO fields
+      seoTitle: this.extractRichText(properties, "SEO Title") || undefined,
+      seoDescription: this.extractRichText(properties, "SEO Description") || undefined,
+      focusKeyword: this.extractRichText(properties, "Focus Keyword") || undefined,
     }
   }
 
