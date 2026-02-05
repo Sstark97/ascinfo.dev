@@ -1,5 +1,6 @@
 import type { PostDto } from "@/content/application/dto/PostDto"
 import { PlainTextContent } from "../value-objects/PlainTextContent"
+import { SeoMetadata } from "../value-objects/SeoMetadata"
 
 export type PostFrontmatter = {
   title: string
@@ -8,6 +9,10 @@ export type PostFrontmatter = {
   readingTime: string
   tags: string[]
   featured?: boolean
+  // SEO fields (opcionales)
+  seoTitle?: string
+  seoDescription?: string
+  focusKeyword?: string
 }
 
 export class Post {
@@ -20,10 +25,19 @@ export class Post {
     public readonly tags: string[],
     public readonly content: string,
     private readonly plainText: PlainTextContent,
-    public readonly featured?: boolean
+    public readonly featured?: boolean,
+    private readonly seoMetadata?: SeoMetadata
   ) {}
 
   static create(slug: string, frontmatter: PostFrontmatter, content: string): Post {
+    const seoMetadata = frontmatter.seoTitle ?? frontmatter.seoDescription
+      ? SeoMetadata.create(
+          frontmatter.seoTitle,
+          frontmatter.seoDescription,
+          frontmatter.focusKeyword
+        )
+      : undefined
+
     return new Post(
       slug,
       frontmatter.title,
@@ -33,12 +47,26 @@ export class Post {
       frontmatter.tags,
       content,
       PlainTextContent.fromMarkdown(content),
-      frontmatter.featured
+      frontmatter.featured,
+      seoMetadata
     )
   }
 
   get plainTextContent(): string {
     return this.plainText.toString()
+  }
+
+  // Getters para SEO con fallback
+  get metaTitle(): string {
+    return this.seoMetadata?.title || this.title
+  }
+
+  get metaDescription(): string {
+    return this.seoMetadata?.description || this.excerpt
+  }
+
+  get focusKeyword(): string | undefined {
+    return this.seoMetadata?.focusKeyword
   }
 
   toDto(): PostDto {
@@ -52,6 +80,10 @@ export class Post {
       content: this.content,
       plainTextContent: this.plainText.toString(),
       featured: this.featured,
+      // SEO fields
+      metaTitle: this.metaTitle,
+      metaDescription: this.metaDescription,
+      focusKeyword: this.focusKeyword,
     }
   }
 }

@@ -1,5 +1,6 @@
 import type { ProjectDto } from "@/content/application/dto/ProjectDto"
 import { PlainTextContent } from "../value-objects/PlainTextContent"
+import { SeoMetadata } from "../value-objects/SeoMetadata"
 
 export type ProjectStatus = "active" | "maintenance" | "archived"
 
@@ -16,6 +17,9 @@ export type ProjectFrontmatter = {
   forks?: number
   lastCommit?: string
   license?: string
+  // SEO fields (opcionales)
+  seoTitle?: string
+  seoDescription?: string
 }
 
 export class Project {
@@ -34,10 +38,18 @@ export class Project {
     public readonly stars?: number,
     public readonly forks?: number,
     public readonly lastCommit?: string,
-    public readonly license?: string
+    public readonly license?: string,
+    private readonly seoMetadata?: SeoMetadata
   ) {}
 
   static create(slug: string, frontmatter: ProjectFrontmatter, content: string): Project {
+    const seoMetadata = frontmatter.seoTitle ?? frontmatter.seoDescription
+      ? SeoMetadata.create(
+          frontmatter.seoTitle,
+          frontmatter.seoDescription
+        )
+      : undefined
+
     return new Project(
       slug,
       frontmatter.title,
@@ -53,12 +65,22 @@ export class Project {
       frontmatter.stars,
       frontmatter.forks,
       frontmatter.lastCommit,
-      frontmatter.license
+      frontmatter.license,
+      seoMetadata
     )
   }
 
   get plainTextContent(): string {
     return this.plainText.toString()
+  }
+
+  // Getters para SEO con fallback
+  get metaTitle(): string {
+    return this.seoMetadata?.title || this.title
+  }
+
+  get metaDescription(): string {
+    return this.seoMetadata?.description || this.description
   }
 
   toDto(): ProjectDto {
@@ -76,6 +98,9 @@ export class Project {
       stars: this.stars,
       forks: this.forks,
       lastCommit: this.lastCommit,
+      // SEO fields
+      metaTitle: this.metaTitle,
+      metaDescription: this.metaDescription,
     }
   }
 }
