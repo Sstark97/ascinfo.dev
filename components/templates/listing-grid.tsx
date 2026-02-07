@@ -54,7 +54,7 @@ export function ListingGrid<T>({
           href={backHref}
           className="inline-flex items-center gap-1.5 text-sm text-[#888888] transition-colors hover:text-[#fca311]"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           {backLabel}
         </Link>
       </div>

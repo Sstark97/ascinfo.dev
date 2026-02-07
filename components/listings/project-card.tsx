@@ -1,7 +1,8 @@
 "use client"
 
-import { useRouter } from "next/navigation"
-import { Github, ExternalLink } from "lucide-react"
+import Link from "next/link"
+import { ExternalLink } from "lucide-react"
+import { GithubIconOutline } from "@/components/icons/github-icon"
 
 interface ProjectCardProps {
   slug: string
@@ -48,22 +49,14 @@ export function ProjectCard({
   stars,
   forks,
 }: ProjectCardProps) {
-  const router = useRouter()
-
-  const handleCardClick = () => {
-    router.push(`/proyectos/${slug}`)
-  }
-
   return (
-    <article
-      onClick={handleCardClick}
-      className="group flex h-full cursor-pointer flex-col rounded-xl border border-[#333333] bg-[#222222] p-5 transition-all duration-300 hover:border-[#fca311] hover:shadow-[0_0_30px_rgba(252,163,17,0.1)]"
-    >
+    <Link href={`/proyectos/${slug}`} className="block h-full">
+      <article className="group flex h-full flex-col rounded-xl border border-[#333333] bg-[#222222] p-5 transition-all duration-300 hover:border-[#fca311] hover:shadow-[0_0_30px_rgba(252,163,17,0.1)]">
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#333333] bg-[#1a1a1a] text-[#999999] transition-all duration-300 group-hover:border-[#fca311]/50 group-hover:text-[#fca311]">
-            <Github aria-hidden="true" className="h-5 w-5" />
+            <GithubIconOutline aria-hidden="true" className="h-5 w-5" />
           </div>
           <div>
             <h2 className="font-semibold text-[#f5f5f5] transition-colors duration-300 group-hover:text-[#fca311]">
@@ -125,7 +118,7 @@ export function ProjectCard({
               onClick={(e) => e.stopPropagation()}
               className="flex items-center gap-1.5 rounded-md border border-[#333333] bg-[#1a1a1a] px-3 py-1.5 text-xs text-[#999999] transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311]"
             >
-              <Github aria-hidden="true" className="h-3.5 w-3.5" />
+              <GithubIconOutline aria-hidden="true" className="h-3.5 w-3.5" />
               Código
             </a>
           )}
@@ -147,5 +140,6 @@ export function ProjectCard({
         </span>
       </div>
     </article>
+    </Link>
   )
 }

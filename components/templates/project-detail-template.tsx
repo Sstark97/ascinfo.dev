@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { ChevronRight, Github, ExternalLink, Star, GitFork, Calendar, Scale } from "lucide-react"
+import { ChevronRight, ExternalLink, Star, GitFork, Calendar, Scale } from "lucide-react"
+import { GithubIconOutline } from "@/components/icons/github-icon"
 import type { Project } from "@/src/lib/content"
 import type { ReactNode } from "react"
 
@@ -26,15 +27,15 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
     <div className="box-border min-h-screen w-full overflow-x-hidden bg-[#1a1a1a]">
       {/* Breadcrumbs */}
       <div className="mx-auto w-full max-w-6xl px-4 pt-8 sm:px-6 md:px-8">
-        <nav className="flex items-center gap-1 text-sm">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1 text-sm">
           <Link href="/" className="text-[#888888] transition-colors hover:text-[#fca311]">
             Inicio
           </Link>
-          <ChevronRight className="h-4 w-4 text-[#666666]" />
+          <ChevronRight className="h-4 w-4 text-[#666666]" aria-hidden="true" />
           <Link href="/proyectos" className="text-[#888888] transition-colors hover:text-[#fca311]">
             Proyectos
           </Link>
-          <ChevronRight className="h-4 w-4 text-[#666666]" />
+          <ChevronRight className="h-4 w-4 text-[#666666]" aria-hidden="true" />
           <span className="truncate text-[#f5f5f5]">{title}</span>
         </nav>
       </div>
@@ -52,7 +53,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                 className="h-full w-full rounded-lg object-cover"
               />
               {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#222222] via-[#222222]/60 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-[#222222] via-[#222222]/60 to-transparent" />
             </div>
 
             {/* Title overlay */}
@@ -73,8 +74,8 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                   </span>
                 ))}
               </div>
-              <h1 className="mt-4 break-words text-balance text-xl font-bold text-[#f5f5f5] sm:text-2xl md:text-4xl">{title}</h1>
-              <p className="mt-2 max-w-2xl break-words text-pretty text-sm text-[#aaaaaa] sm:text-base md:text-lg">{description}</p>
+              <h1 className="mt-4 wrap-break-word text-balance text-xl font-bold text-[#f5f5f5] sm:text-2xl md:text-4xl">{title}</h1>
+              <p className="mt-2 max-w-2xl wrap-break-word text-pretty text-sm text-[#aaaaaa] sm:text-base md:text-lg">{description}</p>
 
               {/* Action buttons */}
               <div className="mt-5 flex flex-wrap gap-2 sm:mt-6 sm:gap-3">
@@ -84,7 +85,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-lg border border-[#444444] bg-[#2a2a2a] px-3 py-2 text-sm font-medium text-[#f5f5f5] transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311] sm:px-4 sm:py-2.5"
                 >
-                  <Github className="h-4 w-4 shrink-0" />
+                  <GithubIconOutline className="h-4 w-4 shrink-0" />
                   <span>GitHub</span>
                 </a>
                 {demoUrl && (
@@ -120,8 +121,8 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                 </span>
               ))}
             </div>
-            <h1 className="mt-4 break-words text-balance text-xl font-bold text-[#f5f5f5] sm:text-2xl md:text-4xl lg:text-5xl">{title}</h1>
-            <p className="mt-3 break-words text-pretty text-sm text-[#aaaaaa] sm:text-base md:text-lg">{description}</p>
+            <h1 className="mt-4 wrap-break-word text-balance text-xl font-bold text-[#f5f5f5] sm:text-2xl md:text-4xl lg:text-5xl">{title}</h1>
+            <p className="mt-3 wrap-break-word text-pretty text-sm text-[#aaaaaa] sm:text-base md:text-lg">{description}</p>
 
             {/* Action buttons */}
             <div className="mt-6 flex flex-wrap gap-2 sm:gap-3">
@@ -131,7 +132,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg border border-[#444444] bg-[#2a2a2a] px-4 py-2.5 text-sm font-medium text-[#f5f5f5] transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311]"
               >
-                <Github className="h-4 w-4 shrink-0" />
+                <GithubIconOutline className="h-4 w-4 shrink-0" />
                 <span>GitHub</span>
               </a>
               {demoUrl && (
@@ -160,7 +161,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
               The prose classes automatically style H1, H2, p, lists, code blocks, etc.
               In Astro, you would use: <Content /> or dangerouslySetInnerHTML
             */}
-            <div className="prose prose-invert max-w-none break-words prose-headings:break-words prose-headings:text-[#f5f5f5] prose-headings:font-semibold prose-p:break-words prose-p:text-[#aaaaaa] prose-p:leading-relaxed prose-a:break-all prose-a:text-[#fca311] prose-a:no-underline hover:prose-a:underline prose-strong:text-[#f5f5f5] prose-code:break-all prose-code:rounded prose-code:bg-[#2a2a2a] prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[#fca311] prose-code:before:content-none prose-code:after:content-none prose-pre:overflow-x-auto prose-pre:bg-[#1a1a1a] prose-pre:border prose-pre:border-[#333333] prose-pre:rounded-xl prose-ul:text-[#aaaaaa] prose-ol:text-[#aaaaaa] prose-li:marker:text-[#fca311]">
+            <div className="prose prose-invert max-w-none wrap-break-word prose-headings:break-words prose-headings:text-[#f5f5f5] prose-headings:font-semibold prose-p:break-words prose-p:text-[#aaaaaa] prose-p:leading-relaxed prose-a:break-all prose-a:text-[#fca311] prose-a:no-underline hover:prose-a:underline prose-strong:text-[#f5f5f5] prose-code:break-all prose-code:rounded prose-code:bg-[#2a2a2a] prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[#fca311] prose-code:before:content-none prose-code:after:content-none prose-pre:overflow-x-auto prose-pre:bg-[#1a1a1a] prose-pre:border prose-pre:border-[#333333] prose-pre:rounded-xl prose-ul:text-[#aaaaaa] prose-ol:text-[#aaaaaa] prose-li:marker:text-[#fca311]">
               {children}
             </div>
           </div>
@@ -240,7 +241,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 rounded-lg border border-[#333333] bg-[#1a1a1a] px-3 py-2.5 text-sm text-[#aaaaaa] transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311] sm:px-4 sm:py-3"
                   >
-                    <Github className="h-4 w-4 shrink-0" />
+                    <GithubIconOutline className="h-4 w-4 shrink-0" />
                     <span className="min-w-0 truncate">Repositorio</span>
                     <ExternalLink className="ml-auto h-3 w-3 shrink-0" />
                   </a>
