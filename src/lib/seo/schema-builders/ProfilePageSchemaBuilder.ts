@@ -5,8 +5,8 @@ export class ProfilePageSchemaBuilder {
     return {
       "@context": SCHEMA_CONTEXT,
       "@type": "ProfilePage",
-      dateCreated: "2024-01-01",
-      dateModified: new Date().toISOString().split('T')[0],
+      dateCreated: "2023-04-11",
+      dateModified: "2026-02-01",
       mainEntity: {
         "@type": "Person",
         "@id": `${SITE_URL}/#person`,
