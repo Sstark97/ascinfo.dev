@@ -17,7 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const allProjects = await projects.getAll.execute()
   const projectEntries: MetadataRoute.Sitemap = allProjects.map((project) => ({
     url: `${siteUrl}/proyectos/${project.slug}`,
-    lastModified: new Date(),
+    lastModified: project.lastCommit ? new Date(project.lastCommit) : new Date("2023-04-11T00:00:00Z"),
     changeFrequency: "monthly",
     priority: 0.6,
   }))
@@ -35,31 +35,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: siteUrl,
-      lastModified: new Date(),
+      lastModified: new Date("2026-02-01T00:00:00Z"),
       changeFrequency: "monthly",
       priority: 1,
     },
     {
       url: `${siteUrl}/blog`,
-      lastModified: new Date(),
+      lastModified: new Date("2026-02-01T00:00:00Z"),
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${siteUrl}/proyectos`,
-      lastModified: new Date(),
+      lastModified: new Date("2026-02-01T00:00:00Z"),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${siteUrl}/charlas`,
-      lastModified: new Date(),
+      lastModified: new Date("2026-02-01T00:00:00Z"),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${siteUrl}/sobre-mi`,
-      lastModified: new Date(),
+      lastModified: new Date("2026-02-01T00:00:00Z"),
       changeFrequency: "monthly",
       priority: 0.8,
     },
