@@ -18,15 +18,15 @@ export function TalkHeader({ title, date, location, event, tags, plainTextConten
     <header className="border-b border-white/5">
       <div className="mx-auto max-w-6xl px-4 py-8 md:px-6">
         {/* Breadcrumbs */}
-        <nav className="mb-6 flex items-center gap-1 text-sm">
+        <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-1 text-sm">
           <Link href="/" className="text-[#888888] transition-colors hover:text-[#fca311]">
             Inicio
           </Link>
-          <ChevronRight className="h-4 w-4 text-[#666666]" />
+          <ChevronRight className="h-4 w-4 text-[#666666]" aria-hidden="true" />
           <Link href="/charlas" className="text-[#888888] transition-colors hover:text-[#fca311]">
             Charlas
           </Link>
-          <ChevronRight className="h-4 w-4 text-[#666666]" />
+          <ChevronRight className="h-4 w-4 text-[#666666]" aria-hidden="true" />
           <span className="truncate text-[#f5f5f5]">{title}</span>
         </nav>
 
