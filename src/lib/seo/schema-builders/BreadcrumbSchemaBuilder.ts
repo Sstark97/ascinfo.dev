@@ -27,7 +27,14 @@ export class BreadcrumbSchemaBuilder {
     ])
   }
 
-  static forProject(title: string) {
+  static forBlogListing() {
+    return this.build([
+      { name: "Inicio", item: SITE_URL },
+      { name: "Blog" }
+    ])
+  }
+
+  static forProject(title: string, slug: string) {
     return this.build([
       { name: "Inicio", item: SITE_URL },
       { name: "Proyectos", item: `${SITE_URL}/proyectos` },
@@ -35,11 +42,25 @@ export class BreadcrumbSchemaBuilder {
     ])
   }
 
-  static forTalk(title: string) {
+  static forProjectsListing() {
+    return this.build([
+      { name: "Inicio", item: SITE_URL },
+      { name: "Proyectos" }
+    ])
+  }
+
+  static forTalk(title: string, slug: string) {
     return this.build([
       { name: "Inicio", item: SITE_URL },
       { name: "Charlas", item: `${SITE_URL}/charlas` },
       { name: title }
+    ])
+  }
+
+  static forTalksListing() {
+    return this.build([
+      { name: "Inicio", item: SITE_URL },
+      { name: "Charlas" }
     ])
   }
 
