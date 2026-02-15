@@ -2,11 +2,17 @@
 const nextConfig = {
   reactCompiler: true,
   trailingSlash: false,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   images: {
-    unoptimized: true,
+    formats: ['image/avif', 'image/webp'],
+  },
+  async redirects() {
+    return [
+      {
+        source: '/posts/:slug',
+        destination: '/blog/:slug',
+        permanent: true,
+      },
+    ]
   },
 }
 
