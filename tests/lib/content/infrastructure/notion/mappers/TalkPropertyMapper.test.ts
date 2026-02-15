@@ -143,7 +143,7 @@ describe("TalkPropertyMapper", () => {
   })
 
   describe("with SEO properties", () => {
-    it("should map SEO title, description and keyword when provided", () => {
+    it("should map SEO title and description when provided", () => {
       const properties: NotionProperties = {
         Title: { type: "title", title: [{ plain_text: "Testing Talk" }] },
         Event: { type: "rich_text", rich_text: [{ plain_text: "Codemotion 2024" }] },
@@ -152,14 +152,12 @@ describe("TalkPropertyMapper", () => {
         Tags: { type: "multi_select", multi_select: [] },
         "SEO Title": { type: "rich_text", rich_text: [{ plain_text: "Testing Talk Codemotion - Aitor Santana" }] },
         "SEO Description": { type: "rich_text", rich_text: [{ plain_text: "Learn testing fundamentals in this talk by Aitor Santana at Codemotion." }] },
-        "Focus Keyword": { type: "rich_text", rich_text: [{ plain_text: "testing codemotion aitor santana" }] },
       }
 
       const result = mapper.mapToFrontmatter(properties)
 
       expect(result.seoTitle).toBe("Testing Talk Codemotion - Aitor Santana")
       expect(result.seoDescription).toBe("Learn testing fundamentals in this talk by Aitor Santana at Codemotion.")
-      expect(result.focusKeyword).toBe("testing codemotion aitor santana")
     })
 
     it("should handle missing SEO properties gracefully", () => {
@@ -175,7 +173,6 @@ describe("TalkPropertyMapper", () => {
 
       expect(result.seoTitle).toBeUndefined()
       expect(result.seoDescription).toBeUndefined()
-      expect(result.focusKeyword).toBeUndefined()
     })
   })
 })
