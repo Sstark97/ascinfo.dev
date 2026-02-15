@@ -3,18 +3,21 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { CareerTimeline } from "@/components/career/career-timeline";
 import { JsonLd } from "@/components/json-ld";
-import { BreadcrumbSchemaBuilder } from "@/src/lib/seo";
+import { BreadcrumbSchemaBuilder, PersonSchemaBuilder } from "@/src/lib/seo";
 
 export const metadata: Metadata = {
   title: "Sobre mí - Aitor Santana | Software Crafter",
   description:
     "Software Crafter con más de 3 años de experiencia en Lean Mind. Especializado en arquitecturas limpias, TDD y desarrollo full-stack con .NET, Java Spring Boot y React.",
+  alternates: {
+    canonical: "/sobre-mi",
+  },
   openGraph: {
     title: "Sobre mí - Aitor Santana",
     description:
       "Software Crafter especializado en arquitecturas limpias, TDD y desarrollo full-stack.",
     type: "profile",
-    url: "https://ascinfo.dev/sobre-mi",
+    url: "/sobre-mi",
   },
   twitter: {
     card: "summary_large_image",
@@ -24,42 +27,7 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Aitor Santana",
-  jobTitle: "Software Crafter",
-  description:
-    "Software Crafter especializado en arquitecturas limpias, TDD y desarrollo full-stack con .NET Core, Java Spring Boot y React.",
-  url: "https://ascinfo.dev",
-  sameAs: [
-    "https://github.com/aitorsantana",
-    "https://www.linkedin.com/in/aitorsantana",
-    "https://twitter.com/aitorsantana",
-  ],
-  worksFor: {
-    "@type": "Organization",
-    name: "Lean Mind",
-    url: "https://leanmind.es",
-  },
-  knowsAbout: [
-    "Software Craftsmanship",
-    "Test-Driven Development",
-    "Domain-Driven Design",
-    "Clean Architecture",
-    "Hexagonal Architecture",
-    ".NET Core",
-    "Java Spring Boot",
-    "React",
-    "TypeScript",
-    "Angular",
-  ],
-  mainEntityOfPage: {
-    "@type": "ProfilePage",
-    "@id": "https://ascinfo.dev/sobre-mi",
-  },
-};
-
+const jsonLd = PersonSchemaBuilder.build();
 const breadcrumbSchema = BreadcrumbSchemaBuilder.forAboutPage();
 
 export default function SobreMiPage() {
