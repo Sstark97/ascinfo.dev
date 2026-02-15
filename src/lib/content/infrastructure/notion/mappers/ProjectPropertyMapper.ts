@@ -25,7 +25,6 @@ export class ProjectPropertyMapper {
       // SEO fields
       seoTitle: this.extractRichText(properties, "SEO Title") || undefined,
       seoDescription: this.extractRichText(properties, "SEO Description") || undefined,
-      focusKeyword: this.extractRichText(properties, "Focus Keyword") || undefined,
     }
   }
 
