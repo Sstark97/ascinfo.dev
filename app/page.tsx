@@ -34,6 +34,7 @@ export default async function Home(): Promise<React.ReactElement> {
       <JsonLd data={personSchema} />
       <JsonLd data={profilePageSchema} />
       <main id="main-content" className="flex min-h-screen items-center justify-center bg-[#1a1a1a] p-4 md:p-6 lg:p-8">
+        <h1 className="sr-only">Aitor Santana Cabrera - Software Crafter</h1>
         <div className="mx-auto w-full max-w-6xl">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:grid-rows-[auto_auto_auto]">
           {/* Row 1: Profile (6 cols) + Latest Article (6 cols) */}

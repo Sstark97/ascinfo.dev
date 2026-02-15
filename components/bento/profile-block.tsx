@@ -13,7 +13,7 @@ export function ProfileBlock() {
 
         {/* Name and Title */}
         <div className="flex-1">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">Aitor Santana</h1>
+          <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">Aitor Santana</h2>
           <p className="mt-1 font-mono text-sm text-[#FCA311]">Software Crafter</p>
         </div>
       </div>
