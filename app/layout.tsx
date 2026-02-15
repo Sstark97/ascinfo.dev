@@ -9,7 +9,6 @@ import "./globals.css"
 const _inter = Inter({ subsets: ["latin"] })
 
 const siteUrl = "https://ascinfo.dev"
-const defaultImage = `${siteUrl}/aitor_profile.webp`
 
 export const metadata: Metadata = {
   title: {
@@ -49,14 +48,6 @@ export const metadata: Metadata = {
     title: "Aitor Santana | Software Crafter & Clean Code",
     description:
       "Aitor Santana - Software Crafter especializado en TDD, Clean Code y Arquitectura Hexagonal. Blog y charlas sobre desarrollo sostenible.",
-    images: [
-      {
-        url: defaultImage,
-        width: 1200,
-        height: 630,
-        alt: "Aitor Santana Cabrera",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -65,7 +56,6 @@ export const metadata: Metadata = {
     title: "Aitor Santana | Software Crafter & Clean Code",
     description:
       "Aitor Santana - Software Crafter especializado en TDD, Clean Code y Arquitectura Hexagonal. Blog y charlas sobre desarrollo sostenible.",
-    images: [defaultImage],
   },
   icons: {
     icon: "/favicon.ico",
