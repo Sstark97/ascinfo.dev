@@ -3,6 +3,7 @@ export type PostDto = {
   title: string
   excerpt: string
   date: string
+  lastModified: string
   readingTime: string
   tags: string[]
   featured?: boolean

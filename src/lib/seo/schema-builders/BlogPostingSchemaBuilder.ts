@@ -11,7 +11,7 @@ export class BlogPostingSchemaBuilder {
       description: post.excerpt,
       image: AUTHOR.image,
       datePublished: post.date,
-      dateModified: post.date,
+      dateModified: post.lastModified,
       author: {
         "@context": SCHEMA_CONTEXT,
         "@type": "Person",

@@ -6,6 +6,7 @@ export type PostFrontmatter = {
   title: string
   excerpt: string
   date: string
+  lastModified?: string
   readingTime: string
   tags: string[]
   featured?: boolean
@@ -21,6 +22,7 @@ export class Post {
     public readonly title: string,
     public readonly excerpt: string,
     public readonly date: string,
+    private readonly modifiedDate: string | undefined,
     public readonly readingTime: string,
     public readonly tags: string[],
     public readonly content: string,
@@ -43,6 +45,7 @@ export class Post {
       frontmatter.title,
       frontmatter.excerpt,
       frontmatter.date,
+      frontmatter.lastModified,
       frontmatter.readingTime,
       frontmatter.tags,
       content,
@@ -54,6 +57,10 @@ export class Post {
 
   get plainTextContent(): string {
     return this.plainText.toString()
+  }
+
+  get lastModified(): string {
+    return this.modifiedDate || this.date
   }
 
   // Getters para SEO con fallback
@@ -75,6 +82,7 @@ export class Post {
       title: this.title,
       excerpt: this.excerpt,
       date: this.date,
+      lastModified: this.lastModified,
       readingTime: this.readingTime,
       tags: this.tags,
       content: this.content,
