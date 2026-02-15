@@ -11,8 +11,6 @@ type PageProps = {
   params: Promise<{ slug: string }>
 }
 
-const siteUrl = "https://ascinfo.dev"
-
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   const allTalks = await talks.getAll.execute()
   return allTalks.map((talk) => ({ slug: talk.slug }))
@@ -28,8 +26,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
-  const talkUrl = `${siteUrl}/charlas/${talk.slug}`
-  const imageUrl = `${siteUrl}/aitor_profile.webp`
+  const talkUrl = `/charlas/${talk.slug}`
+  const imageUrl = "/aitor_profile.webp"
   const dto = talk.toDto()
 
   return {
@@ -77,7 +75,7 @@ export default async function TalkDetailPage({ params }: PageProps): Promise<Rea
   }
 
   const jsonLd = EventSchemaBuilder.build(talk)
-  const breadcrumbSchema = BreadcrumbSchemaBuilder.forTalk(talk.title)
+  const breadcrumbSchema = BreadcrumbSchemaBuilder.forTalk(talk.title, slug)
 
   return (
     <>

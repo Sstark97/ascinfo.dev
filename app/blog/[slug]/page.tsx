@@ -12,8 +12,6 @@ type PageProps = {
   params: Promise<{ slug: string }>
 }
 
-const siteUrl = "https://ascinfo.dev"
-
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   const allPosts = await postsUseCases.getAll.execute()
   return allPosts.map((post) => ({ slug: post.slug }))
@@ -29,8 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
-  const postUrl = `${siteUrl}/blog/${post.slug}`
-  const imageUrl = `${siteUrl}/aitor_profile.webp`
+  const postUrl = `/blog/${post.slug}`
   const dto = post.toDto()
 
   return {
@@ -51,14 +48,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: dto.metaDescription,
       publishedTime: dto.date,
       tags: dto.tags,
-      images: [
-        {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: dto.metaTitle,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
@@ -66,7 +55,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       creator: "@aitorsci",
       title: dto.metaTitle,
       description: dto.metaDescription,
-      images: [imageUrl],
     },
   }
 }

@@ -11,8 +11,6 @@ type PageProps = {
   params: Promise<{ slug: string }>
 }
 
-const siteUrl = "https://ascinfo.dev"
-
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   const allProjects = await projects.getAll.execute()
   return allProjects.map((project) => ({ slug: project.slug }))
@@ -28,12 +26,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
-  const projectUrl = `${siteUrl}/proyectos/${project.slug}`
+  const projectUrl = `/proyectos/${project.slug}`
   const imageUrl = project.heroImage
     ? project.heroImage.startsWith("http")
       ? project.heroImage
-      : `${siteUrl}${project.heroImage}`
-    : `${siteUrl}/og-image.png`
+      : project.heroImage
+    : "/og-image.png"
   const dto = project.toDto()
 
   return {
@@ -79,7 +77,7 @@ export default async function ProjectDetailPage({ params }: PageProps): Promise<
   }
 
   const jsonLd = SoftwareApplicationSchemaBuilder.build(project)
-  const breadcrumbSchema = BreadcrumbSchemaBuilder.forProject(project.title)
+  const breadcrumbSchema = BreadcrumbSchemaBuilder.forProject(project.title, slug)
 
   return (
     <>
