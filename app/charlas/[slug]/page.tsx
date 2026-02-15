@@ -4,7 +4,7 @@ import { talks, mdxComponents } from "@/src/lib/content"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { TalkHeader } from "@/components/detail/talk-header"
 import { JsonLd } from "@/components/json-ld"
-import { EventSchemaBuilder } from "@/src/lib/seo"
+import { EventSchemaBuilder, VideoSchemaBuilder } from "@/src/lib/seo"
 import { BreadcrumbSchemaBuilder } from "@/src/lib/seo/schema-builders/BreadcrumbSchemaBuilder"
 
 type PageProps = {
@@ -74,13 +74,15 @@ export default async function TalkDetailPage({ params }: PageProps): Promise<Rea
     notFound()
   }
 
-  const jsonLd = EventSchemaBuilder.build(talk)
+  const eventSchema = EventSchemaBuilder.build(talk)
   const breadcrumbSchema = BreadcrumbSchemaBuilder.forTalk(talk.title, slug)
+  const videoSchema = talk.videoUrl ? VideoSchemaBuilder.build(talk) : null
 
   return (
     <>
-      <JsonLd data={jsonLd} />
+      <JsonLd data={eventSchema} />
       <JsonLd data={breadcrumbSchema} />
+      {videoSchema && <JsonLd data={videoSchema} />}
       <div className="min-h-screen bg-[#1a1a1a]">
         <TalkHeader
           title={talk.title}

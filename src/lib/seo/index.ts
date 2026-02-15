@@ -4,6 +4,7 @@ export { BlogPostingSchemaBuilder } from "./schema-builders/BlogPostingSchemaBui
 export { CollectionPageSchemaBuilder } from "./schema-builders/CollectionPageSchemaBuilder"
 export { SoftwareApplicationSchemaBuilder } from "./schema-builders/SoftwareApplicationSchemaBuilder"
 export { EventSchemaBuilder } from "./schema-builders/EventSchemaBuilder"
+export { VideoSchemaBuilder } from "./schema-builders/VideoSchemaBuilder"
 export { ProfilePageSchemaBuilder } from "./schema-builders/ProfilePageSchemaBuilder"
 export { WebSiteSchemaBuilder } from "./schema-builders/WebSiteSchemaBuilder"
 export { BreadcrumbSchemaBuilder } from "./schema-builders/BreadcrumbSchemaBuilder"

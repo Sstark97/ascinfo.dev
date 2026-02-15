@@ -125,7 +125,14 @@ export interface EventSchema extends JsonLdSchema {
   recordedIn?: {
     "@type": "VideoObject"
     name: string
+    description?: string
     url: string
+    thumbnailUrl?: string
+    uploadDate?: string
+    performer?: {
+      "@type": "Person"
+      name: string
+    }
   }
   keywords: string
   inLanguage: string
