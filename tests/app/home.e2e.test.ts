@@ -4,8 +4,8 @@ test.describe("Homepage", () => {
   test("should display profile information", async ({ page }) => {
     await page.goto("/")
 
-    // Profile block should be visible
-    await expect(page.getByRole("heading", { name: /Aitor Santana/i })).toBeVisible()
+    // Profile block should be visible (H2 visible heading)
+    await expect(page.getByRole("heading", { level: 2, name: /Aitor Santana/i })).toBeVisible()
   })
 
   test("should display navigation dock", async ({ page }) => {
@@ -20,7 +20,10 @@ test.describe("Homepage", () => {
     await page.goto("/")
 
     const blogLink = page.getByRole("link", { name: /blog/i }).first()
-    await blogLink.click()
+    await Promise.all([
+      page.waitForURL("/blog"),
+      blogLink.click()
+    ])
 
     await expect(page).toHaveURL("/blog")
     await expect(page.locator("h1")).toContainText("Blog")
@@ -53,7 +56,7 @@ test.describe("Homepage", () => {
     const mainContent = page.locator("main")
     await expect(mainContent).toBeVisible()
 
-    // Profile heading should be visible
-    await expect(page.getByRole("heading", { name: /Aitor Santana/i })).toBeVisible()
+    // Profile heading should be visible (H2 visible heading)
+    await expect(page.getByRole("heading", { level: 2, name: /Aitor Santana/i })).toBeVisible()
   })
 })
