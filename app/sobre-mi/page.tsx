@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { CareerTimeline } from "@/components/career/career-timeline";
+import { CvDownloadButtonDynamic } from "@/components/career/cv-download-button-dynamic";
 import { JsonLd } from "@/components/json-ld";
 import { BreadcrumbSchemaBuilder, PersonSchemaBuilder } from "@/src/lib/seo";
 
@@ -88,6 +89,10 @@ export default function SobreMiPage() {
                 sistemas que no solo funcionen hoy, sino que sean fáciles de
                 mantener y entender por mis compañeros mañana.
               </p>
+            </div>
+
+            <div className="mt-8">
+              <CvDownloadButtonDynamic />
             </div>
           </header>
 
