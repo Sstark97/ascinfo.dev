@@ -46,7 +46,7 @@ featured: true
 
   it("should read all MDX files from directory", async () => {
     const repo = new MDXContentRepository()
-    const results = await repo.readAll<PostFrontmatter>(TEST_DIR)
+    const results = await repo.readAll<PostFrontmatter>(TEST_DIR, "es")
 
     expect(results).toHaveLength(2)
     expect(results.some((r) => r.slug === "test-post")).toBe(true)
@@ -55,7 +55,7 @@ featured: true
 
   it("should correctly parse frontmatter", async () => {
     const repo = new MDXContentRepository()
-    const result = await repo.readBySlug<PostFrontmatter>(TEST_DIR, "test-post")
+    const result = await repo.readBySlug<PostFrontmatter>(TEST_DIR, "es", "test-post")
 
     expect(result).not.toBeNull()
     expect(result?.frontmatter.title).toBe("Test Post")
@@ -69,7 +69,7 @@ featured: true
 
   it("should correctly parse content", async () => {
     const repo = new MDXContentRepository()
-    const result = await repo.readBySlug<PostFrontmatter>(TEST_DIR, "test-post")
+    const result = await repo.readBySlug<PostFrontmatter>(TEST_DIR, "es", "test-post")
 
     expect(result).not.toBeNull()
     expect(result?.content).toContain("# Test Content")
@@ -78,7 +78,7 @@ featured: true
 
   it("should read single file by slug", async () => {
     const repo = new MDXContentRepository()
-    const result = await repo.readBySlug<PostFrontmatter>(TEST_DIR, "test-post")
+    const result = await repo.readBySlug<PostFrontmatter>(TEST_DIR, "es", "test-post")
 
     expect(result).not.toBeNull()
     expect(result?.slug).toBe("test-post")
@@ -86,21 +86,21 @@ featured: true
 
   it("should return null for non-existent slug", async () => {
     const repo = new MDXContentRepository()
-    const result = await repo.readBySlug<PostFrontmatter>(TEST_DIR, "non-existent")
+    const result = await repo.readBySlug<PostFrontmatter>(TEST_DIR, "es", "non-existent")
 
     expect(result).toBeNull()
   })
 
   it("should return empty array for non-existent directory", async () => {
     const repo = new MDXContentRepository()
-    const results = await repo.readAll<PostFrontmatter>("/non/existent/path")
+    const results = await repo.readAll<PostFrontmatter>("/non/existent/path", "es")
 
     expect(results).toEqual([])
   })
 
   it("should handle multiple files with different frontmatter", async () => {
     const repo = new MDXContentRepository()
-    const results = await repo.readAll<PostFrontmatter>(TEST_DIR)
+    const results = await repo.readAll<PostFrontmatter>(TEST_DIR, "es")
 
     const testPost = results.find((r) => r.slug === "test-post")
     const anotherPost = results.find((r) => r.slug === "another-post")
