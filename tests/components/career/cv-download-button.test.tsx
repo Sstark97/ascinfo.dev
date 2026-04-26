@@ -40,6 +40,13 @@ vi.mock("@react-pdf/renderer", () => ({
 
 import { CvDownloadButton } from "@/components/career/cv-download-button";
 
+const mockLabels = {
+  download: "Descargar CV en PDF",
+  generating: "Generando PDF...",
+  ariaReady: "Descargar CV en PDF",
+  ariaLoading: "Generando PDF del CV",
+}
+
 describe("CvDownloadButton", () => {
   beforeEach(() => {
     mockPDFDownloadLink.mockImplementation(
@@ -57,14 +64,14 @@ describe("CvDownloadButton", () => {
   });
 
   it("renders a button with the download CV label when ready", () => {
-    render(<CvDownloadButton />);
+    render(<CvDownloadButton labels={mockLabels} />);
 
     const button = screen.getByRole("button", { name: /descargar cv en pdf/i });
     expect(button).toBeInTheDocument();
   });
 
   it("button is enabled when the PDF is ready", () => {
-    render(<CvDownloadButton />);
+    render(<CvDownloadButton labels={mockLabels} />);
 
     const button = screen.getByRole("button");
     expect(button).not.toBeDisabled();
@@ -84,7 +91,7 @@ describe("CvDownloadButton", () => {
         ),
     );
 
-    const { container } = render(<CvDownloadButton />);
+    const { container } = render(<CvDownloadButton labels={mockLabels} />);
 
     const button = screen.getByRole("button", {
       name: /generando pdf del cv/i,
@@ -95,12 +102,12 @@ describe("CvDownloadButton", () => {
 
   it("accepts a custom fileName prop without throwing", () => {
     expect(() =>
-      render(<CvDownloadButton fileName="custom-cv.pdf" />),
+      render(<CvDownloadButton fileName="custom-cv.pdf" labels={mockLabels} />),
     ).not.toThrow();
   });
 
   it("renders inside the PDFDownloadLink wrapper", () => {
-    render(<CvDownloadButton />);
+    render(<CvDownloadButton labels={mockLabels} />);
 
     expect(screen.getByTestId("pdf-download-link")).toBeInTheDocument();
   });

@@ -83,7 +83,7 @@ describe("NotionContentRepository", () => {
         has_more: false,
       })
 
-      const results = await repository.readAll<PostFrontmatter>("posts")
+      const results = await repository.readAll<PostFrontmatter>("posts", "es")
 
       expect(results).toHaveLength(1)
       expect(results[0].slug).toBe("test-post")
@@ -94,8 +94,10 @@ describe("NotionContentRepository", () => {
         method: "post",
         body: {
           filter: {
-            property: "Status",
-            select: { equals: "Published" },
+            and: [
+              { property: "Status", select: { equals: "Published" } },
+              { property: "Language", select: { equals: "es" } },
+            ],
           },
         },
       })
@@ -126,7 +128,7 @@ describe("NotionContentRepository", () => {
         has_more: false,
       })
 
-      const results = await repository.readAll<ProjectFrontmatter>("projects")
+      const results = await repository.readAll<ProjectFrontmatter>("projects", "es")
 
       expect(results).toHaveLength(1)
       expect(results[0].slug).toBe("test-project")
@@ -159,7 +161,7 @@ describe("NotionContentRepository", () => {
         has_more: false,
       })
 
-      const results = await repository.readAll<TalkFrontmatter>("talks")
+      const results = await repository.readAll<TalkFrontmatter>("talks", "es")
 
       expect(results).toHaveLength(1)
       expect(results[0].slug).toBe("test-talk")
@@ -168,7 +170,7 @@ describe("NotionContentRepository", () => {
     })
 
     it("should return empty array for unknown directory", async () => {
-      const results = await repository.readAll<PostFrontmatter>("unknown")
+      const results = await repository.readAll<PostFrontmatter>("unknown", "es")
 
       expect(results).toEqual([])
       expect(mockNotionClient.request).not.toHaveBeenCalled()
@@ -177,7 +179,7 @@ describe("NotionContentRepository", () => {
     it("should return empty array on API error", async () => {
       mockNotionClient.request.mockRejectedValue(new Error("API Error"))
 
-      const results = await repository.readAll<PostFrontmatter>("posts")
+      const results = await repository.readAll<PostFrontmatter>("posts", "es")
 
       expect(results).toEqual([])
     })
@@ -185,15 +187,17 @@ describe("NotionContentRepository", () => {
     it("should handle directory path extraction", async () => {
       mockNotionClient.request.mockResolvedValue({ results: [] })
 
-      await repository.readAll<PostFrontmatter>("src/content/posts")
+      await repository.readAll<PostFrontmatter>("src/content/posts", "es")
 
       expect(mockNotionClient.request).toHaveBeenCalledWith({
         path: "data_sources/posts-db-id/query",
         method: "post",
         body: {
           filter: {
-            property: "Status",
-            select: { equals: "Published" },
+            and: [
+              { property: "Status", select: { equals: "Published" } },
+              { property: "Language", select: { equals: "es" } },
+            ],
           },
         },
       })
@@ -215,7 +219,7 @@ describe("NotionContentRepository", () => {
         ],
       })
 
-      const results = await repository.readAll<PostFrontmatter>("posts")
+      const results = await repository.readAll<PostFrontmatter>("posts", "es")
 
       expect(results).toEqual([])
     })
@@ -287,7 +291,7 @@ describe("NotionContentRepository", () => {
           has_more: false,
         })
 
-      const results = await repository.readAll<PostFrontmatter>("posts")
+      const results = await repository.readAll<PostFrontmatter>("posts", "es")
 
       expect(results).toHaveLength(1)
       expect(results[0].content).toContain("First block")
@@ -340,7 +344,7 @@ describe("NotionContentRepository", () => {
         has_more: false,
       })
 
-      const result = await repository.readBySlug<PostFrontmatter>("posts", "test-post")
+      const result = await repository.readBySlug<PostFrontmatter>("posts", "es", "test-post")
 
       expect(result).not.toBeNull()
       expect(result?.slug).toBe("test-post")
@@ -351,14 +355,9 @@ describe("NotionContentRepository", () => {
         body: {
           filter: {
             and: [
-              {
-                property: "Slug",
-                rich_text: { equals: "test-post" },
-              },
-              {
-                property: "Status",
-                select: { equals: "Published" },
-              },
+              { property: "Slug", rich_text: { equals: "test-post" } },
+              { property: "Status", select: { equals: "Published" } },
+              { property: "Language", select: { equals: "es" } },
             ],
           },
         },
@@ -370,13 +369,13 @@ describe("NotionContentRepository", () => {
         results: [],
       })
 
-      const result = await repository.readBySlug<PostFrontmatter>("posts", "non-existent")
+      const result = await repository.readBySlug<PostFrontmatter>("posts", "es", "non-existent")
 
       expect(result).toBeNull()
     })
 
     it("should return null for unknown directory", async () => {
-      const result = await repository.readBySlug<PostFrontmatter>("unknown", "slug")
+      const result = await repository.readBySlug<PostFrontmatter>("unknown", "es", "slug")
 
       expect(result).toBeNull()
       expect(mockNotionClient.request).not.toHaveBeenCalled()
@@ -385,7 +384,7 @@ describe("NotionContentRepository", () => {
     it("should return null on API error", async () => {
       mockNotionClient.request.mockRejectedValue(new Error("API Error"))
 
-      const result = await repository.readBySlug<PostFrontmatter>("posts", "test-post")
+      const result = await repository.readBySlug<PostFrontmatter>("posts", "es", "test-post")
 
       expect(result).toBeNull()
     })

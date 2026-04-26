@@ -4,11 +4,12 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { TimelineNode } from "./timeline-node";
 import { ProjectSubNode } from "./project-sub-node";
 
-export async function CareerTimeline() {
-  const locale = await getLocale()
-  const t = await getTranslations("career")
-  const careerData = getCareerData(locale)
+interface CareerTimelineContentProps {
+  careerData: CareerPosition[]
+  activeLabel: string
+}
 
+export function CareerTimelineContent({ careerData, activeLabel }: CareerTimelineContentProps) {
   return (
     <div className="relative">
       {careerData.map((position: CareerPosition, index: number) => (
@@ -18,7 +19,6 @@ export async function CareerTimeline() {
           isPrimary={position.isPrimary}
           isLast={index === careerData.length - 1}
         >
-          {/* Main Position Card */}
           <div
             className={`group rounded-xl border transition-all duration-200 ${
               position.isPrimary
@@ -26,7 +26,6 @@ export async function CareerTimeline() {
                 : "border-white/5 bg-[#222222] p-5 hover:border-white/10"
             }`}
           >
-            {/* Company & Role */}
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
                 <h3
@@ -50,17 +49,15 @@ export async function CareerTimeline() {
               {position.isActive && (
                 <span className="flex items-center gap-1.5 rounded-full bg-[#FCA311]/10 px-3 py-1.5 font-mono text-xs font-medium text-[#FCA311]">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#FCA311]" />
-                  {t("active")}
+                  {activeLabel}
                 </span>
               )}
             </div>
 
-            {/* Description */}
             <p className="text-sm leading-relaxed text-muted-foreground">
               {position.description}
             </p>
 
-            {/* Stack (if no projects) */}
             {position.stack && position.stack.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
                 {position.stack.map((tech: string) => (
@@ -75,7 +72,6 @@ export async function CareerTimeline() {
             )}
           </div>
 
-          {/* Internal Projects (if any) */}
           {position.projects && position.projects.length > 0 && (
             <div className="mt-4">
               {position.projects.map((project, projectIndex: number) => (
@@ -90,5 +86,12 @@ export async function CareerTimeline() {
         </TimelineNode>
       ))}
     </div>
-  );
+  )
+}
+
+export async function CareerTimeline() {
+  const locale = await getLocale()
+  const t = await getTranslations("career")
+  const careerData = getCareerData(locale)
+  return <CareerTimelineContent careerData={careerData} activeLabel={t("active")} />
 }

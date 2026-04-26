@@ -1,11 +1,26 @@
 import { describe, it, expect, vi } from "vitest"
 import { render, screen, fireEvent } from "@testing-library/react"
 import { SearchAndFilter } from "@/components/search-and-filter"
+import type { SearchLabels } from "@/components/search-and-filter"
 
 describe("SearchAndFilter", () => {
   const mockTags = ["Arquitectura", "TDD", "React", "TypeScript"]
   const mockOnSearch = vi.fn()
   const mockOnTagSelect = vi.fn()
+
+  const mockLabels: SearchLabels = {
+    placeholder: "Buscar...",
+    filterByTag: "Filtrar por tag",
+    filteredTemplate: "Filtrado ({count})",
+    tagsChecked: "tags seleccionados",
+    activeFilter: "Filtro activo:",
+    activeFilters: "Filtros activos:",
+    clearAll: "Limpiar todo",
+    noTags: "No hay tags disponibles",
+    clearSearch: "Limpiar búsqueda",
+    removeFilterTemplate: "Quitar filtro: {tag}",
+    clearAllFilters: "Limpiar todos los filtros",
+  }
 
   it("should render search input", () => {
     render(
@@ -14,6 +29,7 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={[]}
+        labels={mockLabels}
       />
     )
 
@@ -27,6 +43,7 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={[]}
+        labels={mockLabels}
       />
     )
 
@@ -40,6 +57,7 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={[]}
+        labels={mockLabels}
       />
     )
 
@@ -56,30 +74,21 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={[]}
+        labels={mockLabels}
       />
     )
 
     const filterButton = screen.getByRole("button", { name: /Filtrar/i })
 
-    // Initially collapsed - verify by trying to click a tag (should not work or be visible)
-    const initialTagQuery = screen.queryByRole("button", { name: mockTags[0], pressed: false })
-    
-    // After first render, tags might be in DOM but with aria-hidden or pointer-events-none
-    // Let's verify the functional behavior: click to open
     fireEvent.click(filterButton)
-    
-    // After opening, tag should be accessible and clickable
+
     const tagAfterOpen = screen.getByRole("button", { name: mockTags[0], pressed: false })
     expect(tagAfterOpen).toBeInTheDocument()
-    
-    // Verify we can click the tag (functional test)
+
     fireEvent.click(tagAfterOpen)
     expect(mockOnTagSelect).toHaveBeenCalledWith([mockTags[0]])
-    
-    // Click filter button again to collapse
+
     fireEvent.click(filterButton)
-    
-    // Panel should collapse (we verify this works by the fact that next open will work)
     fireEvent.click(filterButton)
     const tagAfterReopen = screen.getByRole("button", { name: mockTags[0], pressed: false })
     expect(tagAfterReopen).toBeInTheDocument()
@@ -92,14 +101,13 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={["Arquitectura"]}
+        labels={mockLabels}
       />
     )
 
-    // Filter button should indicate filtered state (any text with number)
     const filterButton = screen.getByRole("button", { name: /\(1\)/i })
     expect(filterButton).toBeInTheDocument()
 
-    // Remove filter button should be accessible
     const removeButton = screen.getByLabelText(/quitar filtro.*arquitectura/i)
     expect(removeButton).toBeInTheDocument()
   })
@@ -111,14 +119,13 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={[]}
+        labels={mockLabels}
       />
     )
 
-    // Open filter panel
     const filterButton = screen.getByRole("button", { name: /Filtrar/i })
     fireEvent.click(filterButton)
 
-    // Click on a tag
     const tag = screen.getByRole("button", { name: "TDD" })
     fireEvent.click(tag)
 
@@ -132,14 +139,13 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={["TDD"]}
+        labels={mockLabels}
       />
     )
 
-    // Open filter panel
     const filterButton = screen.getByRole("button", { name: /Filtrado/i })
     fireEvent.click(filterButton)
 
-    // Click on the selected tag to deselect
     const tag = screen.getByRole("button", { name: "TDD", pressed: true })
     fireEvent.click(tag)
 
@@ -155,19 +161,17 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={[]}
+        labels={mockLabels}
       />
     )
 
-    // Open filter panel
     const filterButton = screen.getByRole("button", { name: /Filtrar/i })
     fireEvent.click(filterButton)
 
-    // Should only show canonical tags (no duplicates)
     const tagButtons = screen.getAllByRole("button", { pressed: false }).filter(
       (btn) => btn.closest("#filter-tags")
     )
 
-    // Should have 2 unique tags: "Arquitectura" and "TDD" (duplicates merged)
     expect(tagButtons).toHaveLength(2)
   })
 
@@ -179,6 +183,7 @@ describe("SearchAndFilter", () => {
         onTagSelect={mockOnTagSelect}
         selectedTags={[]}
         searchQuery="test"
+        labels={mockLabels}
       />
     )
 
@@ -195,6 +200,7 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={["React"]}
+        labels={mockLabels}
       />
     )
 
@@ -211,14 +217,13 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={[]}
+        labels={mockLabels}
       />
     )
 
-    // Open filter panel
     const filterButton = screen.getByRole("button", { name: /Filtrar/i })
     fireEvent.click(filterButton)
 
-    // All tags should be rendered
     mockTags.forEach((tag) => {
       expect(screen.getByRole("button", { name: tag })).toBeInTheDocument()
     })
@@ -231,15 +236,16 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={[]}
+        labels={mockLabels}
       />
     )
 
-    // Open filter panel
     const filterButton = screen.getByRole("button", { name: /Filtrar/i })
     fireEvent.click(filterButton)
 
     expect(screen.getByText(/no hay tags/i)).toBeInTheDocument()
   })
+
   it("should show multiple selected tags", () => {
     render(
       <SearchAndFilter
@@ -247,18 +253,16 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={["Arquitectura", "React"]}
+        labels={mockLabels}
       />
     )
 
-    // Filter button should show count
     const filterButton = screen.getByRole("button", { name: /\(2\)/i })
     expect(filterButton).toBeInTheDocument()
 
-    // Both remove buttons should be accessible
     expect(screen.getByLabelText(/quitar filtro.*arquitectura/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/quitar filtro.*react/i)).toBeInTheDocument()
 
-    // "Clear all" button should be visible
     expect(screen.getByLabelText(/limpiar todos/i)).toBeInTheDocument()
   })
 
@@ -269,6 +273,7 @@ describe("SearchAndFilter", () => {
         onSearch={mockOnSearch}
         onTagSelect={mockOnTagSelect}
         selectedTags={["Arquitectura", "React", "TDD"]}
+        labels={mockLabels}
       />
     )
 
