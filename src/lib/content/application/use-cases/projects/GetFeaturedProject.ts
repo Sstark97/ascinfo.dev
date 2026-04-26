@@ -1,6 +1,7 @@
 import { Project } from "@/content/domain/entities/Project"
 import { GetAllProjects } from "./GetAllProjects"
 import type { ContentRepository } from "@/content/domain/repositories/ContentRepository"
+import type { Locale } from "@/content/domain/types/Locale"
 
 export class GetFeaturedProject {
   private readonly getAllProjects: GetAllProjects
@@ -9,8 +10,8 @@ export class GetFeaturedProject {
     this.getAllProjects = new GetAllProjects(contentRepository)
   }
 
-  async execute(): Promise<Project | null> {
-    const projects = await this.getAllProjects.execute()
+  async execute(locale: Locale): Promise<Project | null> {
+    const projects = await this.getAllProjects.execute(locale)
     const featured = projects.find((project) => project.featured)
     return featured ?? projects[0] ?? null
   }

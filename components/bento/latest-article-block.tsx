@@ -14,21 +14,23 @@ type LatestArticleBlockProps = {
   excerpt: string
   tags: string[]
   recentPosts: RecentPost[]
+  latestArticleLabel: string
+  previousLabel: string
 }
 
-export function LatestArticleBlock({ slug, title, excerpt, tags, recentPosts }: LatestArticleBlockProps): React.ReactElement {
+export function LatestArticleBlock({ slug, title, excerpt, tags, recentPosts, latestArticleLabel, previousLabel }: LatestArticleBlockProps): React.ReactElement {
   return (
     <div className="flex h-full w-full flex-col rounded-xl border border-white/5 bg-[#222222] transition-all duration-300">
       {/* Featured Article Section */}
-      <Link 
-        href={`/blog/${slug}`} 
+      <Link
+        href={`/blog/${slug}`}
         className="group block p-6 focus-visible:outline-2 focus-visible:outline-[#FCA311] focus-visible:outline-offset-2 focus-visible:rounded-t-xl"
       >
         <div className="flex h-full flex-col">
           {/* Header */}
           <div className="flex items-start justify-between flex-shrink-0">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Último artículo</span>
+              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">{latestArticleLabel}</span>
             </div>
             <ArrowUpRight aria-hidden="true" className="h-5 w-5 text-muted-foreground/40 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#FCA311]" />
           </div>
@@ -71,7 +73,7 @@ export function LatestArticleBlock({ slug, title, excerpt, tags, recentPosts }: 
       {recentPosts.length > 0 && (
         <div className="p-6 pt-4">
           <div className="flex items-center gap-2 mb-3">
-            <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Anteriores</span>
+            <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">{previousLabel}</span>
           </div>
           <div className="space-y-2">
             {recentPosts.map((post) => (
@@ -80,9 +82,9 @@ export function LatestArticleBlock({ slug, title, excerpt, tags, recentPosts }: 
                 href={`/blog/${post.slug}`}
                 className="group/link flex items-start gap-2 py-1.5 transition-colors hover:text-[#FCA311] focus-visible:outline-2 focus-visible:outline-[#FCA311] focus-visible:outline-offset-2 rounded"
               >
-                <ChevronRight 
-                  aria-hidden="true" 
-                  className="h-4 w-4 mt-0.5 flex-shrink-0 text-muted-foreground/60 transition-all duration-200 group-hover/link:text-[#FCA311] group-hover/link:translate-x-0.5" 
+                <ChevronRight
+                  aria-hidden="true"
+                  className="h-4 w-4 mt-0.5 flex-shrink-0 text-muted-foreground/60 transition-all duration-200 group-hover/link:text-[#FCA311] group-hover/link:translate-x-0.5"
                 />
                 <span className="text-sm leading-snug text-muted-foreground transition-colors group-hover/link:text-[#FCA311]">
                   {post.title}

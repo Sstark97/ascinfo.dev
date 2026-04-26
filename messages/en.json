@@ -1,0 +1,141 @@
+{
+  "meta": {
+    "blog": {
+      "title": "Blog",
+      "description": "Articles about software development, TDD, Clean Code, hexagonal architecture, and programming best practices by Aitor Santana.",
+      "ogTitle": "Blog | Aitor Santana",
+      "twitterDescription": "Articles about software development, TDD, Clean Code, and best practices."
+    },
+    "talks": {
+      "title": "Talks",
+      "description": "Talks and presentations by Aitor Santana on software development, TDD, Clean Code, hexagonal architecture, and agile methodologies at conferences and technical events.",
+      "ogTitle": "Talks | Aitor Santana",
+      "twitterDescription": "Talks and presentations by Aitor Santana on software development and best practices."
+    },
+    "projects": {
+      "title": "Projects",
+      "description": "Portfolio of software projects developed by Aitor Santana. Web apps, open-source tools, and experiments with modern technologies.",
+      "ogTitle": "Projects | Aitor Santana",
+      "twitterDescription": "Portfolio of software projects developed by Aitor Santana."
+    },
+    "about": {
+      "title": "About me - Aitor Santana | Software Crafter",
+      "description": "Software Crafter with 3+ years of experience at Lean Mind. Specialized in clean architectures, TDD, and full-stack development with .NET, Java Spring Boot, and React.",
+      "ogTitle": "About me - Aitor Santana",
+      "ogDescription": "Software Crafter specialized in clean architectures, TDD, and full-stack development."
+    }
+  },
+  "home": {
+    "latestArticle": "Latest article",
+    "previous": "Previous",
+    "featuredProject": "Featured project",
+    "viewProject": "View project",
+    "recentTalk": "Recent talk",
+    "viewTalk": "View talk"
+  },
+  "profile": {
+    "bio1": "Hi, I'm Aitor Santana. As a <strong>Software Developer</strong> and <strong>Software Crafter</strong>, I help teams build sustainable code.",
+    "bio2": "My specialty is at the intersection of <strong>Clean Code</strong>, <strong>Hexagonal Architecture</strong>, and the new wave of <highlight>Generative AI</highlight>.",
+    "bio3": "I write, give talks, and develop quality software from <strong>the Canary Islands</strong> to the world."
+  },
+  "nav": {
+    "blog": "Blog",
+    "talks": "Talks",
+    "projects": "Projects",
+    "about": "About me"
+  },
+  "search": {
+    "placeholder": "Search...",
+    "filterByTag": "Filter by tag",
+    "filtered": "Filtered ({count})",
+    "tagsChecked": "Tags ✓",
+    "activeFilter": "Active filter:",
+    "activeFilters": "Active filters:",
+    "clearAll": "Clear all",
+    "noTags": "No tags available",
+    "clearSearch": "Clear search",
+    "removeFilter": "Remove filter: {tag}",
+    "clearAllFilters": "Clear all filters"
+  },
+  "listing": {
+    "backToHome": "Back to home",
+    "blog": {
+      "title": "Blog",
+      "subtitle": "The Technical Log — Articles about software development",
+      "empty": "No articles found with those filters."
+    },
+    "projects": {
+      "title": "Projects",
+      "subtitle": "Portfolio — Open source projects and side projects",
+      "empty": "No projects found with those filters."
+    },
+    "talks": {
+      "title": "Talks",
+      "subtitle": "Talks & Events — Conferences and workshops",
+      "empty": "No talks found with those filters."
+    }
+  },
+  "project": {
+    "statusActive": "Active",
+    "statusMaintenance": "Maintenance",
+    "statusArchived": "Archived",
+    "code": "Code",
+    "demo": "Demo",
+    "viewDetails": "View details →"
+  },
+  "tts": {
+    "listen": "Listen",
+    "pause": "Pause",
+    "resume": "Resume",
+    "unavailable": "Unavailable"
+  },
+  "talks": {
+    "slides": "View slides",
+    "video": "Watch video"
+  },
+  "breadcrumbs": {
+    "home": "Home",
+    "blog": "Blog",
+    "projects": "Projects",
+    "talks": "Talks",
+    "about": "About me"
+  },
+  "about": {
+    "pageTitle": "About me",
+    "careerTitle": "Professional Career",
+    "approachTitle": "Technical Approach",
+    "stackTitle": "Current Technical Stack",
+    "backend": "Backend",
+    "frontend": "Frontend",
+    "devops": "DevOps & Tools",
+    "skipToContent": "Skip to main content",
+    "bio1": "I'm a <highlight>Software Developer</highlight> passionate about building <strong>sustainable software</strong>. During my years at <strong>Lean Mind</strong>, I've had the opportunity to rotate across complex projects (Fintech, Multimedia, EdTech), which has taught me to adapt to new tech stacks without sacrificing quality.",
+    "bio2": "I see software development as an <strong>engineering discipline</strong> that requires rigor and empathy. My daily goal is to design systems that not only work today, but are easy to maintain and understand by my teammates tomorrow.",
+    "craftsmanshipDesc": "Code is a communication artifact, not just instructions for the machine. I prioritize readability, emergent design, and continuous refactoring.",
+    "tddDesc": "Tests are the system's first documentation. TDD lets me design APIs before implementing them and gives me confidence in changes.",
+    "namingDesc": "Names matter. I try to make the code tell a story and reflect business intent, so any teammate can read it without needing a translation.",
+    "architectureDesc": "I separate business logic from infrastructure details. Hexagonal architecture, ports and adapters, dependency inversion."
+  },
+  "career": {
+    "active": "Active"
+  },
+  "cv": {
+    "download": "Download CV",
+    "generating": "Generating PDF...",
+    "ariaReady": "Download CV as PDF",
+    "ariaLoading": "Generating CV PDF, please wait"
+  },
+  "projectDetail": {
+    "stats": "Statistics",
+    "lastCommit": "Last commit",
+    "license": "License",
+    "repository": "Repository",
+    "liveDemo": "Live demo",
+    "links": "Links"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "Sorry, the page you are looking for does not exist or has been moved.",
+    "backHome": "Back to home"
+  }
+}

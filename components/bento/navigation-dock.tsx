@@ -1,6 +1,7 @@
 "use client"
 
-import Link from "next/link"
+import { useTranslations } from "next-intl"
+import { Link } from "@/src/i18n/navigation"
 import { FileText, Mic2, FolderKanban, User } from "lucide-react"
 import { GithubIconOutline } from "@/components/icons/github-icon"
 
@@ -25,13 +26,6 @@ const BlueskyIcon = () => (
   </svg>
 )
 
-const NAV_ITEMS = [
-  { href: "/blog", icon: FileText, label: "Blog" },
-  { href: "/charlas", icon: Mic2, label: "Charlas" },
-  { href: "/proyectos", icon: FolderKanban, label: "Proyectos" },
-  { href: "/sobre-mi", icon: User, label: "Sobre mí" },
-] as const
-
 const SOCIAL_LINKS = [
   { href: "https://github.com/Sstark97", icon: GithubIconOutline, label: "GitHub" },
   { href: "https://www.linkedin.com/in/aitorscinfo/", icon: LinkedInIcon, label: "LinkedIn" },
@@ -40,11 +34,20 @@ const SOCIAL_LINKS = [
 ] as const
 
 export function NavigationDock() {
+  const t = useTranslations("nav")
+
+  const navItems = [
+    { href: "/blog" as const, icon: FileText, label: t("blog") },
+    { href: "/charlas" as const, icon: Mic2, label: t("talks") },
+    { href: "/proyectos" as const, icon: FolderKanban, label: t("projects") },
+    { href: "/sobre-mi" as const, icon: User, label: t("about") },
+  ]
+
   return (
     <nav className="flex h-full flex-col items-center justify-center gap-4 rounded-xl border border-white/5 bg-[#222222] p-4">
       {/* Navigation Links */}
       <div className="flex items-center gap-1 md:gap-2">
-        {NAV_ITEMS.map((item) => (
+        {navItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
@@ -61,7 +64,7 @@ export function NavigationDock() {
       {/* Divider */}
       <div className="h-px w-full bg-white/5" />
 
-      {/* Social Links */}
+      {/* Social Links + Language Switcher */}
       <div className="flex items-center gap-3">
         {SOCIAL_LINKS.map((social) => {
           const IconComponent = social.icon
@@ -81,6 +84,7 @@ export function NavigationDock() {
           )
         })}
       </div>
+
     </nav>
   )
 }

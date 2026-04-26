@@ -4,12 +4,20 @@ import { Volume2, Pause, Play, VolumeX } from "lucide-react"
 import { useTextToSpeech } from "./use-text-to-speech"
 import type { ReactElement } from "react"
 
-interface TextToSpeechButtonProps {
-  text: string
+interface TtsLabels {
+  listen: string
+  pause: string
+  resume: string
+  unavailable: string
 }
 
-export function TextToSpeechButton({ text }: TextToSpeechButtonProps): ReactElement {
-  const { status, isSupported, play, pause, resume, stop } = useTextToSpeech(text)
+interface TextToSpeechButtonProps {
+  text: string
+  labels: TtsLabels
+}
+
+export function TextToSpeechButton({ text, labels }: TextToSpeechButtonProps): ReactElement {
+  const { status, isSupported, play, pause, resume } = useTextToSpeech(text)
 
   const handleClick = (): void => {
     if (status === "idle") {
@@ -37,13 +45,13 @@ export function TextToSpeechButton({ text }: TextToSpeechButtonProps): ReactElem
   const getLabel = (): string => {
     switch (status) {
       case "playing":
-        return "Pausar"
+        return labels.pause
       case "paused":
-        return "Continuar"
+        return labels.resume
       case "unavailable":
-        return "No disponible"
+        return labels.unavailable
       default:
-        return "Escuchar"
+        return labels.listen
     }
   }
 

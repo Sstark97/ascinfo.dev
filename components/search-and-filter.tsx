@@ -1,50 +1,34 @@
 "use client"
 
 import { Search, X, Filter, Check } from "lucide-react"
-import { useState, useMemo } from "react"
+import { useState } from "react"
 
-// Mapa de alias para normalizar tags duplicados (inglés/español)
 const TAG_ALIASES: Record<string, string> = {
-  // Architecture
   "Architecture": "Arquitectura",
   "Software Architecture": "Arquitectura de Software",
   "Hexagonal Architecture": "Arquitectura Hexagonal",
-  
-  // Design
   "Software Design": "Diseño de Software",
   "Design Patterns": "Patrones de Diseño",
   "Clean Code": "Código Limpio",
-  
-  // Testing
   "Testing": "Testing",
   "TDD": "TDD",
   "Test-Driven Development": "TDD",
-  
-  // Languages
   "TypeScript": "TypeScript",
   "JavaScript": "JavaScript",
   "C#": "C#",
   "Rust": "Rust",
   "Java": "Java",
   "Spring": "Spring",
-  
-  // Frontend
   "React": "React",
   "Next.js": "Next.js",
   "Astro": "Astro",
   "Frontend": "Frontend",
-  
-  // Backend
   "Backend": "Backend",
   ".NET": ".NET",
   "Node.js": "Node.js",
-  
-  // DevOps
   "DevOps": "DevOps",
   "Docker": "Docker",
   "Git": "Git",
-  
-  // Concepts
   "Refactoring": "Refactoring",
   "DDD": "DDD",
   "Domain-Driven Design": "DDD",
@@ -52,23 +36,31 @@ const TAG_ALIASES: Record<string, string> = {
   "OOP": "POO",
   "Object-Oriented Programming": "POO",
   "SOLID": "SOLID",
-  
-  // Career
   "Career": "Carrera",
   "Soft Skills": "Habilidades Blandas",
   "Junior": "Junior",
-  
-  // Talks
   "Talk": "Charla",
   "Conference": "Conferencia",
   "Meetup": "Meetup",
-  
-  // Projects
   "Open Source": "Open Source",
   "Side Project": "Proyecto Personal",
   "CLI": "CLI",
   "Web": "Web",
   "API": "API",
+}
+
+export interface SearchLabels {
+  placeholder: string
+  filterByTag: string
+  filteredTemplate: string
+  tagsChecked: string
+  activeFilter: string
+  activeFilters: string
+  clearAll: string
+  noTags: string
+  clearSearch: string
+  removeFilterTemplate: string
+  clearAllFilters: string
 }
 
 type SearchAndFilterProps = {
@@ -77,35 +69,24 @@ type SearchAndFilterProps = {
   onTagSelect: (tags: string[]) => void
   selectedTags: string[]
   searchQuery?: string
+  labels: SearchLabels
 }
 
-/**
- * Componente reutilizable para búsqueda y filtrado por tags.
- * Incluye canonicalización de tags (normalización de duplicados inglés/español)
- * y UI colapsable con Progressive Disclosure.
- * Soporta selección múltiple de tags (lógica OR).
- */
 export function SearchAndFilter({
   tags,
   onSearch,
   onTagSelect,
   selectedTags,
   searchQuery = "",
+  labels,
 }: SearchAndFilterProps): React.ReactElement {
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
-  // Canonicalizar tags: normalizar usando el mapa de aliases
-  const canonicalTags = useMemo(() => {
-    const normalized = tags.map((tag) => TAG_ALIASES[tag] ?? tag)
-    // Eliminar duplicados manteniendo el orden
-    return Array.from(new Set(normalized))
-  }, [tags])
+  const canonicalTags = Array.from(new Set(tags.map((tag) => TAG_ALIASES[tag] ?? tag)))
 
-  // Determinar si hay filtros activos
   const hasActiveFilters = selectedTags.length > 0
 
-  // Manejar toggle de tag (agregar o quitar)
   const handleTagToggle = (tag: string): void => {
     if (selectedTags.includes(tag)) {
       onTagSelect(selectedTags.filter((t) => t !== tag))
@@ -114,14 +95,12 @@ export function SearchAndFilter({
     }
   }
 
-  // Limpiar todos los filtros
   const clearAllFilters = (): void => {
     onTagSelect([])
   }
 
   return (
     <div className="space-y-4">
-      {/* Barra de búsqueda y botón de filtro */}
       <div className="flex flex-col gap-3 sm:flex-row">
         {/* Search Bar */}
         <div
@@ -132,7 +111,7 @@ export function SearchAndFilter({
           <Search className="ml-3 h-4 w-4 text-[#888888]" />
           <input
             type="text"
-            placeholder="Buscar..."
+            placeholder={labels.placeholder}
             value={searchQuery}
             onChange={(e) => onSearch(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
@@ -143,7 +122,7 @@ export function SearchAndFilter({
             <button
               onClick={() => onSearch("")}
               className="mr-2 rounded p-1 text-[#888888] hover:bg-white/5 hover:text-[#f5f5f5]"
-              aria-label="Limpiar búsqueda"
+              aria-label={labels.clearSearch}
             >
               <X className="h-3 w-3" />
             </button>
@@ -164,31 +143,31 @@ export function SearchAndFilter({
           {hasActiveFilters ? (
             <>
               <Check className="h-4 w-4" />
-              <span className="hidden sm:inline">Filtrado ({selectedTags.length})</span>
-              <span className="sm:hidden">Tags ✓</span>
+              <span className="hidden sm:inline">{labels.filteredTemplate.replace("{count}", String(selectedTags.length))}</span>
+              <span className="sm:hidden">{labels.tagsChecked}</span>
             </>
           ) : (
             <>
               <Filter className="h-4 w-4" />
-              <span className="hidden sm:inline">Filtrar por tag</span>
+              <span className="hidden sm:inline">{labels.filterByTag}</span>
               <span className="sm:hidden">Tags</span>
             </>
           )}
         </button>
       </div>
 
-      {/* Selected Tags Badges (always visible when active) */}
+      {/* Selected Tags Badges */}
       {hasActiveFilters && (
         <div className="flex flex-wrap items-center gap-2">
           <span className="font-mono text-xs text-[#888888]">
-            {selectedTags.length === 1 ? "Filtro activo:" : "Filtros activos:"}
+            {selectedTags.length === 1 ? labels.activeFilter : labels.activeFilters}
           </span>
           {selectedTags.map((tag) => (
             <button
               key={tag}
               onClick={() => handleTagToggle(tag)}
               className="inline-flex items-center gap-1.5 rounded-full bg-[#fca311] px-3 py-1 font-mono text-xs text-[#1a1a1a] transition-all hover:bg-[#fca311]/90"
-              aria-label={`Quitar filtro: ${tag}`}
+              aria-label={labels.removeFilterTemplate.replace("{tag}", tag)}
             >
               {tag}
               <X className="h-3 w-3" />
@@ -198,9 +177,9 @@ export function SearchAndFilter({
             <button
               onClick={clearAllFilters}
               className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-[#2a2a2a] px-3 py-1 font-mono text-xs text-[#888888] transition-all hover:border-[#fca311]/50 hover:text-[#f5f5f5]"
-              aria-label="Limpiar todos los filtros"
+              aria-label={labels.clearAllFilters}
             >
-              Limpiar todo
+              {labels.clearAll}
             </button>
           )}
         </div>
@@ -219,9 +198,7 @@ export function SearchAndFilter({
           className={`scrollbar-custom flex flex-wrap gap-2 p-4 pr-3 ${
             isFilterOpen ? "overflow-y-auto overscroll-contain" : "overflow-hidden"
           }`}
-          style={{
-            maxHeight: isFilterOpen ? "60vh" : "0",
-          }}
+          style={{ maxHeight: isFilterOpen ? "60vh" : "0" }}
         >
           <div className="flex flex-wrap gap-2 w-full">
             {canonicalTags.length > 0 ? (
@@ -243,7 +220,7 @@ export function SearchAndFilter({
                 )
               })
             ) : (
-              <p className="text-sm text-[#888888]">No hay tags disponibles</p>
+              <p className="text-sm text-[#888888]">{labels.noTags}</p>
             )}
           </div>
         </div>

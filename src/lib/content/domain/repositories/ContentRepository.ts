@@ -1,3 +1,5 @@
+import type { Locale } from '@/content/domain/types/Locale'
+
 export type RawContent<F> = {
   slug: string
   frontmatter: F
@@ -5,6 +7,6 @@ export type RawContent<F> = {
 }
 
 export type ContentRepository = {
-  readAll<F>(directory: string): Promise<RawContent<F>[]>
-  readBySlug<F>(directory: string, slug: string): Promise<RawContent<F> | null>
+  readAll<F>(directory: string, locale: Locale): Promise<RawContent<F>[]>
+  readBySlug<F>(directory: string, locale: Locale, slug: string): Promise<RawContent<F> | null>
 }

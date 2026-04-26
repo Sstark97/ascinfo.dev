@@ -1,6 +1,7 @@
 import { Client } from "@notionhq/client"
 import type { BlockObjectResponse, PageObjectResponse } from "@notionhq/client/build/src/api-endpoints"
 import type { ContentRepository, RawContent } from "@/content/domain/repositories/ContentRepository"
+import type { Locale } from "@/content/domain/types/Locale"
 import { NotionBlocksToMarkdown } from "./NotionBlocksToMarkdown"
 import { PostPropertyMapper } from "./mappers/PostPropertyMapper"
 import { ProjectPropertyMapper } from "./mappers/ProjectPropertyMapper"
@@ -33,7 +34,7 @@ export class NotionContentRepository implements ContentRepository {
    * @param directory - The content directory (maps to data source ID)
    * @returns Array of raw content with frontmatter and markdown
    */
-  async readAll<F>(directory: string): Promise<RawContent<F>[]> {
+  async readAll<F>(directory: string, locale: Locale): Promise<RawContent<F>[]> {
     try {
       const dataSourceId = this.getDatabaseId(directory)
       if (!dataSourceId) {
@@ -47,8 +48,10 @@ export class NotionContentRepository implements ContentRepository {
         method: "post",
         body: {
           filter: {
-            property: "Status",
-            select: { equals: "Published" },
+            and: [
+              { property: "Status", select: { equals: "Published" } },
+              { property: "Language", select: { equals: locale } },
+            ],
           },
         },
       })) as { results: Array<PageObjectResponse | Record<string, unknown>> }
@@ -72,7 +75,7 @@ export class NotionContentRepository implements ContentRepository {
    * @param slug - The content slug to find
    * @returns Raw content or null if not found
    */
-  async readBySlug<F>(directory: string, slug: string): Promise<RawContent<F> | null> {
+  async readBySlug<F>(directory: string, locale: Locale, slug: string): Promise<RawContent<F> | null> {
     try {
       const dataSourceId = this.getDatabaseId(directory)
       if (!dataSourceId) {
@@ -87,14 +90,9 @@ export class NotionContentRepository implements ContentRepository {
         body: {
           filter: {
             and: [
-              {
-                property: "Slug",
-                rich_text: { equals: slug },
-              },
-              {
-                property: "Status",
-                select: { equals: "Published" },
-              },
+              { property: "Slug", rich_text: { equals: slug } },
+              { property: "Status", select: { equals: "Published" } },
+              { property: "Language", select: { equals: locale } },
             ],
           },
         },

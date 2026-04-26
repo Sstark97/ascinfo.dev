@@ -3,6 +3,13 @@
 import React from "react";
 import dynamic from "next/dynamic";
 
+interface CvLabels {
+  download: string
+  generating: string
+  ariaReady: string
+  ariaLoading: string
+}
+
 const CvDownloadButtonLazy = dynamic(
   () =>
     import("@/components/career/cv-download-button").then(
@@ -16,6 +23,10 @@ const CvDownloadButtonLazy = dynamic(
   },
 );
 
-export function CvDownloadButtonDynamic(): React.ReactElement {
-  return <CvDownloadButtonLazy />;
+interface CvDownloadButtonDynamicProps {
+  readonly labels: CvLabels;
+}
+
+export function CvDownloadButtonDynamic({ labels }: CvDownloadButtonDynamicProps): React.ReactElement {
+  return <CvDownloadButtonLazy labels={labels} />;
 }

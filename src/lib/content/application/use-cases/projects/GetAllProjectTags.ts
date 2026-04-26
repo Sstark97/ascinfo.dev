@@ -1,5 +1,6 @@
 import { GetAllProjects } from "./GetAllProjects"
 import type { ContentRepository } from "@/content/domain/repositories/ContentRepository"
+import type { Locale } from "@/content/domain/types/Locale"
 
 export class GetAllProjectTags {
   private readonly getAllProjects: GetAllProjects
@@ -8,8 +9,8 @@ export class GetAllProjectTags {
     this.getAllProjects = new GetAllProjects(contentRepository)
   }
 
-  async execute(): Promise<string[]> {
-    const projects = await this.getAllProjects.execute()
+  async execute(locale: Locale): Promise<string[]> {
+    const projects = await this.getAllProjects.execute(locale)
     const tagsSet = new Set<string>()
     projects.forEach((project) => project.tags.forEach((tag) => tagsSet.add(tag)))
     return Array.from(tagsSet).sort()

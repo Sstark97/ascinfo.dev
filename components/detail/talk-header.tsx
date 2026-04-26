@@ -2,6 +2,13 @@ import Link from "next/link"
 import { ChevronRight, Calendar, MapPin, Presentation, Video } from "lucide-react"
 import { TextToSpeechButton } from "./text-to-speech-button"
 
+interface TtsLabels {
+  listen: string
+  pause: string
+  resume: string
+  unavailable: string
+}
+
 interface TalkHeaderProps {
   title: string
   date: string
@@ -11,20 +18,25 @@ interface TalkHeaderProps {
   plainTextContent: string
   slidesUrl?: string
   videoUrl?: string
+  homeLabel: string
+  talksLabel: string
+  slidesLabel: string
+  videoLabel: string
+  ttsLabels: TtsLabels
 }
 
-export function TalkHeader({ title, date, location, event, tags, plainTextContent, slidesUrl, videoUrl }: TalkHeaderProps) {
+export function TalkHeader({ title, date, location, event, tags, plainTextContent, slidesUrl, videoUrl, homeLabel, talksLabel, slidesLabel, videoLabel, ttsLabels }: TalkHeaderProps) {
   return (
     <header className="border-b border-white/5">
       <div className="mx-auto max-w-6xl px-4 py-8 md:px-6">
         {/* Breadcrumbs */}
         <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-1 text-sm">
           <Link href="/" className="text-[#888888] transition-colors hover:text-[#fca311]">
-            Inicio
+            {homeLabel}
           </Link>
           <ChevronRight className="h-4 w-4 text-[#666666]" aria-hidden="true" />
           <Link href="/charlas" className="text-[#888888] transition-colors hover:text-[#fca311]">
-            Charlas
+            {talksLabel}
           </Link>
           <ChevronRight className="h-4 w-4 text-[#666666]" aria-hidden="true" />
           <span className="truncate text-[#f5f5f5]">{title}</span>
@@ -73,7 +85,7 @@ export function TalkHeader({ title, date, location, event, tags, plainTextConten
                 className="inline-flex items-center gap-2 rounded-lg border border-[#444444] bg-[#2a2a2a] px-4 py-2 text-sm font-medium text-[#f5f5f5] transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311]"
               >
                 <Presentation className="h-4 w-4" />
-                <span>Ver diapositivas</span>
+                <span>{slidesLabel}</span>
               </a>
             )}
             {videoUrl && (
@@ -84,7 +96,7 @@ export function TalkHeader({ title, date, location, event, tags, plainTextConten
                 className="inline-flex items-center gap-2 rounded-lg bg-[#fca311] px-4 py-2 text-sm font-medium text-[#1a1a1a] transition-all duration-300 hover:bg-[#e5940f]"
               >
                 <Video className="h-4 w-4" />
-                <span>Ver video</span>
+                <span>{videoLabel}</span>
               </a>
             )}
           </div>
@@ -92,7 +104,7 @@ export function TalkHeader({ title, date, location, event, tags, plainTextConten
 
         {/* TTS Button */}
         <div className="mt-6">
-          <TextToSpeechButton text={plainTextContent} />
+          <TextToSpeechButton text={plainTextContent} labels={ttsLabels} />
         </div>
       </div>
     </header>

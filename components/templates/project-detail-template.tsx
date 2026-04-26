@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { ChevronRight, ExternalLink, Star, GitFork, Calendar, Scale } from "lucide-react"
 import { GithubIconOutline } from "@/components/icons/github-icon"
+import { getTranslations } from "next-intl/server"
 import type { Project } from "@/src/lib/content"
 import type { ReactNode } from "react"
 
@@ -10,18 +11,24 @@ type ProjectDetailTemplateProps = {
 }
 
 const statusConfig = {
-  active: { label: "Activo", color: "text-green-400", bgColor: "bg-green-500/10", dotColor: "bg-green-500" },
-  maintenance: {
-    label: "Mantenimiento",
-    color: "text-[#fca311]",
-    bgColor: "bg-[#fca311]/10",
-    dotColor: "bg-[#fca311]",
-  },
-  archived: { label: "Archivado", color: "text-[#888888]", bgColor: "bg-[#888888]/10", dotColor: "bg-[#555555]" },
+  active: { color: "text-green-400", bgColor: "bg-green-500/10", dotColor: "bg-green-500" },
+  maintenance: { color: "text-[#fca311]", bgColor: "bg-[#fca311]/10", dotColor: "bg-[#fca311]" },
+  archived: { color: "text-[#888888]", bgColor: "bg-[#888888]/10", dotColor: "bg-[#555555]" },
 }
 
-export function ProjectDetailTemplate({ project, children }: ProjectDetailTemplateProps): React.ReactElement {
+export async function ProjectDetailTemplate({ project, children }: ProjectDetailTemplateProps): Promise<React.ReactElement> {
   const { title, description, heroImage, tags, repoUrl, demoUrl, status, stars, forks, lastCommit, license } = project
+  const [tBreadcrumbs, tDetail, tProject] = await Promise.all([
+    getTranslations("breadcrumbs"),
+    getTranslations("projectDetail"),
+    getTranslations("project"),
+  ])
+
+  const statusLabels = {
+    active: tProject("statusActive"),
+    maintenance: tProject("statusMaintenance"),
+    archived: tProject("statusArchived"),
+  }
 
   return (
     <div className="box-border min-h-screen w-full overflow-x-hidden bg-[#1a1a1a]">
@@ -29,11 +36,11 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
       <div className="mx-auto w-full max-w-6xl px-4 pt-8 sm:px-6 md:px-8">
         <nav aria-label="Breadcrumb" className="flex items-center gap-1 text-sm">
           <Link href="/" className="text-[#888888] transition-colors hover:text-[#fca311]">
-            Inicio
+            {tBreadcrumbs("home")}
           </Link>
           <ChevronRight className="h-4 w-4 text-[#666666]" aria-hidden="true" />
           <Link href="/proyectos" className="text-[#888888] transition-colors hover:text-[#fca311]">
-            Proyectos
+            {tBreadcrumbs("projects")}
           </Link>
           <ChevronRight className="h-4 w-4 text-[#666666]" aria-hidden="true" />
           <span className="truncate text-[#f5f5f5]">{title}</span>
@@ -63,7 +70,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                   className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${statusConfig[status].bgColor} ${statusConfig[status].color}`}
                 >
                   <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${statusConfig[status].dotColor}`} />
-                  {statusConfig[status].label}
+                  {statusLabels[status]}
                 </span>
                 {tags.map((tag: string) => (
                   <span
@@ -110,7 +117,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                 className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${statusConfig[status].bgColor} ${statusConfig[status].color}`}
               >
                 <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${statusConfig[status].dotColor}`} />
-                {statusConfig[status].label}
+                {statusLabels[status]}
               </span>
               {tags.map((tag: string) => (
                 <span
@@ -173,7 +180,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
               {(stars !== undefined || forks !== undefined || lastCommit || license) && (
                 <div className="overflow-hidden rounded-xl border border-[#333333] bg-[#222222] p-4 sm:p-5 md:p-6">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-[#888888] sm:text-sm">
-                    Estadísticas
+                    {tDetail("stats")}
                   </h3>
                   <div className="mt-3 space-y-3 sm:mt-4 sm:space-y-4">
                     {stars !== undefined && (
@@ -198,7 +205,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex min-w-0 items-center gap-2 text-sm text-[#aaaaaa]">
                           <Calendar className="h-4 w-4 shrink-0 text-[#fca311]" />
-                          <span className="truncate">Último commit</span>
+                          <span className="truncate">{tDetail("lastCommit")}</span>
                         </div>
                         <span className="shrink-0 break-all font-mono text-xs text-[#f5f5f5] sm:text-sm">{lastCommit}</span>
                       </div>
@@ -207,7 +214,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex min-w-0 items-center gap-2 text-sm text-[#aaaaaa]">
                           <Scale className="h-4 w-4 shrink-0 text-[#fca311]" />
-                          <span className="truncate">Licencia</span>
+                          <span className="truncate">{tDetail("license")}</span>
                         </div>
                         <span className="shrink-0 break-all font-mono text-sm text-[#f5f5f5]">{license}</span>
                       </div>
@@ -233,7 +240,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
 
               {/* Quick Links */}
               <div className="overflow-hidden rounded-xl border border-[#333333] bg-[#222222] p-4 sm:p-5 md:p-6">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-[#888888] sm:text-sm">Enlaces</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-[#888888] sm:text-sm">{tDetail("links")}</h3>
                 <div className="mt-3 space-y-2 sm:mt-4">
                   <a
                     href={repoUrl}
@@ -242,7 +249,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                     className="flex items-center gap-2 rounded-lg border border-[#333333] bg-[#1a1a1a] px-3 py-2.5 text-sm text-[#aaaaaa] transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311] sm:px-4 sm:py-3"
                   >
                     <GithubIconOutline className="h-4 w-4 shrink-0" />
-                    <span className="min-w-0 truncate">Repositorio</span>
+                    <span className="min-w-0 truncate">{tDetail("repository")}</span>
                     <ExternalLink className="ml-auto h-3 w-3 shrink-0" />
                   </a>
                   {demoUrl && (
@@ -253,7 +260,7 @@ export function ProjectDetailTemplate({ project, children }: ProjectDetailTempla
                       className="flex items-center gap-2 rounded-lg border border-[#333333] bg-[#1a1a1a] px-3 py-2.5 text-sm text-[#aaaaaa] transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311] sm:px-4 sm:py-3"
                     >
                       <ExternalLink className="h-4 w-4 shrink-0" />
-                      <span className="min-w-0 truncate">Demo en vivo</span>
+                      <span className="min-w-0 truncate">{tDetail("liveDemo")}</span>
                       <ExternalLink className="ml-auto h-3 w-3 shrink-0" />
                     </a>
                   )}

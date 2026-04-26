@@ -1,8 +1,15 @@
-"use client"
-
 import Link from "next/link"
 import { ExternalLink } from "lucide-react"
 import { GithubIconOutline } from "@/components/icons/github-icon"
+
+interface ProjectLabels {
+  code: string
+  demo: string
+  viewDetails: string
+  statusActive: string
+  statusMaintenance: string
+  statusArchived: string
+}
 
 interface ProjectCardProps {
   slug: string
@@ -14,6 +21,7 @@ interface ProjectCardProps {
   liveUrl?: string
   stars?: number
   forks?: number
+  labels: ProjectLabels
 }
 
 const techColors: Record<string, string> = {
@@ -27,15 +35,10 @@ const techColors: Record<string, string> = {
   Docker: "text-blue-500",
 }
 
-const statusConfig = {
-  active: { label: "Activo", color: "text-green-400", dotColor: "bg-green-500", glowColor: "shadow-green-500/50" },
-  maintenance: {
-    label: "Mantenimiento",
-    color: "text-[#fca311]",
-    dotColor: "bg-[#fca311]",
-    glowColor: "shadow-[#fca311]/50",
-  },
-  archived: { label: "Archivado", color: "text-[#999999]", dotColor: "bg-[#555555]", glowColor: "" },
+const statusStyle = {
+  active: { color: "text-green-400", dotColor: "bg-green-500", glowColor: "shadow-green-500/50" },
+  maintenance: { color: "text-[#fca311]", dotColor: "bg-[#fca311]", glowColor: "shadow-[#fca311]/50" },
+  archived: { color: "text-[#999999]", dotColor: "bg-[#555555]", glowColor: "" },
 }
 
 export function ProjectCard({
@@ -48,10 +51,20 @@ export function ProjectCard({
   liveUrl,
   stars,
   forks,
+  labels,
 }: ProjectCardProps) {
+  const style = statusStyle[status]
+  const statusLabel = { active: labels.statusActive, maintenance: labels.statusMaintenance, archived: labels.statusArchived }[status]
+
   return (
-    <Link href={`/proyectos/${slug}`} className="block h-full">
-      <article className="group flex h-full flex-col rounded-xl border border-[#333333] bg-[#222222] p-5 transition-all duration-300 hover:border-[#fca311] hover:shadow-[0_0_30px_rgba(252,163,17,0.1)]">
+    <article className="group relative flex h-full flex-col rounded-xl border border-[#333333] bg-[#222222] p-5 transition-all duration-300 hover:border-[#fca311] hover:shadow-[0_0_30px_rgba(252,163,17,0.1)]">
+      {/* Stretched link — covers entire card, no nested <a> */}
+      <Link
+        href={`/proyectos/${slug}`}
+        className="absolute inset-0 rounded-xl focus-visible:outline-2 focus-visible:outline-[#fca311] focus-visible:outline-offset-2"
+        aria-label={title}
+      />
+
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -85,10 +98,8 @@ export function ProjectCard({
           </div>
         </div>
         <div className="flex items-center gap-1.5">
-          <div
-            className={`h-2 w-2 rounded-full ${statusConfig[status].dotColor} ${statusConfig[status].glowColor} shadow-sm`}
-          />
-          <span className={`text-xs ${statusConfig[status].color}`}>{statusConfig[status].label}</span>
+          <div className={`h-2 w-2 rounded-full ${style.dotColor} ${style.glowColor} shadow-sm`} />
+          <span className={`text-xs ${style.color}`}>{statusLabel}</span>
         </div>
       </div>
 
@@ -107,19 +118,18 @@ export function ProjectCard({
         ))}
       </div>
 
-      {/* Action Links */}
-      <div className="mt-4 flex items-center justify-between border-t border-[#333333] pt-4">
+      {/* Action Links — relative + z-10 to float above the stretched link */}
+      <div className="relative z-10 mt-4 flex items-center justify-between border-t border-[#333333] pt-4">
         <div className="flex gap-3">
           {githubUrl && (
             <a
               href={githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
               className="flex items-center gap-1.5 rounded-md border border-[#333333] bg-[#1a1a1a] px-3 py-1.5 text-xs text-[#999999] transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311]"
             >
               <GithubIconOutline aria-hidden="true" className="h-3.5 w-3.5" />
-              Código
+              {labels.code}
             </a>
           )}
           {liveUrl && (
@@ -127,19 +137,17 @@ export function ProjectCard({
               href={liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
               className="flex items-center gap-1.5 rounded-md border border-[#333333] bg-[#1a1a1a] px-3 py-1.5 text-xs text-[#999999] transition-all duration-300 hover:border-[#fca311] hover:text-[#fca311] group-hover:border-[#fca311]/50 group-hover:text-[#fca311] group-hover:shadow-[0_0_10px_rgba(252,163,17,0.2)]"
             >
               <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
-              Demo
+              {labels.demo}
             </a>
           )}
         </div>
         <span className="text-xs text-[#555555] transition-colors duration-300 group-hover:text-[#fca311]">
-          Ver detalles →
+          {labels.viewDetails}
         </span>
       </div>
     </article>
-    </Link>
   )
 }

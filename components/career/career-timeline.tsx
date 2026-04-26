@@ -1,9 +1,14 @@
-import { careerData } from "@/src/lib/career/career-data";
+import { getCareerData } from "@/src/lib/career/career-data";
 import type { CareerPosition } from "@/src/lib/career/career-data";
+import { getTranslations, getLocale } from "next-intl/server";
 import { TimelineNode } from "./timeline-node";
 import { ProjectSubNode } from "./project-sub-node";
 
-export function CareerTimeline() {
+export async function CareerTimeline() {
+  const locale = await getLocale()
+  const t = await getTranslations("career")
+  const careerData = getCareerData(locale)
+
   return (
     <div className="relative">
       {careerData.map((position: CareerPosition, index: number) => (
@@ -45,7 +50,7 @@ export function CareerTimeline() {
               {position.isActive && (
                 <span className="flex items-center gap-1.5 rounded-full bg-[#FCA311]/10 px-3 py-1.5 font-mono text-xs font-medium text-[#FCA311]">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#FCA311]" />
-                  Activo
+                  {t("active")}
                 </span>
               )}
             </div>

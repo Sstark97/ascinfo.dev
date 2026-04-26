@@ -2,9 +2,11 @@ import fs from "fs/promises"
 import path from "path"
 import matter from "gray-matter"
 import type { ContentRepository, RawContent } from "@/content/domain/repositories/ContentRepository"
+import type { Locale } from "@/content/domain/types/Locale"
 
 export class MDXContentRepository implements ContentRepository {
-  async readAll<F>(directory: string): Promise<RawContent<F>[]> {
+  async readAll<F>(directory: string, locale: Locale): Promise<RawContent<F>[]> {
+    if (locale !== 'es') return []
     try {
       const files = await fs.readdir(directory)
       const mdxFiles = files.filter((file) => file.endsWith(".mdx"))
@@ -14,7 +16,8 @@ export class MDXContentRepository implements ContentRepository {
     }
   }
 
-  async readBySlug<F>(directory: string, slug: string): Promise<RawContent<F> | null> {
+  async readBySlug<F>(directory: string, locale: Locale, slug: string): Promise<RawContent<F> | null> {
+    if (locale !== 'es') return null
     try {
       const filePath = path.join(directory, `${slug}.mdx`)
       return await this.parseFile<F>(filePath)

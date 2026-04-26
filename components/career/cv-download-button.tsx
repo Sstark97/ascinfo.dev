@@ -5,12 +5,21 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { CvPdfDocument } from "@/components/career/cv-pdf-document";
 import { cvData } from "@/src/lib/career/cv-data";
 
+interface CvLabels {
+  download: string
+  generating: string
+  ariaReady: string
+  ariaLoading: string
+}
+
 interface CvDownloadButtonProps {
   readonly fileName?: string;
+  readonly labels: CvLabels;
 }
 
 export function CvDownloadButton({
   fileName,
+  labels,
 }: CvDownloadButtonProps): React.ReactElement {
   const resolvedFileName = fileName ?? "aitor-santana-cv.pdf";
 
@@ -23,11 +32,7 @@ export function CvDownloadButton({
         <button
           type="button"
           disabled={loading}
-          aria-label={
-            loading
-              ? "Generando PDF del CV, por favor espera"
-              : "Descargar CV en PDF"
-          }
+          aria-label={loading ? labels.ariaLoading : labels.ariaReady}
           className={[
             "inline-flex items-center gap-2 rounded-lg px-5 py-2.5",
             "border border-[#FCA311] bg-[#FCA311]/10 font-mono text-sm font-medium text-[#FCA311]",
@@ -43,7 +48,7 @@ export function CvDownloadButton({
                 aria-hidden="true"
                 className="h-4 w-4 animate-spin rounded-full border-2 border-[#FCA311]/30 border-t-[#FCA311]"
               />
-              Generando PDF...
+              {labels.generating}
             </>
           ) : (
             <>
@@ -62,7 +67,7 @@ export function CvDownloadButton({
                   d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                 />
               </svg>
-              Descargar CV
+              {labels.download}
             </>
           )}
         </button>

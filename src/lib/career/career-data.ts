@@ -18,7 +18,7 @@ export interface CareerPosition {
   isPrimary: boolean;
 }
 
-export const careerData: CareerPosition[] = [
+const careerDataEs: CareerPosition[] = [
   {
     company: "Lean Mind",
     role: "Software Developer",
@@ -70,3 +70,62 @@ export const careerData: CareerPosition[] = [
     isPrimary: false,
   },
 ];
+
+const careerDataEn: CareerPosition[] = [
+  {
+    company: "Lean Mind",
+    role: "Software Developer",
+    dateRange: "Mar 2023 - Present",
+    location: "Canary Islands, Remote",
+    isActive: true,
+    description: "Specialized software development consultancy, delivering value through Extreme Programming (XP), TDD, and evolutionary architectures in high-performance teams.",
+    isPrimary: true,
+    projects: [
+      {
+        name: "Fintech B2B & Payments",
+        dateRange: "Feb 2025 - Present",
+        stack: [".NET Core", "Angular", "DDD", "Hexagonal Arch"],
+        description: "Building B2B payment ecosystems and e-invoicing for the travel sector. Implementation of virtual payment methods (VCC) and resilient architectures for high-throughput transactions.",
+        isActive: true,
+      },
+      {
+        name: "Global OTT Platform",
+        dateRange: "Nov 2023 - Feb 2025",
+        stack: ["Java Spring Boot", "Event-Driven", "Microservices", "PostgreSQL"],
+        description: "Modernization of a global streaming and TV platform. Service orchestration for large-scale ingestion, processing, and distribution of multimedia content.",
+        isActive: false,
+      },
+      {
+        name: "EdTech Platform",
+        dateRange: "Mar 2023 - Nov 2023",
+        stack: ["React", "Java Spring Boot", "TDD", "Docker"],
+        description: "Building an education platform focused on code quality, applying strict TDD and continuous delivery pipelines (CI/CD).",
+        isActive: false,
+      },
+    ],
+  },
+  {
+    company: "Codemotion",
+    role: "Technical Writer & Speaker",
+    dateRange: "Oct 2024 - Present",
+    isActive: true,
+    description: "Technical outreach on Clean Code, Testing, and Software Architecture through specialized articles and community talks.",
+    isPrimary: false,
+  },
+  {
+    company: "NEWE",
+    role: "Frontend Lead",
+    dateRange: "Nov 2021 - Apr 2022",
+    location: "Valencia, Remote",
+    isActive: false,
+    stack: ["React", "TypeScript", "Redux", "Material UI"],
+    description: "Technical leadership at a Circular Economy and Retail Tech startup. Development of a B2B SaaS platform for reverse logistics management and pay-per-use (Renting) models in e-commerce.",
+    isPrimary: false,
+  },
+];
+
+export function getCareerData(locale: string): CareerPosition[] {
+  return locale === "en" ? careerDataEn : careerDataEs;
+}
+
+export const careerData = careerDataEs;

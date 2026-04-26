@@ -1,0 +1,141 @@
+{
+  "meta": {
+    "blog": {
+      "title": "Blog",
+      "description": "Artículos sobre desarrollo de software, TDD, Clean Code, arquitectura hexagonal y buenas prácticas de programación por Aitor Santana.",
+      "ogTitle": "Blog | Aitor Santana",
+      "twitterDescription": "Artículos sobre desarrollo de software, TDD, Clean Code y buenas prácticas."
+    },
+    "talks": {
+      "title": "Charlas",
+      "description": "Charlas y ponencias de Aitor Santana sobre desarrollo de software, TDD, Clean Code, arquitectura hexagonal y metodologías ágiles en conferencias y eventos técnicos.",
+      "ogTitle": "Charlas | Aitor Santana",
+      "twitterDescription": "Charlas y ponencias de Aitor Santana sobre desarrollo de software y buenas prácticas."
+    },
+    "projects": {
+      "title": "Proyectos",
+      "description": "Portfolio de proyectos de software desarrollados por Aitor Santana. Aplicaciones web, herramientas open-source y experimentos con tecnologías modernas.",
+      "ogTitle": "Proyectos | Aitor Santana",
+      "twitterDescription": "Portfolio de proyectos de software desarrollados por Aitor Santana."
+    },
+    "about": {
+      "title": "Sobre mí - Aitor Santana | Software Crafter",
+      "description": "Software Crafter con más de 3 años de experiencia en Lean Mind. Especializado en arquitecturas limpias, TDD y desarrollo full-stack con .NET, Java Spring Boot y React.",
+      "ogTitle": "Sobre mí - Aitor Santana",
+      "ogDescription": "Software Crafter especializado en arquitecturas limpias, TDD y desarrollo full-stack."
+    }
+  },
+  "home": {
+    "latestArticle": "Último artículo",
+    "previous": "Anteriores",
+    "featuredProject": "Proyecto destacado",
+    "viewProject": "Ver proyecto",
+    "recentTalk": "Charla reciente",
+    "viewTalk": "Ver charla"
+  },
+  "profile": {
+    "bio1": "Hola, soy Aitor Santana. Como <strong>Desarrollador de Software</strong> y <strong>Software Crafter</strong>, ayudo a equipos a construir código sostenible.",
+    "bio2": "Mi especialidad está en la intersección entre el <strong>Clean Code</strong>, la <strong>Arquitectura Hexagonal</strong> y la nueva ola de <highlight>IA Generativa</highlight>.",
+    "bio3": "Escribo, doy charlas y desarrollo software de calidad desde <strong>Canarias</strong> para el mundo."
+  },
+  "nav": {
+    "blog": "Blog",
+    "talks": "Charlas",
+    "projects": "Proyectos",
+    "about": "Sobre mí"
+  },
+  "search": {
+    "placeholder": "Buscar...",
+    "filterByTag": "Filtrar por tag",
+    "filtered": "Filtrado ({count})",
+    "tagsChecked": "Tags ✓",
+    "activeFilter": "Filtro activo:",
+    "activeFilters": "Filtros activos:",
+    "clearAll": "Limpiar todo",
+    "noTags": "No hay tags disponibles",
+    "clearSearch": "Limpiar búsqueda",
+    "removeFilter": "Quitar filtro: {tag}",
+    "clearAllFilters": "Limpiar todos los filtros"
+  },
+  "listing": {
+    "backToHome": "Volver al inicio",
+    "blog": {
+      "title": "Blog",
+      "subtitle": "The Technical Log — Artículos sobre desarrollo de software",
+      "empty": "No se encontraron artículos con esos filtros."
+    },
+    "projects": {
+      "title": "Proyectos",
+      "subtitle": "Portfolio — Proyectos open source y side projects",
+      "empty": "No se encontraron proyectos con esos filtros."
+    },
+    "talks": {
+      "title": "Charlas",
+      "subtitle": "Talks & Events — Conferencias y workshops",
+      "empty": "No se encontraron charlas con esos filtros."
+    }
+  },
+  "project": {
+    "statusActive": "Activo",
+    "statusMaintenance": "Mantenimiento",
+    "statusArchived": "Archivado",
+    "code": "Código",
+    "demo": "Demo",
+    "viewDetails": "Ver detalles →"
+  },
+  "tts": {
+    "listen": "Escuchar",
+    "pause": "Pausar",
+    "resume": "Continuar",
+    "unavailable": "No disponible"
+  },
+  "talks": {
+    "slides": "Ver diapositivas",
+    "video": "Ver video"
+  },
+  "breadcrumbs": {
+    "home": "Inicio",
+    "blog": "Blog",
+    "projects": "Proyectos",
+    "talks": "Charlas",
+    "about": "Sobre mí"
+  },
+  "about": {
+    "pageTitle": "Sobre mí",
+    "careerTitle": "Trayectoria Profesional",
+    "approachTitle": "Enfoque Técnico",
+    "stackTitle": "Stack Técnico Actual",
+    "backend": "Backend",
+    "frontend": "Frontend",
+    "devops": "DevOps & Tools",
+    "skipToContent": "Saltar al contenido principal",
+    "bio1": "Soy un <highlight>Desarrollador de Software</highlight> apasionado por construir <strong>software sostenible</strong>. En mis años en <strong>Lean Mind</strong>, he tenido la oportunidad de rotar por proyectos complejos (Fintech, Multimedia, EdTech), lo que me ha enseñado a adaptarme a nuevos stacks tecnológicos sin sacrificar la calidad.",
+    "bio2": "Veo el desarrollo de software como una <strong>disciplina de ingeniería</strong> que requiere rigor y empatía. Mi objetivo diario es diseñar sistemas que no solo funcionen hoy, sino que sean fáciles de mantener y entender por mis compañeros mañana.",
+    "craftsmanshipDesc": "El código es un artefacto de comunicación, no solo instrucciones para la máquina. Priorizo la legibilidad, el diseño emergente y el refactoring continuo.",
+    "tddDesc": "Los tests son la primera documentación del sistema. TDD me permite diseñar APIs antes de implementarlas y tener confianza en los cambios.",
+    "namingDesc": "Los nombres importan. Intento que el código cuente una historia y refleje la intención del negocio, facilitando que cualquier compañero pueda leerlo sin necesidad de traducción.",
+    "architectureDesc": "Separo la lógica de negocio de los detalles de infraestructura. Arquitectura hexagonal, puertos y adaptadores, inversión de dependencias."
+  },
+  "career": {
+    "active": "Activo"
+  },
+  "cv": {
+    "download": "Descargar CV",
+    "generating": "Generando PDF...",
+    "ariaReady": "Descargar CV en PDF",
+    "ariaLoading": "Generando PDF del CV, por favor espera"
+  },
+  "projectDetail": {
+    "stats": "Estadísticas",
+    "lastCommit": "Último commit",
+    "license": "Licencia",
+    "repository": "Repositorio",
+    "liveDemo": "Demo en vivo",
+    "links": "Enlaces"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "Lo siento, la página que buscas no existe o ha sido movida.",
+    "backHome": "Volver al inicio"
+  }
+}
