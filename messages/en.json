@@ -63,7 +63,8 @@
     "blog": "Blog",
     "talks": "Talks",
     "projects": "Projects",
-    "about": "About me"
+    "about": "About me",
+    "sectionsLabel": "Sections"
   },
   "search": {
     "placeholder": "Search...",
@@ -135,7 +136,15 @@
     "craftsmanshipDesc": "Code is a communication artifact, not just instructions for the machine. I prioritize readability, emergent design, and continuous refactoring.",
     "tddDesc": "Tests are the system's first documentation. TDD lets me design APIs before implementing them and gives me confidence in changes.",
     "namingDesc": "Names matter. I try to make the code tell a story and reflect business intent, so any teammate can read it without needing a translation.",
-    "architectureDesc": "I separate business logic from infrastructure details. Hexagonal architecture, ports and adapters, dependency inversion."
+    "architectureDesc": "I separate business logic from infrastructure details. Hexagonal architecture, ports and adapters, dependency inversion.",
+    "contact": {
+      "title": "Let's chat?",
+      "description": "If you have a project in mind, an idea to validate, or want to talk about Clean Code, TDD or architecture, drop me a line. I reply within 24 hours.",
+      "primaryLabel": "Send email",
+      "primaryAriaLabel": "Send an email to Aitor Santana",
+      "secondaryLabel": "Connect on LinkedIn",
+      "secondaryAriaLabel": "Connect with Aitor Santana on LinkedIn (opens in a new tab)"
+    }
   },
   "career": {
     "active": "Active"
@@ -158,5 +167,23 @@
     "title": "Page not found",
     "description": "Sorry, the page you are looking for does not exist or has been moved.",
     "backHome": "Back to home"
+  },
+  "footer": {
+    "contactTitle": "Contact",
+    "emailLabel": "Email",
+    "linkedinLabel": "LinkedIn",
+    "linkedinHandle": "@aitorscinfo",
+    "linkedinAriaLabel": "Aitor Santana's LinkedIn profile (opens in a new tab)",
+    "githubLabel": "GitHub",
+    "githubHandle": "@Sstark97",
+    "githubAriaLabel": "Aitor Santana's GitHub profile (opens in a new tab)",
+    "emailAriaLabel": "Send an email to Aitor Santana",
+    "xLabel": "X",
+    "xHandle": "@aitorsci",
+    "xAriaLabel": "Aitor Santana's X (Twitter) profile (opens in a new tab)",
+    "blueskyLabel": "Bluesky",
+    "blueskyHandle": "@ascinfo.dev",
+    "blueskyAriaLabel": "Aitor Santana's Bluesky profile (opens in a new tab)",
+    "copyright": "© {year} Aitor Santana. Crafted with care in the Canary Islands."
   }
 }

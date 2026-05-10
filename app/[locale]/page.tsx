@@ -21,7 +21,7 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
 
   const l = locale as Locale
 
-  const [tHome, tProject, featuredPost, featuredProject, featuredTalk, allPosts, allTalks] = await Promise.all([
+  const [tHome, tProject, featuredPost, featuredProject, featuredTalk, allPosts, allTalks, allProjects] = await Promise.all([
     getTranslations("home"),
     getTranslations("project"),
     posts.getFeatured.execute(l),
@@ -29,6 +29,7 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
     talks.getFeatured.execute(l),
     posts.getAll.execute(l),
     talks.getAll.execute(l),
+    projects.getAll.execute(l),
   ])
 
   const featuredPostDto = featuredPost?.toDto()
@@ -128,7 +129,7 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
               )}
             </div>
             <div className="md:col-span-4">
-              <NavigationDock />
+              <NavigationDock postsCount={allPosts.length} talksCount={allTalks.length} projectsCount={allProjects.length} />
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import { setRequestLocale, getTranslations } from "next-intl/server"
 import { CareerTimeline } from "@/components/career/career-timeline"
+import { ContactCtaSection } from "@/components/about/contact-cta-section"
 import { CvDownloadButtonDynamic } from "@/components/career/cv-download-button-dynamic"
 import { JsonLd } from "@/components/json-ld"
 import { BreadcrumbSchemaBuilder, PersonSchemaBuilder } from "@/src/lib/seo"
@@ -163,6 +164,8 @@ export default async function SobreMiPage({ params }: Props) {
               </div>
             </div>
           </section>
+
+          <ContactCtaSection />
         </div>
       </div>
     </>
