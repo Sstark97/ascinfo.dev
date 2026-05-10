@@ -1,11 +1,14 @@
+import type { JSX } from "react";
 import type { InternalProject } from "@/src/lib/career/career-data";
+import { ImpactList } from "./impact-list";
 
 interface ProjectSubNodeProps {
   project: InternalProject;
   isLast: boolean;
+  impactLabel: string;
 }
 
-export function ProjectSubNode({ project, isLast }: ProjectSubNodeProps) {
+export function ProjectSubNode({ project, isLast, impactLabel }: ProjectSubNodeProps): JSX.Element {
   return (
     <div className="relative flex gap-4 pl-6">
       {/* Dashed Line */}
@@ -50,6 +53,11 @@ export function ProjectSubNode({ project, isLast }: ProjectSubNodeProps) {
           <p className="mb-3 text-sm leading-relaxed text-muted-foreground">
             {project.description}
           </p>
+
+          {/* Impact List */}
+          {project.impact && project.impact.length > 0 && (
+            <ImpactList items={project.impact} ariaLabel={impactLabel} />
+          )}
 
           {/* Stack Tags */}
           <div className="flex flex-wrap gap-2">

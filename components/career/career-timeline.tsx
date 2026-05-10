@@ -1,15 +1,18 @@
+import type { JSX } from "react";
 import { getCareerData } from "@/src/lib/career/career-data";
 import type { CareerPosition } from "@/src/lib/career/career-data";
 import { getTranslations, getLocale } from "next-intl/server";
 import { TimelineNode } from "./timeline-node";
 import { ProjectSubNode } from "./project-sub-node";
+import { ImpactList } from "./impact-list";
 
 interface CareerTimelineContentProps {
-  careerData: CareerPosition[]
-  activeLabel: string
+  careerData: CareerPosition[];
+  activeLabel: string;
+  impactLabel: string;
 }
 
-export function CareerTimelineContent({ careerData, activeLabel }: CareerTimelineContentProps) {
+export function CareerTimelineContent({ careerData, activeLabel, impactLabel }: CareerTimelineContentProps): JSX.Element {
   return (
     <div className="relative">
       {careerData.map((position: CareerPosition, index: number) => (
@@ -58,6 +61,12 @@ export function CareerTimelineContent({ careerData, activeLabel }: CareerTimelin
               {position.description}
             </p>
 
+            {position.impact && position.impact.length > 0 && (
+              <div className="mt-4">
+                <ImpactList items={position.impact} ariaLabel={impactLabel} />
+              </div>
+            )}
+
             {position.stack && position.stack.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
                 {position.stack.map((tech: string) => (
@@ -79,6 +88,7 @@ export function CareerTimelineContent({ careerData, activeLabel }: CareerTimelin
                   key={`${project.name}-${project.dateRange}`}
                   project={project}
                   isLast={projectIndex === position.projects!.length - 1}
+                  impactLabel={impactLabel}
                 />
               ))}
             </div>
@@ -89,9 +99,15 @@ export function CareerTimelineContent({ careerData, activeLabel }: CareerTimelin
   )
 }
 
-export async function CareerTimeline() {
+export async function CareerTimeline(): Promise<JSX.Element> {
   const locale = await getLocale()
   const t = await getTranslations("career")
   const careerData = getCareerData(locale)
-  return <CareerTimelineContent careerData={careerData} activeLabel={t("active")} />
+  return (
+    <CareerTimelineContent
+      careerData={careerData}
+      activeLabel={t("active")}
+      impactLabel={t("impactLabel")}
+    />
+  )
 }

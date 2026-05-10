@@ -21,59 +21,59 @@ const mockInactiveProject: InternalProject = {
 
 describe("ProjectSubNode", () => {
   it("renders project name as heading", () => {
-    render(<ProjectSubNode project={mockActiveProject} isLast={false} />);
+    render(<ProjectSubNode project={mockActiveProject} isLast={false} impactLabel="" />);
 
     const heading = screen.getByRole("heading", { level: 4 });
     expect(heading).toBeInTheDocument();
   });
 
   it("displays date range", () => {
-    render(<ProjectSubNode project={mockActiveProject} isLast={false} />);
+    render(<ProjectSubNode project={mockActiveProject} isLast={false} impactLabel="" />);
 
     expect(screen.getByText(mockActiveProject.dateRange)).toBeInTheDocument();
   });
 
   it("displays active badge when project is active", () => {
-    render(<ProjectSubNode project={mockActiveProject} isLast={false} />);
+    render(<ProjectSubNode project={mockActiveProject} isLast={false} impactLabel="" />);
 
     expect(screen.getByText("Actual")).toBeInTheDocument();
   });
 
   it("does not display active badge when project is inactive", () => {
-    render(<ProjectSubNode project={mockInactiveProject} isLast={false} />);
+    render(<ProjectSubNode project={mockInactiveProject} isLast={false} impactLabel="" />);
 
     expect(screen.queryByText("Actual")).not.toBeInTheDocument();
   });
 
   it("renders all stack technologies", () => {
-    render(<ProjectSubNode project={mockActiveProject} isLast={false} />);
+    render(<ProjectSubNode project={mockActiveProject} isLast={false} impactLabel="" />);
 
     expect(screen.getByText("React")).toBeInTheDocument();
     expect(screen.getByText("TypeScript")).toBeInTheDocument();
   });
 
   it("displays project description", () => {
-    render(<ProjectSubNode project={mockActiveProject} isLast={false} />);
+    render(<ProjectSubNode project={mockActiveProject} isLast={false} impactLabel="" />);
 
     expect(screen.getByText(mockActiveProject.description)).toBeInTheDocument();
   });
 
   it("renders dashed vertical line when not last", () => {
-    const { container } = render(<ProjectSubNode project={mockActiveProject} isLast={false} />);
+    const { container } = render(<ProjectSubNode project={mockActiveProject} isLast={false} impactLabel="" />);
 
     const dashedLine = container.querySelector(".border-dashed");
     expect(dashedLine).toBeInTheDocument();
   });
 
   it("does not render vertical line when is last", () => {
-    const { container } = render(<ProjectSubNode project={mockActiveProject} isLast={true} />);
+    const { container } = render(<ProjectSubNode project={mockActiveProject} isLast={true} impactLabel="" />);
 
     const dashedLine = container.querySelector(".border-dashed");
     expect(dashedLine).not.toBeInTheDocument();
   });
 
   it("applies active indicator styling when active", () => {
-    const { container } = render(<ProjectSubNode project={mockActiveProject} isLast={false} />);
+    const { container } = render(<ProjectSubNode project={mockActiveProject} isLast={false} impactLabel="" />);
 
     // Active project should have orange indicator
     const activeIndicator = container.querySelector(".bg-\\[\\#FCA311\\]\\/50");
@@ -81,7 +81,7 @@ describe("ProjectSubNode", () => {
   });
 
   it("applies inactive indicator styling when inactive", () => {
-    const { container } = render(<ProjectSubNode project={mockInactiveProject} isLast={false} />);
+    const { container } = render(<ProjectSubNode project={mockInactiveProject} isLast={false} impactLabel="" />);
 
     // Inactive should have white/20 border
     const inactiveIndicator = container.querySelector(".border-white\\/20");
@@ -89,7 +89,7 @@ describe("ProjectSubNode", () => {
   });
 
   it("renders card with hover effect", () => {
-    const { container } = render(<ProjectSubNode project={mockActiveProject} isLast={false} />);
+    const { container } = render(<ProjectSubNode project={mockActiveProject} isLast={false} impactLabel="" />);
 
     const card = container.querySelector(".hover\\:border-white\\/10");
     expect(card).toBeInTheDocument();

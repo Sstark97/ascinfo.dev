@@ -147,7 +147,8 @@
     }
   },
   "career": {
-    "active": "Active"
+    "active": "Active",
+    "impactLabel": "Impact"
   },
   "cv": {
     "download": "Download CV",
