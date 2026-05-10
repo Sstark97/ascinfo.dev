@@ -31,12 +31,33 @@
     "featuredProject": "Featured project",
     "viewProject": "View project",
     "recentTalk": "Recent talk",
-    "viewTalk": "View talk"
+    "viewTalk": "View talk",
+    "heroStats": {
+      "label": "Metrics",
+      "yearsExperience": {
+        "value": "3",
+        "suffix": "+",
+        "label": "Years of experience"
+      },
+      "articlesPublished": {
+        "label": "Technical articles"
+      },
+      "talksDelivered": {
+        "label": "Conference talks"
+      },
+      "linkedinRecommendations": {
+        "value": "11",
+        "label": "LinkedIn recommendations"
+      }
+    }
   },
   "profile": {
     "bio1": "Hi, I'm Aitor Santana. As a <strong>Software Developer</strong> and <strong>Software Crafter</strong>, I help teams build sustainable code.",
     "bio2": "My specialty is at the intersection of <strong>Clean Code</strong>, <strong>Hexagonal Architecture</strong>, and the new wave of <highlight>Generative AI</highlight>.",
-    "bio3": "I write, give talks, and develop quality software from <strong>the Canary Islands</strong> to the world."
+    "bio3": "I write, give talks, and develop quality software from <strong>the Canary Islands</strong> to the world.",
+    "impactSubtitle": "Specialized in clean architectures and TDD. Shipping product in Fintech, Streaming, and EdTech.",
+    "ctaLabel": "Let's talk",
+    "ctaAriaLabel": "Send email to Aitor Santana"
   },
   "nav": {
     "blog": "Blog",

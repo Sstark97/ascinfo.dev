@@ -4,6 +4,7 @@ import { LatestArticleBlock } from "@/components/bento/latest-article-block"
 import { FeaturedProjectBlock } from "@/components/bento/featured-project-block"
 import { RecentTalkBlock } from "@/components/bento/recent-talk-block"
 import { NavigationDock } from "@/components/bento/navigation-dock"
+import { HeroStatsBlock } from "@/components/bento/hero-stats-block"
 import { JsonLd } from "@/components/json-ld"
 import { posts, projects, talks } from "@/src/lib/content"
 import { PersonSchemaBuilder } from "@/src/lib/seo"
@@ -20,13 +21,14 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
 
   const l = locale as Locale
 
-  const [tHome, tProject, featuredPost, featuredProject, featuredTalk, allPosts] = await Promise.all([
+  const [tHome, tProject, featuredPost, featuredProject, featuredTalk, allPosts, allTalks] = await Promise.all([
     getTranslations("home"),
     getTranslations("project"),
     posts.getFeatured.execute(l),
     projects.getFeatured.execute(l),
     talks.getFeatured.execute(l),
     posts.getAll.execute(l),
+    talks.getAll.execute(l),
   ])
 
   const featuredPostDto = featuredPost?.toDto()
@@ -37,6 +39,35 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
     .filter((post) => post.slug !== featuredPost?.slug)
     .slice(0, 2)
     .map((post) => post.toDto())
+
+  const parseStatValue = (raw: string): number => {
+    const parsed = Number(raw)
+    return Number.isFinite(parsed) ? parsed : 0
+  }
+
+  const heroStats = [
+    {
+      id: "years-experience",
+      value: parseStatValue(tHome("heroStats.yearsExperience.value")),
+      suffix: tHome("heroStats.yearsExperience.suffix"),
+      label: tHome("heroStats.yearsExperience.label"),
+    },
+    {
+      id: "articles",
+      value: allPosts.length,
+      label: tHome("heroStats.articlesPublished.label"),
+    },
+    {
+      id: "talks",
+      value: allTalks.length,
+      label: tHome("heroStats.talksDelivered.label"),
+    },
+    {
+      id: "linkedin",
+      value: parseStatValue(tHome("heroStats.linkedinRecommendations.value")),
+      label: tHome("heroStats.linkedinRecommendations.label"),
+    },
+  ] as const
 
   const personSchema = PersonSchemaBuilder.build()
   const profilePageSchema = ProfilePageSchemaBuilder.build()
@@ -64,6 +95,13 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
                   previousLabel={tHome("previous")}
                 />
               )}
+            </div>
+
+            <div className="md:col-span-12">
+              <HeroStatsBlock
+                sectionLabel={tHome("heroStats.label")}
+                stats={heroStats}
+              />
             </div>
 
             <div className="md:col-span-4">
