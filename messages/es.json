@@ -30,7 +30,9 @@
     "previous": "Anteriores",
     "featuredPosts": {
       "label": "Artículos destacados",
-      "readingTimeAria": "Tiempo de lectura: {time}"
+      "readingTimeAria": "Tiempo de lectura: {time}",
+      "viewAll": "→ Ver todos los artículos",
+      "exploreByTopic": "Explora por tema"
     },
     "featuredProject": "Proyecto destacado",
     "viewProject": "Ver proyecto",
@@ -58,7 +60,7 @@
   "profile": {
     "bio1": "Hola, soy Aitor Santana. Como <strong>Desarrollador de Software</strong> y <strong>Software Crafter</strong>, ayudo a equipos a construir código sostenible.",
     "bio2": "Mi especialidad está en la intersección entre el <strong>Clean Code</strong>, la <strong>Arquitectura Hexagonal</strong> y la nueva ola de <highlight>IA Generativa</highlight>.",
-    "bio3": "Escribo, doy charlas y desarrollo software de calidad desde <strong>Canarias</strong> para el mundo.",
+    "skills": ["TypeScript", ".NET", "Java", "Hexagonal", "TDD", "GenAI"],
     "impactSubtitle": "Especializado en arquitecturas limpias y TDD. Entregando producto en Fintech, Streaming y EdTech.",
     "ctaLabel": "Hablemos",
     "ctaAriaLabel": "Enviar email a Aitor Santana"

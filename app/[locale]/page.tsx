@@ -36,6 +36,17 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
   const featuredProjectDto = featuredProject?.toDto()
   const featuredTalkDto = featuredTalk?.toDto()
 
+  const tagCounts = new Map<string, number>()
+  for (const post of allPosts) {
+    for (const tag of post.toDto().tags) {
+      tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
+    }
+  }
+  const topTags = [...tagCounts.entries()]
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 5)
+    .map(([tag]) => tag)
+
   const parseStatValue = (raw: string): number => {
     const parsed = Number(raw)
     return Number.isFinite(parsed) ? parsed : 0
@@ -84,6 +95,9 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
                 posts={featuredPostsDtos}
                 sectionLabel={tHome("featuredPosts.label")}
                 readingTimeAriaLabel={(time) => tHome("featuredPosts.readingTimeAria", { time })}
+                viewAllLabel={tHome("featuredPosts.viewAll")}
+                topTags={topTags}
+                exploreByTopicLabel={tHome("featuredPosts.exploreByTopic")}
               />
             </div>
 
