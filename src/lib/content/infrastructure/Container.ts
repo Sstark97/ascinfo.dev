@@ -7,6 +7,7 @@ import { GetAllPosts } from "@/content/application/use-cases/posts/GetAllPosts"
 import { GetPostBySlug } from "@/content/application/use-cases/posts/GetPostBySlug"
 import { GetAllPostTags } from "@/content/application/use-cases/posts/GetAllPostTags"
 import { GetFeaturedPost } from "@/content/application/use-cases/posts/GetFeaturedPost"
+import { GetFeaturedPosts } from "@/content/application/use-cases/posts/GetFeaturedPosts"
 
 import { GetAllProjects } from "@/content/application/use-cases/projects/GetAllProjects"
 import { GetProjectBySlug } from "@/content/application/use-cases/projects/GetProjectBySlug"
@@ -57,6 +58,7 @@ export const posts = {
   getBySlug: new GetPostBySlug(contentRepository),
   getAllTags: new GetAllPostTags(contentRepository),
   getFeatured: new GetFeaturedPost(contentRepository),
+  getFeaturedList: new GetFeaturedPosts(contentRepository),
 }
 
 export const projects = {

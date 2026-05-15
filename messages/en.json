@@ -28,6 +28,10 @@
   "home": {
     "latestArticle": "Latest article",
     "previous": "Previous",
+    "featuredPosts": {
+      "label": "Featured articles",
+      "readingTimeAria": "Reading time: {time}"
+    },
     "featuredProject": "Featured project",
     "viewProject": "View project",
     "recentTalk": "Recent talk",

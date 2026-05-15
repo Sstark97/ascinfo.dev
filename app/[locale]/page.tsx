@@ -1,6 +1,6 @@
 import { setRequestLocale, getTranslations } from "next-intl/server"
 import { ProfileBlock } from "@/components/bento/profile-block"
-import { LatestArticleBlock } from "@/components/bento/latest-article-block"
+import { FeaturedPostsBlock } from "@/components/bento/featured-posts-block"
 import { FeaturedProjectBlock } from "@/components/bento/featured-project-block"
 import { RecentTalkBlock } from "@/components/bento/recent-talk-block"
 import { NavigationDock } from "@/components/bento/navigation-dock"
@@ -21,10 +21,10 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
 
   const l = locale as Locale
 
-  const [tHome, tProject, featuredPost, featuredProject, featuredTalk, allPosts, allTalks, allProjects] = await Promise.all([
+  const [tHome, tProject, featuredPosts, featuredProject, featuredTalk, allPosts, allTalks, allProjects] = await Promise.all([
     getTranslations("home"),
     getTranslations("project"),
-    posts.getFeatured.execute(l),
+    posts.getFeaturedList.execute(l, 4),
     projects.getFeatured.execute(l),
     talks.getFeatured.execute(l),
     posts.getAll.execute(l),
@@ -32,14 +32,9 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
     projects.getAll.execute(l),
   ])
 
-  const featuredPostDto = featuredPost?.toDto()
+  const featuredPostsDtos = featuredPosts.map((post) => post.toDto())
   const featuredProjectDto = featuredProject?.toDto()
   const featuredTalkDto = featuredTalk?.toDto()
-
-  const recentPosts = allPosts
-    .filter((post) => post.slug !== featuredPost?.slug)
-    .slice(0, 2)
-    .map((post) => post.toDto())
 
   const parseStatValue = (raw: string): number => {
     const parsed = Number(raw)
@@ -85,17 +80,11 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
               <ProfileBlock />
             </div>
             <div className="md:col-span-6 flex">
-              {featuredPostDto && (
-                <LatestArticleBlock
-                  slug={featuredPostDto.slug}
-                  title={featuredPostDto.title}
-                  excerpt={featuredPostDto.excerpt}
-                  tags={featuredPostDto.tags}
-                  recentPosts={recentPosts}
-                  latestArticleLabel={tHome("latestArticle")}
-                  previousLabel={tHome("previous")}
-                />
-              )}
+              <FeaturedPostsBlock
+                posts={featuredPostsDtos}
+                sectionLabel={tHome("featuredPosts.label")}
+                readingTimeAriaLabel={(time) => tHome("featuredPosts.readingTimeAria", { time })}
+              />
             </div>
 
             <div className="md:col-span-12">

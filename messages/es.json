@@ -28,6 +28,10 @@
   "home": {
     "latestArticle": "Último artículo",
     "previous": "Anteriores",
+    "featuredPosts": {
+      "label": "Artículos destacados",
+      "readingTimeAria": "Tiempo de lectura: {time}"
+    },
     "featuredProject": "Proyecto destacado",
     "viewProject": "Ver proyecto",
     "recentTalk": "Charla reciente",
