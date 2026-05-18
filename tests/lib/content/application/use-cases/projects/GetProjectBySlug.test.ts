@@ -10,7 +10,7 @@ describe("GetProjectBySlug", () => {
       readBySlug: vi.fn().mockResolvedValue(mockRawProject),
     }
     const useCase = new GetProjectBySlug(mockRepo)
-    const project = await useCase.execute("test-project")
+    const project = await useCase.execute("test-project", "es")
 
     expect(project).not.toBeNull()
     expect(project?.slug).toBe("test-project")
@@ -23,7 +23,7 @@ describe("GetProjectBySlug", () => {
       readBySlug: vi.fn().mockResolvedValue(null),
     }
     const useCase = new GetProjectBySlug(mockRepo)
-    const project = await useCase.execute("non-existent")
+    const project = await useCase.execute("non-existent", "es")
 
     expect(project).toBeNull()
   })

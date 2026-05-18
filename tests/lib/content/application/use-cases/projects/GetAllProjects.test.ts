@@ -10,7 +10,7 @@ describe("GetAllProjects", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetAllProjects(mockRepo)
-    const projects = await useCase.execute()
+    const projects = await useCase.execute("es")
 
     expect(projects).toHaveLength(3)
     expect(projects[0].status).toBe("active") // project-1
@@ -24,7 +24,7 @@ describe("GetAllProjects", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetAllProjects(mockRepo)
-    const projects = await useCase.execute()
+    const projects = await useCase.execute("es")
 
     expect(projects).toEqual([])
   })

@@ -11,7 +11,7 @@ describe("GetFeaturedTalk", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetFeaturedTalk(mockRepo)
-    const talk = await useCase.execute()
+    const talk = await useCase.execute("es")
 
     expect(talk?.slug).toBe("featured-talk")
     expect(talk?.featured).toBe(true)
@@ -23,7 +23,7 @@ describe("GetFeaturedTalk", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetFeaturedTalk(mockRepo)
-    const talk = await useCase.execute()
+    const talk = await useCase.execute("es")
 
     expect(talk?.slug).toBe("talk-3") // First after sort by date (newest: 2024-01-25)
   })
@@ -34,7 +34,7 @@ describe("GetFeaturedTalk", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetFeaturedTalk(mockRepo)
-    const talk = await useCase.execute()
+    const talk = await useCase.execute("es")
 
     expect(talk).toBeNull()
   })

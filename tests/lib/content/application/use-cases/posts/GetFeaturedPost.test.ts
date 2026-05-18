@@ -11,7 +11,7 @@ describe("GetFeaturedPost", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetFeaturedPost(mockRepo)
-    const post = await useCase.execute()
+    const post = await useCase.execute("es")
 
     expect(post?.slug).toBe("featured-post")
     expect(post?.featured).toBe(true)
@@ -23,7 +23,7 @@ describe("GetFeaturedPost", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetFeaturedPost(mockRepo)
-    const post = await useCase.execute()
+    const post = await useCase.execute("es")
 
     expect(post?.slug).toBe("post-3") // First after sort by date
   })
@@ -34,7 +34,7 @@ describe("GetFeaturedPost", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetFeaturedPost(mockRepo)
-    const post = await useCase.execute()
+    const post = await useCase.execute("es")
 
     expect(post).toBeNull()
   })

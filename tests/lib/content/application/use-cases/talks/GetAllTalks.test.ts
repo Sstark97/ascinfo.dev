@@ -10,7 +10,7 @@ describe("GetAllTalks", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetAllTalks(mockRepo)
-    const talks = await useCase.execute()
+    const talks = await useCase.execute("es")
 
     expect(talks).toHaveLength(3)
     expect(talks[0].slug).toBe("talk-3") // 2024-01-25
@@ -24,7 +24,7 @@ describe("GetAllTalks", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetAllTalks(mockRepo)
-    const talks = await useCase.execute()
+    const talks = await useCase.execute("es")
 
     expect(talks).toEqual([])
   })

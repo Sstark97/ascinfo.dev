@@ -11,7 +11,7 @@ describe("GetFeaturedProject", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetFeaturedProject(mockRepo)
-    const project = await useCase.execute()
+    const project = await useCase.execute("es")
 
     expect(project?.slug).toBe("featured-project")
     expect(project?.featured).toBe(true)
@@ -23,7 +23,7 @@ describe("GetFeaturedProject", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetFeaturedProject(mockRepo)
-    const project = await useCase.execute()
+    const project = await useCase.execute("es")
 
     expect(project?.slug).toBe("project-1") // First after sort by status (active)
   })
@@ -34,7 +34,7 @@ describe("GetFeaturedProject", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetFeaturedProject(mockRepo)
-    const project = await useCase.execute()
+    const project = await useCase.execute("es")
 
     expect(project).toBeNull()
   })

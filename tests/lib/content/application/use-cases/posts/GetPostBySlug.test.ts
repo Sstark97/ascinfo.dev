@@ -10,7 +10,7 @@ describe("GetPostBySlug", () => {
       readBySlug: vi.fn().mockResolvedValue(mockRawPost),
     }
     const useCase = new GetPostBySlug(mockRepo)
-    const post = await useCase.execute("test-post")
+    const post = await useCase.execute("test-post", "es")
 
     expect(post).not.toBeNull()
     expect(post?.slug).toBe("test-post")
@@ -23,7 +23,7 @@ describe("GetPostBySlug", () => {
       readBySlug: vi.fn().mockResolvedValue(null),
     }
     const useCase = new GetPostBySlug(mockRepo)
-    const post = await useCase.execute("non-existent")
+    const post = await useCase.execute("non-existent", "es")
 
     expect(post).toBeNull()
   })

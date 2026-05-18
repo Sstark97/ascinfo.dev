@@ -10,7 +10,7 @@ describe("GetTalkBySlug", () => {
       readBySlug: vi.fn().mockResolvedValue(mockRawTalk),
     }
     const useCase = new GetTalkBySlug(mockRepo)
-    const talk = await useCase.execute("test-talk")
+    const talk = await useCase.execute("test-talk", "es")
 
     expect(talk).not.toBeNull()
     expect(talk?.slug).toBe("test-talk")
@@ -23,7 +23,7 @@ describe("GetTalkBySlug", () => {
       readBySlug: vi.fn().mockResolvedValue(null),
     }
     const useCase = new GetTalkBySlug(mockRepo)
-    const talk = await useCase.execute("non-existent")
+    const talk = await useCase.execute("non-existent", "es")
 
     expect(talk).toBeNull()
   })

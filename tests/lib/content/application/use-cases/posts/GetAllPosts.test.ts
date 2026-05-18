@@ -10,7 +10,7 @@ describe("GetAllPosts", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetAllPosts(mockRepo)
-    const posts = await useCase.execute()
+    const posts = await useCase.execute("es")
 
     expect(posts).toHaveLength(3)
     expect(posts[0].slug).toBe("post-3") // 2024-01-25
@@ -24,7 +24,7 @@ describe("GetAllPosts", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetAllPosts(mockRepo)
-    const posts = await useCase.execute()
+    const posts = await useCase.execute("es")
 
     expect(posts).toEqual([])
   })

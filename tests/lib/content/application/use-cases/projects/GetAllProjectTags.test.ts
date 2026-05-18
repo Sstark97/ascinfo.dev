@@ -11,7 +11,7 @@ describe("GetAllProjectTags", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetAllProjectTags(mockRepo)
-    const tags = await useCase.execute()
+    const tags = await useCase.execute("es")
 
     expect(tags).toEqual(["nextjs", "react", "testing", "typescript"])
   })
@@ -26,7 +26,7 @@ describe("GetAllProjectTags", () => {
       readBySlug: vi.fn(),
     }
     const useCase = new GetAllProjectTags(mockRepo)
-    const tags = await useCase.execute()
+    const tags = await useCase.execute("es")
 
     expect(tags).toEqual(["react", "typescript"])
   })
