@@ -9,4 +9,4 @@ export { compileMDXContent } from "./infrastructure/mdx/compiler"
 export { mdxComponents } from "./infrastructure/mdx/components"
 
 // Use cases - Container
-export { posts, projects, talks } from "./infrastructure/Container"
+export { posts, projects, talks, testimonials } from "./infrastructure/Container"

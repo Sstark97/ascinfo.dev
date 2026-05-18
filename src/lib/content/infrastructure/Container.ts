@@ -1,7 +1,10 @@
 import { MDXContentRepository } from "./MDXContentRepository"
 import { NotionContentRepository } from "./notion/NotionContentRepository"
+import { InMemoryTestimonialRepository } from "./InMemoryTestimonialRepository"
+import { NotionTestimonialRepository } from "./notion/NotionTestimonialRepository"
 import { Client } from "@notionhq/client"
 import type { ContentRepository } from "@/content/domain/repositories/ContentRepository"
+import type { TestimonialRepository } from "@/content/domain/repositories/TestimonialRepository"
 
 import { GetAllPosts } from "@/content/application/use-cases/posts/GetAllPosts"
 import { GetPostBySlug } from "@/content/application/use-cases/posts/GetPostBySlug"
@@ -18,6 +21,8 @@ import { GetAllTalks } from "@/content/application/use-cases/talks/GetAllTalks"
 import { GetTalkBySlug } from "@/content/application/use-cases/talks/GetTalkBySlug"
 import { GetAllTalkTags } from "@/content/application/use-cases/talks/GetAllTalkTags"
 import { GetFeaturedTalk } from "@/content/application/use-cases/talks/GetFeaturedTalk"
+
+import { GetAllTestimonials } from "@/content/application/use-cases/testimonials/GetAllTestimonials"
 
 /**
  * Factory function to create the appropriate ContentRepository based on CMS_PROVIDER env variable
@@ -73,4 +78,32 @@ export const talks = {
   getBySlug: new GetTalkBySlug(contentRepository),
   getAllTags: new GetAllTalkTags(contentRepository),
   getFeatured: new GetFeaturedTalk(contentRepository),
+}
+
+function createTestimonialRepository(): TestimonialRepository {
+  const provider = process.env.CMS_PROVIDER ?? "mdx"
+
+  if (provider === "notion") {
+    const apiKey = process.env.NOTION_API_KEY
+    const dbId = process.env.NOTION_TESTIMONIALS_DATABASE_ID
+
+    if (apiKey === undefined || dbId === undefined) {
+      console.warn(
+        "Notion configuration incomplete for testimonials, falling back to InMemoryTestimonialRepository. " +
+          "Required: NOTION_API_KEY, NOTION_TESTIMONIALS_DATABASE_ID"
+      )
+      return new InMemoryTestimonialRepository()
+    }
+
+    const notion = new Client({ auth: apiKey })
+    return new NotionTestimonialRepository(notion, { testimonials: dbId })
+  }
+
+  return new InMemoryTestimonialRepository()
+}
+
+const testimonialRepository = createTestimonialRepository()
+
+export const testimonials = {
+  getAll: new GetAllTestimonials(testimonialRepository),
 }
