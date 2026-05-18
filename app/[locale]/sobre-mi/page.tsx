@@ -5,8 +5,11 @@ import { setRequestLocale, getTranslations } from "next-intl/server"
 import { CareerTimeline } from "@/components/career/career-timeline"
 import { ContactCtaSection } from "@/components/about/contact-cta-section"
 import { CvDownloadButtonDynamic } from "@/components/career/cv-download-button-dynamic"
+import { TestimonialsAboutSection } from "@/components/testimonials/testimonials-about-section"
 import { JsonLd } from "@/components/json-ld"
 import { BreadcrumbSchemaBuilder, PersonSchemaBuilder } from "@/src/lib/seo"
+import { testimonials } from "@/src/lib/content"
+import type { Locale } from "@/src/lib/content/domain/types/Locale"
 
 type Props = {
   params: Promise<{ locale: string }>
@@ -37,11 +40,16 @@ export default async function SobreMiPage({ params }: Props) {
   const { locale } = await params
   setRequestLocale(locale)
 
-  const [t, tBread, tCv] = await Promise.all([
+  const l = locale as Locale
+
+  const [t, tBread, tCv, allTestimonials] = await Promise.all([
     getTranslations("about"),
     getTranslations("breadcrumbs"),
     getTranslations("cv"),
+    testimonials.getAll.execute(l),
   ])
+
+  const testimonialDtos = allTestimonials.map((testimonial) => testimonial.toDto())
 
   const jsonLd = PersonSchemaBuilder.build()
   const breadcrumbSchema = BreadcrumbSchemaBuilder.forAboutPage()
@@ -164,6 +172,8 @@ export default async function SobreMiPage({ params }: Props) {
               </div>
             </div>
           </section>
+
+          <TestimonialsAboutSection testimonials={testimonialDtos} />
 
           <ContactCtaSection />
         </div>

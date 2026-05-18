@@ -5,8 +5,9 @@ import { FeaturedProjectBlock } from "@/components/bento/featured-project-block"
 import { RecentTalkBlock } from "@/components/bento/recent-talk-block"
 import { NavigationDock } from "@/components/bento/navigation-dock"
 import { HeroStatsBlock } from "@/components/bento/hero-stats-block"
+import { TestimonialsSection } from "@/components/testimonials/testimonials-section"
 import { JsonLd } from "@/components/json-ld"
-import { posts, projects, talks } from "@/src/lib/content"
+import { posts, projects, talks, testimonials } from "@/src/lib/content"
 import { PersonSchemaBuilder } from "@/src/lib/seo"
 import { ProfilePageSchemaBuilder } from "@/src/lib/seo/schema-builders/ProfilePageSchemaBuilder"
 import type { Locale } from "@/src/lib/content/domain/types/Locale"
@@ -21,7 +22,7 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
 
   const l = locale as Locale
 
-  const [tHome, tProject, featuredPosts, featuredProject, featuredTalk, allPosts, allTalks, allProjects] = await Promise.all([
+  const [tHome, tProject, featuredPosts, featuredProject, featuredTalk, allPosts, allTalks, allProjects, allTestimonials] = await Promise.all([
     getTranslations("home"),
     getTranslations("project"),
     posts.getFeaturedList.execute(l, 4),
@@ -30,11 +31,13 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
     posts.getAll.execute(l),
     talks.getAll.execute(l),
     projects.getAll.execute(l),
+    testimonials.getAll.execute(l),
   ])
 
   const featuredPostsDtos = featuredPosts.map((post) => post.toDto())
   const featuredProjectDto = featuredProject?.toDto()
   const featuredTalkDto = featuredTalk?.toDto()
+  const testimonialsDtos = allTestimonials.map((testimonial) => testimonial.toDto())
 
   const tagCounts = new Map<string, number>()
   for (const post of allPosts) {
@@ -106,6 +109,10 @@ export default async function Home({ params }: Props): Promise<React.ReactElemen
                 sectionLabel={tHome("heroStats.label")}
                 stats={heroStats}
               />
+            </div>
+
+            <div className="md:col-span-12">
+              <TestimonialsSection testimonials={testimonialsDtos} />
             </div>
 
             <div className="md:col-span-4">

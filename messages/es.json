@@ -175,6 +175,17 @@
     "description": "Lo siento, la página que buscas no existe o ha sido movida.",
     "backHome": "Volver al inicio"
   },
+  "testimonials": {
+    "label": "TESTIMONIOS",
+    "title": "Lo que dicen de mí",
+    "subtitle": "Recomendaciones de compañeros con los que he trabajado.",
+    "viewLinkedinAriaLabel": "Ver perfil de LinkedIn de {author} (se abre en una pestaña nueva)",
+    "viewAllLabel": "Ver todos los testimonios",
+    "viewAllCount": "({count})",
+    "aboutLabel": "TESTIMONIOS · {count}",
+    "aboutTitle": "Lo que dicen de mí",
+    "aboutSubtitle": "Voces de las personas con las que he trabajado a lo largo de estos años."
+  },
   "footer": {
     "contactTitle": "Contacto",
     "emailLabel": "Email",

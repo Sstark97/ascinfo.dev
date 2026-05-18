@@ -175,6 +175,17 @@
     "description": "Sorry, the page you are looking for does not exist or has been moved.",
     "backHome": "Back to home"
   },
+  "testimonials": {
+    "label": "TESTIMONIALS",
+    "title": "What others say",
+    "subtitle": "Recommendations from teammates I've worked with.",
+    "viewLinkedinAriaLabel": "View {author}'s LinkedIn profile (opens in a new tab)",
+    "viewAllLabel": "View all testimonials",
+    "viewAllCount": "({count})",
+    "aboutLabel": "TESTIMONIALS · {count}",
+    "aboutTitle": "What others say",
+    "aboutSubtitle": "Voices of the people I've worked with over the years."
+  },
   "footer": {
     "contactTitle": "Contact",
     "emailLabel": "Email",
