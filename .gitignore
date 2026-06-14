@@ -30,3 +30,9 @@ next-env.d.ts
 /coverage
 /playwright-report
 /test-results
+
+# os
+.DS_Store
+
+# ide
+.idea/
