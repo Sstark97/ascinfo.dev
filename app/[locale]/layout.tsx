@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages, setRequestLocale } from "next-intl/server"
+import { ViewTransition } from "react"
 import { JsonLd } from "@/components/json-ld"
 import { SiteFooter } from "@/components/footer/site-footer"
 import { WebSiteSchemaBuilder } from "@/src/lib/seo/schema-builders/WebSiteSchemaBuilder"
@@ -108,7 +109,7 @@ export default async function LocaleLayout({ children, params }: Props): Promise
           >
             {locale === "en" ? "Skip to main content" : "Saltar al contenido principal"}
           </a>
-          {children}
+          <ViewTransition>{children}</ViewTransition>
           <SiteFooter />
           <Analytics />
         </NextIntlClientProvider>

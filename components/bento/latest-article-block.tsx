@@ -20,7 +20,7 @@ type LatestArticleBlockProps = {
 
 export function LatestArticleBlock({ slug, title, excerpt, tags, recentPosts, latestArticleLabel, previousLabel }: LatestArticleBlockProps): React.ReactElement {
   return (
-    <div className="flex h-full w-full flex-col rounded-xl border border-white/5 bg-[#222222] transition-all duration-300">
+    <div className="flex h-full w-full flex-col rounded-xl border border-white/5 bg-[#222222] transition-all duration-300 hover:border-[#FCA311]/30 hover:shadow-[0_0_30px_rgba(252,163,17,0.05)]">
       {/* Featured Article Section */}
       <Link
         href={`/blog/${slug}`}

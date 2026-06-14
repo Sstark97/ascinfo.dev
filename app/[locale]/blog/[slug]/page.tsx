@@ -5,6 +5,8 @@ import { posts as postsUseCases, mdxComponents } from "@/src/lib/content"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { BlogHeader } from "@/components/detail/blog-header"
 import { BlogNavigation } from "@/components/detail/blog-navigation"
+import { ReadingProgressBar } from "@/components/detail/reading-progress-bar"
+import { ScrollToTopButton } from "@/components/ui/scroll-to-top-button"
 import { JsonLd } from "@/components/json-ld"
 import { BlogPostingSchemaBuilder } from "@/src/lib/seo"
 import { BreadcrumbSchemaBuilder } from "@/src/lib/seo/schema-builders/BreadcrumbSchemaBuilder"
@@ -91,6 +93,7 @@ export default async function BlogDetailPage({ params }: PageProps): Promise<Rea
       <JsonLd data={jsonLd} />
       <JsonLd data={breadcrumbSchema} />
       <div className="min-h-screen bg-[#1a1a1a]">
+        <ReadingProgressBar targetId="article-content" />
         <BlogHeader
           title={post.title}
           date={post.date}
@@ -108,7 +111,7 @@ export default async function BlogDetailPage({ params }: PageProps): Promise<Rea
         />
 
         <div className="mx-auto max-w-6xl px-4 py-12 md:px-6 lg:px-8">
-          <article className="mx-auto w-full">
+          <article id="article-content" className="mx-auto w-full">
             <div className="max-w-none text-lg">
               <MDXRemote source={post.content} components={mdxComponents} />
             </div>
@@ -116,6 +119,7 @@ export default async function BlogDetailPage({ params }: PageProps): Promise<Rea
             <BlogNavigation prevPost={prevPost} nextPost={nextPost} />
           </article>
         </div>
+        <ScrollToTopButton />
       </div>
     </>
   )

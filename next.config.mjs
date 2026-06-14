@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 const nextConfig = {
   reactCompiler: true,
   trailingSlash: false,
+  experimental: {
+    viewTransition: true,
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
   },

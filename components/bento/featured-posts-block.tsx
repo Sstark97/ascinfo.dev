@@ -24,7 +24,7 @@ export function FeaturedPostsBlock({
   return (
     <section
       aria-label={sectionLabel}
-      className="flex h-full w-full flex-col rounded-xl border border-white/5 bg-[#222222] p-6 transition-all duration-300 hover:border-white/10"
+      className="flex h-full w-full flex-col rounded-xl border border-white/5 bg-[#222222] p-6 transition-all duration-300 hover:border-[#FCA311]/30 hover:shadow-[0_0_30px_rgba(252,163,17,0.05)]"
     >
       <div className="flex items-center justify-between">
         <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">

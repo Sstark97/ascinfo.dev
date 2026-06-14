@@ -14,7 +14,7 @@ type RecentTalkBlockProps = {
 export function RecentTalkBlock({ slug, title, event, recentTalkLabel, viewTalkLabel }: RecentTalkBlockProps): React.ReactElement {
   return (
     <Link href={`/charlas/${slug}`} className="group block h-full focus-visible:outline-2 focus-visible:outline-[#FCA311] focus-visible:outline-offset-2 focus-visible:rounded-xl">
-      <div className="flex h-full flex-col rounded-xl border border-white/5 bg-[#222222] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#FCA311]/50 hover:shadow-lg hover:shadow-[#FCA311]/5">
+      <div className="flex h-full flex-col rounded-xl border border-white/5 bg-[#222222] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#FCA311]/30 hover:shadow-[0_0_30px_rgba(252,163,17,0.05)]">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">

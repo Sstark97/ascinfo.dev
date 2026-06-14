@@ -6,6 +6,7 @@ import { CareerTimeline } from "@/components/career/career-timeline"
 import { ContactCtaSection } from "@/components/about/contact-cta-section"
 import { CvDownloadButtonDynamic } from "@/components/career/cv-download-button-dynamic"
 import { TestimonialsAboutSection } from "@/components/testimonials/testimonials-about-section"
+import { ScrollToTopButton } from "@/components/ui/scroll-to-top-button"
 import { JsonLd } from "@/components/json-ld"
 import { BreadcrumbSchemaBuilder, PersonSchemaBuilder } from "@/src/lib/seo"
 import { testimonials } from "@/src/lib/content"
@@ -178,6 +179,7 @@ export default async function SobreMiPage({ params }: Props) {
           <ContactCtaSection />
         </div>
       </div>
+      <ScrollToTopButton />
     </>
   )
 }

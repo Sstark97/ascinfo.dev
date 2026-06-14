@@ -24,7 +24,7 @@ export function NavigationDock({ postsCount, talksCount, projectsCount }: Naviga
   return (
     <nav
       aria-label={t("sectionsLabel")}
-      className="flex h-full flex-col rounded-xl border border-white/5 bg-[#222222] p-6 transition-all duration-300 hover:border-white/10"
+      className="flex h-full flex-col rounded-xl border border-white/5 bg-[#222222] p-6 transition-all duration-300 hover:border-[#FCA311]/30 hover:shadow-[0_0_30px_rgba(252,163,17,0.05)]"
     >
       <div className="flex items-center gap-2">
         <div aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#FCA311]" />

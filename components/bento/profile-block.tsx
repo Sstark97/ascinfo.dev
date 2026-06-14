@@ -26,7 +26,7 @@ export function ProfileBlockContent({
   ctaAriaLabel,
 }: ProfileBlockContentProps): React.ReactElement {
   return (
-    <div className="group flex h-full flex-col rounded-xl border border-white/5 bg-[#222222] p-6 transition-all duration-300 hover:border-white/10">
+    <div className="group flex h-full flex-col rounded-xl border border-white/5 bg-[#222222] p-6 transition-all duration-300 hover:border-[#FCA311]/30 hover:shadow-[0_0_30px_rgba(252,163,17,0.05)]">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
         <div className="relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-xl">
           <Image
