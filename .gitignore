@@ -36,3 +36,7 @@ next-env.d.ts
 
 # ide
 .idea/
+
+# claude code (local/personal settings)
+.claude/settings.local.json
+.claude/notion-database-ids.md

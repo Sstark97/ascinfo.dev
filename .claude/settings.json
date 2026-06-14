@@ -1,0 +1,24 @@
+{
+  "Stop": [
+    {
+      "matcher": "*",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "Before stopping, verify: (1) if any .ts/.tsx files were modified, confirm `pnpm type-check` passes with 0 errors; (2) if tests were written or modified, confirm `pnpm test` passes; (3) if E2E tests were written or modified, confirm `pnpm test:e2e` passes. If any check fails, block and fix the issue first. Only approve if all checks pass or no code was changed."
+        }
+      ]
+    }
+  ],
+  "SubagentStop": [
+    {
+      "matcher": "*",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "Before this subagent stops, verify it completed its assigned task: (1) all required output files exist (PLAN, REVIEW, or code changes as appropriate); (2) if code was written, `pnpm type-check` passes with 0 errors; (3) if tests were written, `pnpm test` passes; (4) the task is fully done, not partially done. Return 'approve' if complete, 'block' with reason if not."
+        }
+      ]
+    }
+  ]
+}
